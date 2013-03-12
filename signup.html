@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Sign in &middot; Intern Corner</title>
+    <title>Sign Up &middot; Intern Corner</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -30,6 +30,7 @@
   <div class="navbar navbar-inverse navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container">
+                    
                     <a class="brand" href="#">Intern Corner</a>
                     
                 </div>
@@ -39,17 +40,24 @@
     <div class="container">
 
       <form class="form-signin">
-        <h2 class="form-signin-heading">Please sign in</h2>
-        <input type="text" class="input-block-level" placeholder="DA-IICT Email address" required>
-        <input type="password" class="input-block-level" placeholder="Password" required>
-
-        <a href="#" class="btn btn-large btn-primary" type="submit" >Sign in</a>
-		<a href="signup.html" class="btn btn-large btn-primary" type="submit" >Sign up</a>
+        <h2 class="form-signin-heading">Please Sign up</h2>
+		<input type="text" id="username" class="input-block-level" placeholder="Select unique username" required>
+        <input type="text" id="email" class="input-block-level" placeholder="Enter DA-IICT email address" required>
+        <input type="password" id="password" class="input-block-level" placeholder="Password" required>
+		<input type="password" id="confirm_password" class="input-block-level" placeholder="Confirm Password" required>
+		    <select class="input-block-level" required>
+			<optgroup label="User Category">
+			<option>Professor</option>
+			<option>Student</option>
+			<option>Alumni</option>
+			</optgroup>
+			</select>
+		<button class="btn btn-large btn-primary" type="submit">Sign up</button>
       </form>
 
     </div> <!-- /container -->
 
-    <!-- javascript
+    <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="js/jquery.js"></script>
@@ -65,7 +73,6 @@
     <script src="js/bootstrap-collapse.js"></script>
     <script src="js/bootstrap-carousel.js"></script>
     <script src="js/bootstrap-typeahead.js"></script>
-	
 
   </body>
 </html>
