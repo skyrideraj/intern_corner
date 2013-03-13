@@ -39,12 +39,12 @@
 
     <div class="container">
 
-      <form class="form-signin">
+      <!--form class="form-signin">
         <h2 class="form-signin-heading">Please Sign up</h2>
-		<input type="text" id="username" class="input-block-level" placeholder="Select unique username" required>
-        <input type="text" id="email" class="input-block-level" placeholder="Enter DA-IICT email address" required>
-        <input type="password" id="password" class="input-block-level" placeholder="Password" required>
-		<input type="password" id="confirm_password" class="input-block-level" placeholder="Confirm Password" required>
+		<input type="text" name="username" id="username" maxlength="15" class="input-block-level" placeholder="Select unique username" required>
+        <input type="email" name="emailid" id="email" class="input-block-level" placeholder="Enter DA-IICT email address" required>
+        <input type="password" name="passwrd" id="password" class="input-block-level" placeholder="Password" required>
+		<input type="password" data-validation-match-match="passwrd" id="confirm_password" class="input-block-level" placeholder="Confirm Password" required>
 		    <select class="input-block-level" required>
 			<optgroup label="User Category">
 			<option>Professor</option>
@@ -53,7 +53,38 @@
 			</optgroup>
 			</select>
 		<button class="btn btn-large btn-primary" type="submit">Sign up</button>
-      </form>
+      </form -->
+	  
+	  <form class="form-horizontal">
+			<h2 class="form-signin-heading">Please sign in</h2>
+			<div class="control-group">
+			<label class="control-label">Username</label>
+				<div class="controls">
+				<input type="text" maxlength="15" minlength="5" placeholder="Username" required/>
+				</div>
+			</div>
+			<div class="control-group">
+			<label class="control-label">Email address</label>
+				<div class="controls">
+				<input type="email" data-validation-email-message="Not a valid email id!" pattern="[A-Za-z0-9._%+-]+@daiict.ac.in" data-validation-pattern-message="Must be a valid DA-IICT email id" placeholder="someone@daiict.ac.in" required/>
+				</div>
+			</div>
+			<div class="control-group">
+			<label class="control-label">Password</label>
+				<div class="controls">
+				<input type="password" name="password" placeholder="password" required/>
+				</div>
+			</div>
+			<div class="control-group">
+			<label class="control-label">Renter Password</label>
+				<div class="controls">
+				<input type="password" data-validation-match-match="password" data-validation-match-message="Passwords do not match!" placeholder="password again" required/>
+				</div>
+			</div>
+			<div class="submit-buttons">
+				<input type="submit" class="btn btn-large btn-primary" formaction="404.html" value="Sign up"/>
+			</div>
+		</form>
 
     </div> <!-- /container -->
 
@@ -73,6 +104,11 @@
     <script src="js/bootstrap-collapse.js"></script>
     <script src="js/bootstrap-carousel.js"></script>
     <script src="js/bootstrap-typeahead.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> <!-- or use local jquery -->
+	<script src="js/jqBootstrapValidation.js"></script>
+	<script>
+	$(function () { $("form,input").not("[type=submit]").jqBootstrapValidation(); } );
+	</script>
 
   </body>
 </html>

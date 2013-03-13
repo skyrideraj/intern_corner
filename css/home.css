@@ -4,8 +4,8 @@ body {
         background-color: #f5f5f5;
       }
 
-      .form-signin {
-        max-width: 300px;
+      .form-horizontal {
+        max-width: 500px;
         padding: 19px 29px 29px;
         margin: 0 auto 20px;
         background-color: #fff;
@@ -17,14 +17,20 @@ body {
            -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
                 box-shadow: 0 1px 2px rgba(0,0,0,.05);
       }
-      .form-signin .form-signin-heading,
-      .form-signin .checkbox {
+	  
+      .form-horizontal .form-signin-heading {
         margin-bottom: 10px;
+		margin-left:70px;
+		padding-bottom:20px;
       }
-      .form-signin input[type="text"],
-      .form-signin input[type="password"] {
+	  .form-horizontal .submit-buttons{
+		margin-left:70px;
+	  }
+      .form-horizontal input[type="email"],
+      .form-horizontal input[type="password"],
+		.form-horizontal input[type="text"],
+		.form-horizontal select{
         font-size: 16px;
         height: auto;
-        margin-bottom: 15px;
-        padding: 7px 9px;
+        padding: 5px 9px;
       }

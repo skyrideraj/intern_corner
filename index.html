@@ -38,20 +38,45 @@
 
     <div class="container">
 
-      <form class="form-signin">
+      <!--form class="form-signin">
         <h2 class="form-signin-heading">Please sign in</h2>
-        <input type="text" class="input-block-level" placeholder="DA-IICT Email address" required>
+        <input type="email" class="input-block-level" placeholder="Something@daiict.ac.in" required>
         <input type="password" class="input-block-level" placeholder="Password" required>
 
-        <a href="#" class="btn btn-large btn-primary" type="submit" >Sign in</a>
-		<a href="signup.html" class="btn btn-large btn-primary" type="submit" >Sign up</a>
-      </form>
+        <input type="submit" class="btn btn-large btn-primary" formaction="404.html" value="Sign in">
+		<input type="submit" class="btn btn-large btn-primary" formaction="signup.html" value="Sign up" >
+      </form -->
+	  
+
+		<form class="form-horizontal">
+			<h2 class="form-signin-heading">Please sign in</h2>
+			<div class="control-group">
+			<label class="control-label">Email address</label>
+				<div class="controls">
+				<input type="email" data-validation-email-message="Not a valid email id!" pattern="[A-Za-z0-9._%+-]+@daiict.ac.in" data-validation-pattern-message="Must be a valid DA-IICT email id" placeholder="someone@daiict.ac.in" required/>
+				</div>
+			</div>
+			<div class="control-group">
+			<label class="control-label">Password</label>
+				<div class="controls">
+				<input type="password" placeholder="password" required/>
+				</div>
+			</div>
+			<div class="submit-buttons">
+				<input type="submit" class="btn btn-large btn-primary" formaction="404.html" value="Sign in"/>
+				<input type="submit" class="btn btn-large btn-primary" formaction="signup.html" value="Sign up" />
+			</div>
+		</form>
+
+
 
     </div> <!-- /container -->
 
     <!-- javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> <!-- or use local jquery -->
+	<script src="js/jqBootstrapValidation.js"></script>
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap-transition.js"></script>
     <script src="js/bootstrap-alert.js"></script>
@@ -65,6 +90,10 @@
     <script src="js/bootstrap-collapse.js"></script>
     <script src="js/bootstrap-carousel.js"></script>
     <script src="js/bootstrap-typeahead.js"></script>
+	<script>
+	$(function () { $("form,input").not("[type=submit]").jqBootstrapValidation(); } );
+	</script>
+	
 	
 
   </body>
