@@ -8,17 +8,20 @@ class User
 	var $full_name;
 	var $email;
 	var $account_type;
-	var $activated;
+	var $contact_details;
 
 
-	function __construct($username,$full_name,$email,$account_type,$activated)
+	function __construct($username,$full_name,$email,$account_type,$contact_details)
 	{
 		# code...
 		$this->username=$username;
 		$this->full_name=$full_name;
 		$this->email=$email;
 		$this->account_type=$account_type;
-		$this->activated=$activated;
+		$this->contact_details=$contact_details;
+	}
+	function getUsername(){
+		return $this->username;
 	}
 
 	
