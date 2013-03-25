@@ -8,9 +8,9 @@
     <meta name="author" content="">
 
     <!-- Le styles -->
-    <link href="css/bootstrap.css" rel="stylesheet">
-	<link rel="stylesheet" href="css/home.css">
-    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+		<link rel="stylesheet" href="css/home.css">
+		<link href="css/bootstrap.css" rel="stylesheet" media="screen">
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -23,10 +23,14 @@
       <link rel="apple-touch-icon-precomposed" sizes="72x72" href="ico/apple-touch-icon-72-precomposed.png">
                     <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
                                    <link rel="shortcut icon" href="ico/favicon.png">
+	<script src="js/modernizr-2.6.2.min.js"></script>
   </head>
   
 
   <body>
+	<!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+	<![endif]-->
   <div class="navbar navbar-inverse navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container">
@@ -64,7 +68,7 @@
 			</div>
 			<div class="submit-buttons">
 				<input type="submit" class="btn btn-large btn-primary" formaction="404.html" value="Sign in"/>
-				<input type="submit" class="btn btn-large btn-primary" formaction="signup.html" value="Sign up" />
+				<a type="submit" class="btn btn-large btn-primary" href="signup.html" >Sign Up</a>
 			</div>
 		</form>
 
@@ -90,6 +94,7 @@
     <script src="js/bootstrap-collapse.js"></script>
     <script src="js/bootstrap-carousel.js"></script>
     <script src="js/bootstrap-typeahead.js"></script>
+
 	<script>
 	$(function () { $("form,input").not("[type=submit]").jqBootstrapValidation(); } );
 	</script>
