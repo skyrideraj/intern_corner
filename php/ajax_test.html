@@ -1,0 +1,23 @@
+<html>
+<head>
+	<title>Ajax Test</title>
+	<script type="text/javascript" src="./jQuery/jquery.js"></script>
+</head>
+<body>
+
+
+	<script type="text/javascript">
+	function send_data(){
+	$.post("controller.php",{func:'login',username:'sen',password:'password'},function(ret_data){
+		if(ret_data.status_code==202){
+			window.location= "demo.html";
+		}
+
+	},"json");
+}
+// alert("Hello1");
+send_data();
+// alert("Hello2");
+	</script>
+</body>
+</html>

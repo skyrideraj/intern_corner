@@ -2,10 +2,14 @@
 /**
 * Login class
 */
-require_once '../includes/initialize_database.php';
-require_once 'User.php';
+// require_once __DIR__.'../includes/initialize_database.php';
+// require_once __DIR__.'User.php';
 // require_once 'Student.php';
 // 
+// require_once __DIR__.'/../includes/initialize_database.php';
+require_once __DIR__.'/../includes/initialize_database.php';
+require_once __DIR__.'/User.php';
+require_once __DIR__.'/Student.php';
 
 
 class Login
@@ -57,6 +61,7 @@ class Login
 					$result = $this->db->fetch_assoc_all();
 					if($result[0]['profile_complete']==0){
 						//user should be redirected to build profile page
+						//accepted
 						return array('status_code'=>202,'detail'=>'build_profile');
 
 					}
@@ -138,8 +143,9 @@ class Login
 
 }
 // session_start();
-$login = new Login("sen","sen");
-$login -> validateAndLogin();
+// $login = new Login("sen","password");
+// $ret_val = $login -> validateAndLogin();
+// print_r($ret_val);
 // print_r($_SESSION['user']);
 // $login -> logout();
 // print_r($_SESSION['user']);
