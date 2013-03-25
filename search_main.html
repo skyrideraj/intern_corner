@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Search Centre</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!-- Bootstrap -->
+		
+		<style type="text/css">
+			.navbar .brand
+			{
+				float : right;
+			}
+			,opp_top
+			{
+				z-index:1;
+			}
+			.four_corners
+			{
+				position:relative;
+				margin-top:-20px;
+				margin-left:300px;
+			}
+			.top_left
+			{
+				z-index:5;
+			}
+			.corner_stone
+			{
+				z-index:1;
+				margin-left: 200px;
+				margin-top: -450px;
+				position:relative;
+				/*left:-800px;*/
+				/*top:-120px;*/
+			}
+			.corner_stone1
+			{
+				z-index:1;
+				margin-left: 350px;
+				margin-top: -1015px;
+				position:relative;
+				/*left:-800px;*/
+				/*top:-120px;*/
+			}
+			.corner_stone2	
+			{
+				z-index:1;
+				margin-left: -551px;
+				margin-top: -970px;
+				position:relative;
+				/*left:-800px;*/
+				/*top:-120px;*/
+			}
+			.stip_value
+			{
+				position:relative;
+				margin-left:20px;
+			}
+		</style>
+		<link href="css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+		<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+		<link href="css/bootstrap.css" rel="stylesheet" media="screen">
+	</head>
+	<body>
+	<div id="myModal_1" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+   
+    <form class="form-horizontal">
+      <h2 class="form-signin-heading">Experience based Search </h2>
+      <div class="control-group">
+      <label class="control-label">Company Name: </label>
+        <div class="controls">
+        <input type="text" maxlength="25" minlength="4" data-validation-pattern-message="sas" placeholder="Company_Name" required/>
+        </div>
+      </div>
+      
+
+    
+ 
+  </div>
+  <div class="modal-footer">
+          <input type="submit" class="btn btn-primary" formaction="404.html" value="Search"/>   
+    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+     
+  </div>
+      </form>
+
+</div>
+
+<!--  MODAL_Search Experience ENDS HERE-->
+
+<!-- my_MODAL_Search_Opportunity DETAILS -->
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+   
+    <form class="form-horizontal">
+      <h2 class="form-signin-heading">Opportunity based Search </h2>
+      <div class="control-group">
+      <label class="control-label">Company Name: </label>
+        <div class="controls">
+        <input type="text" maxlength="25" minlength="4" data-validation-pattern-message="sas" placeholder="Company_Name" required/>
+        </div>
+      </div>
+      <div class="control-group">
+      <label class="control-label">Tag: </label>
+        <div class="controls">
+        <input type="text" maxlength="25" minlength="4" data-validation-pattern-message="sas" placeholder="Tags Interested In"/>
+        </div>
+      </div>
+	  <div class="control-group">
+      <label class="control-label">Location: </label>
+        <div class="controls">
+        <input type="text" maxlength="25" minlength="4" data-validation-pattern-message="sas" placeholder="Location"/>
+        </div>
+      </div>
+	  <div class="control-group">
+      <label class="control-label">Stipend greator than: </label>
+        <div class="controls">
+        <input type="range" name="points" id="stip" min="1" max="1000000" value="2500" step="10000" onChange="change()">&nbsp;&nbsp;&nbsp;<span id="stip_value"></span>
+        </div>
+      </div>
+      <div class="control-group">
+      <label class="control-label">Type: </label>
+        <div class="controls">
+        <select>
+        	<option>Rural</option>
+        	<option>Research</option>
+        	<option>Industrial</option>
+        </select>
+        </div>
+      </div>
+      
+
+    
+ 
+  </div>
+  <div class="modal-footer">
+          <input type="submit" class="btn btn-primary" formaction="404.html" value="Search"/>   
+    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+     
+  </div>
+      </form>
+
+</div>
+
+<!--  MODAL_Search Opportunity ENDS HERE-->
+
+
+<!-- my_MODAL_search_Internhsip DETAILS -->
+<div id="myModal_2" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+   
+    <form class="form-horizontal">
+      <h2 class="form-signin-heading">Search For Faculty</h2>
+      <div class="control-group">
+      <label class="control-label">Faculty Name: </label>
+        <div class="controls">
+        <input type="text" maxlength="25" minlength="4" data-validation-pattern-message="sas" placeholder="Faculty Name" />
+        </div>
+      </div>
+      <div class="control-group">
+      <label class="control-label">Area Of Expertise </label>
+        <div class="controls">
+        <input type="text" maxlength="25" minlength="4" data-validation-pattern-message="sas" placeholder="Area Of Expertise" />
+        </div>
+      </div>
+      <div class="control-group">
+      <label class="control-label">Area Of Interest </label>
+        <div class="controls">
+        <input type="text" maxlength="25" minlength="4" data-validation-pattern-message="sas" placeholder="Area Of Interest" />
+        </div>
+      </div>
+      </div>
+  <div class="modal-footer">
+          <input type="submit" class="btn btn-primary" formaction="404.html" value="Search"/>   
+    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+     
+  </div>
+      </form>
+
+</div>
+
+<!--  MODAL_search Internship ENDS HERE-->
+		<div class="navbar navbar-inverse">
+			<div class="navbar-inner">
+				<div class="container">
+				<!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				</a>
+				<!-- Be sure to leave the brand out there if you want it shown -->
+				<a class="brand" href="#">USERNAME</a>
+				<a class="brand" href="#">HOME</a>
+				<!-- Everything you want hidden at 940px or less, place within here -->
+					<div class="nav-collapse collapse">
+					<!-- .nav, .navbar-search, .navbar-form, etc -->
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="opp_top">
+			<h1>Search Centre</h1>
+		</div>
+		<div class="four_corners">
+			<img class="top_left" src="img/search_corner1.png">
+			<a href="#myModal" data-toggle="modal"><img src="img/look_for_inter.jpg" class="corner_stone" /></a>
+			<a href="#myModal_1" data-toggle="modal"><img src="img/look_at_exp.jpg" class="corner_stone1" /></a>
+			<a href="#myModal_2" data-toggle="modal"><img src="img/look_for_faculty.jpg" class="corner_stone2"></a>
+		</div>
+		
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/modernizr-2.6.2.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> <!-- or use local jquery -->
+		<script src="js/jqBootstrapValidation.js"></script>
+		<script src="js/jquery-1.9.1.min.js"></script>
+		<script src="js/bootstrap-transition.js"></script>
+		<script src="js/bootstrap-alert.js"></script>
+		<script src="js/bootstrap-modal.js"></script>
+		<script src="js/bootstrap-dropdown.js"></script>
+		<script src="js/bootstrap-scrollspy.js"></script>
+		<script src="js/bootstrap-tab.js"></script>
+		<script src="js/bootstrap-tooltip.js"></script>
+		<script src="js/bootstrap-popover.js"></script>
+		<script src="js/bootstrap-button.js"></script>
+		<script src="js/bootstrap-collapse.js"></script>
+		<script src="js/bootstrap-carousel.js"></script>
+		<script src="js/bootstrap-typeahead.js"></script>
+		<script>
+			$("#stip").change(function(){
+			document.getElementById("stip_value").innerHTML=($(this).val());
+			}).change();
+</script>
+	</body>
+</html>

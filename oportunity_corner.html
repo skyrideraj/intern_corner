@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Internship Corner</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!-- Bootstrap -->
+		<link href="css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+		<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+		<link href="css/bootstrap.css" rel="stylesheet" media="screen">
+		
+		<script>    
+			var counter = 1;
+			var counter1=1;
+			var limit = 5;
+			function addInput(divName){
+				if (counter == limit)  {
+					alert("You have reached the limit of adding " + counter + " inputs");
+				}
+				else {
+					var newdiv = document.createElement('div');
+					newdiv.innerHTML = "<input type='text' name='tag1' placeholder='Additional Tag'>";
+					document.getElementById(divName).appendChild(newdiv);
+					counter++;
+				}
+			}
+		</script>
+		<style>
+			.navbar .brand
+			{
+				float:right;
+			}
+			.accordion-heading
+			{
+				height:80px;
+			}
+			.org_name
+			{
+				position:relative;
+				left:10px;
+			}
+			.org_name_val
+			{
+				position:relative;
+				left:20px;
+			}
+			.deadline
+			{
+				position:relative;
+				left:200px;
+				color:red;
+			}
+			.deadline_val
+			{
+				position:relative;
+				left:210px;
+				color:red;
+			}
+			.opp_type
+			{
+				position:relative;
+				left:100px;
+			}
+			.opp_type_val
+			{
+				position:relative;
+				left:110px;
+			}
+			.username
+			{
+				position:relative;
+				left:10px;
+			}
+			.username_val
+			{
+				position:relative;
+				left:20px;
+			}
+			.location
+			{
+				position:relative;
+				left:10px;
+			}
+			.location_val
+			{
+				position:relative;
+				left:20px;
+			}
+			.stipend
+			{
+				position:relative;
+				left:800px;
+			}
+			.stipend_val
+			{
+				position:relative;
+				left:810px;
+			}
+			.strt_date
+			{
+				position:relative;
+				left:10px;
+			}
+			.strt_date_val
+			{
+				position:relative;
+				left:10px;
+			}
+			.end_date
+			{
+				position:relative;
+				left:780px;
+			}
+			.end_date_val
+			{
+				position:relative;
+				left:790px;
+			}
+			.description
+			{
+				position:relative;
+				left:10px;
+			}
+			.description_val
+			{
+				position:relative;
+				left:20px;
+			}
+			.upvote
+			{
+				position:relative;
+				top:-60px;
+				left:170px;
+			}
+			.downvote
+			{
+				position:relative;
+				top:-107px;
+				left:205px;
+			}
+			.freespace
+			{
+				height:30px;
+			}
+			
+			
+		</style>
+	</head>
+	<body>
+		<div class="navbar navbar-inverse">
+			<div class="navbar-inner">
+				<div class="container">
+				<!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				</a>
+				<!-- Be sure to leave the brand out there if you want it shown -->
+				<a class="brand" href="#">USERNAME</a>
+				<a class="brand" href="#">HOME</a>
+				<!-- Everything you want hidden at 940px or less, place within here -->
+					<div class="nav-collapse collapse">
+					<!-- .nav, .navbar-search, .navbar-form, etc -->
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="opp_top">
+			<h1>Opportunity Corner</h1>
+		</div>
+<div class="jumbotron">
+          <a href="#myModal" data-toggle="modal" class="btn btn-primary">Post New Opportunity</a>
+		</div>
+		<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+				<h3 id="myModalLabel">New Experience</h3>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal">
+			<!--	<h2 class="form-signin-heading">New Experience</h2>-->
+				<div class="control-group">
+				<label class="control-label">Opportunity Title</label>
+					<div class="controls">
+					<input type="text" placeholder="A suitable Title" required/>
+					</div>
+				</div>
+				<div class="control-group">
+				<label class="control-label">Organisation Name</label>
+					<div class="controls">
+					<input type="text" placeholder="Organisation Name" required/>
+					</div>
+				</div>
+				<div class="control-group">
+				<label class="control-label">Opportunity Type</label>
+					<div class="controls">
+					<select required>
+						<option>Rural</option>
+						<option>Research</option>
+						<option>Industrial</option>
+					</select>
+					</div>
+				</div>
+				<div class="control-group">
+				<label class="control-label">App Deadline</label>
+					<div class="controls">
+					<input type="text" id="datepicker"/>
+					</div>
+				</div>
+				
+				<div class="control-group">
+				<label class="control-label">Location</label>
+					<div class="controls">
+					<input type="text" placeholder="Place of Intern" required/>
+					</div>
+				</div>
+				<div class="control-group">
+				<label class="control-label">Stipend</label>
+					<div class="controls">
+					<input type="text" placeholder="What Does It Pay" required/>
+					</div>
+				</div>
+				<div class="control-group">
+				<label class="control-label">Start Date</label>
+					<div class="controls">
+					<input type="text" id="datepicker1"/>
+					</div>
+				</div>
+				<div class="control-group">
+				<label class="control-label">End Date</label>
+					<div class="controls">
+					<input type="text" id="datepicker2"/>
+					</div>
+				</div>
+				<div class="control-group">
+				<label class="control-label">Description</label>
+					<div class="controls">
+					<textarea rows="4" columns="20"></textarea>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">Associated Tags</label>
+						<div class="controls">
+						<div id="xyz">
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" data-validation-pattern-message="Enter Valid Tag" placeholder="Tag" name="tag">
+						
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" data-validation-pattern-message="Enter Valid Tag" placeholder="Tag2" name="tag">
+						
+						</div>
+						<input type="button" value="Add another Tag" onClick="addInput('xyz');">
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+			<button class="btn btn-primary">Save changes</button>
+			</div>
+		</div>
+
+
+		
+		<div class="accordion" id="accordion2">
+			<div class="freespace">
+			</div>
+			<div class="accordion-group">
+				<div class="accordion-heading">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+					<h5>Opportunity Title</h5>
+					</a>
+					<span class="org_name">Organisation Name:</span>
+					<span class="org_name_val">Name Goes Here</span>
+					<span class="opp_type">Opp Type:</span>
+					<span class="opp_type_val">Opp Type Goes Here</span>
+					<span class="deadline">Application Deadline:</span>
+					<span class="deadline_val">Deadline goes here</span>
+					<span class="upvote">
+						<form>
+						<button>
+						<img src="img/like_thumbs_up.png" height="20px" width="20px">
+						</button>
+						</form>
+					</span>
+					<span class="downvote">
+						<form>
+						<button>
+						<img src="img/like_thumbs_down.png" height="20px" width="20px">
+						</button>
+						</form>
+					</span>
+				</div>
+				<div id="collapseOne" class="accordion-body collapse ">
+					<div class="accordion-inner">
+					<span class="username">Username:</span>
+					<span class="username_val">Username goes here</span><br />
+					<span class="location">Location:</span>
+					<span class="location_val">location goes here</span>
+					<span class="stipend">Stipend:</span>
+					<span class="stipend_val">stipend goes here</span><br />
+					<span class="strt_date">Start date:</span>
+					<span class="strt_date_val">Start date goes here</span>
+					<span class="end_date">End date:</span>
+					<span class="end_date_val">End date goes here</span><br />
+					<span class="description">Description:</span>
+					<span class="description_val">Description goes here</span>
+					</div>
+				</div>
+			</div>
+			<div class="freespace">
+			</div>
+			<div class="accordion-group">
+				<div class="accordion-heading">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+					<h5>Opportunity Title</h5>
+					</a>
+					<span class="org_name">Organisation Name:</span>
+					<span class="org_name_val">Name Goes Here</span>
+					<span class="opp_type">Opp Type:</span>
+					<span class="opp_type_val">Opp Type Goes Here</span>
+					<span class="deadline">Application Deadline:</span>
+					<span class="deadline_val">Deadline goes here</span>
+					<span class="upvote">
+						<form>
+						<button>
+						<img src="img/like_thumbs_up.png" height="20px" width="20px">
+						</button>
+						</form>
+					</span>
+					<span class="downvote">
+						<form>
+						<button>
+						<img src="img/like_thumbs_down.png" height="20px" width="20px">
+						</button>
+						</form>
+					</span>
+				</div>
+				<div id="collapseTwo" class="accordion-body collapse ">
+					<div class="accordion-inner">
+					<span class="username">Username:</span>
+					<span class="username_val">Username goes here</span><br />
+					<span class="location">Location:</span>
+					<span class="location_val">location goes here</span>
+					<span class="stipend">Stipend:</span>
+					<span class="stipend_val">stipend goes here</span><br />
+					<span class="strt_date">Start date:</span>
+					<span class="strt_date_val">Start date goes here</span>
+					<span class="end_date">End date:</span>
+					<span class="end_date_val">End date goes here</span><br />
+					<span class="description">Description:</span>
+					<span class="description_val">Description goes here</span>
+					</div>
+				</div>
+			</div>
+			<div class="freespace">
+			</div>
+			<div class="accordion-group">
+				<div class="accordion-heading">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
+					<h5>Opportunity Title</h5>
+					</a>
+					<span class="org_name">Organisation Name:</span>
+					<span class="org_name_val">Name Goes Here</span>
+					<span class="opp_type">Opp Type:</span>
+					<span class="opp_type_val">Opp Type Goes Here</span>
+					<span class="deadline">Application Deadline:</span>
+					<span class="deadline_val">Deadline goes here</span>
+					<span class="upvote">
+						<form>
+						<button>
+						<img src="img/like_thumbs_up.png" height="20px" width="20px">
+						</button>
+						</form>
+					</span>
+					<span class="downvote">
+						<form>
+						<button>
+						<img src="img/like_thumbs_down.png" height="20px" width="20px">
+						</button>
+						</form>
+					</span>
+				</div>
+				<div id="collapseThree" class="accordion-body collapse ">
+					<div class="accordion-inner">
+					<span class="username">Username:</span>
+					<span class="username_val">Username goes here</span><br />
+					<span class="location">Location:</span>
+					<span class="location_val">location goes here</span>
+					<span class="stipend">Stipend:</span>
+					<span class="stipend_val">stipend goes here</span><br />
+					<span class="strt_date">Start date:</span>
+					<span class="strt_date_val">Start date goes here</span>
+					<span class="end_date">End date:</span>
+					<span class="end_date_val">End date goes here</span><br />
+					<span class="description">Description:</span>
+					<span class="description_val">Description goes here</span>
+					</div>
+				</div>
+			</div>
+			<div class="freespace">
+			</div>
+			<div class="accordion-group">
+				<div class="accordion-heading">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFour">
+					<h5>Opportunity Title</h5>
+					</a>
+					<span class="org_name">Organisation Name:</span>
+					<span class="org_name_val">Name Goes Here</span>
+					<span class="opp_type">Opp Type:</span>
+					<span class="opp_type_val">Opp Type Goes Here</span>
+					<span class="deadline">Application Deadline:</span>
+					<span class="deadline_val">Deadline goes here</span>
+					<span class="upvote">
+						<form>
+						<button>
+						<img src="img/like_thumbs_up.png" height="20px" width="20px">
+						</button>
+						</form>
+					</span>
+					<span class="downvote">
+						<form>
+						<button>
+						<img src="img/like_thumbs_down.png" height="20px" width="20px">
+						</button>
+						</form>
+					</span>
+				</div>
+				<div id="collapseFour" class="accordion-body collapse ">
+					<div class="accordion-inner">
+					<span class="username">Username:</span>
+					<span class="username_val">Username goes here</span><br />
+					<span class="location">Location:</span>
+					<span class="location_val">location goes here</span>
+					<span class="stipend">Stipend:</span>
+					<span class="stipend_val">stipend goes here</span><br />
+					<span class="strt_date">Start date:</span>
+					<span class="strt_date_val">Start date goes here</span>
+					<span class="end_date">End date:</span>
+					<span class="end_date_val">End date goes here</span><br />
+					<span class="description">Description:</span>
+					<span class="description_val">Description goes here</span>
+					</div>
+				</div>
+			</div>
+			<div class="freespace">
+			</div>
+			<div class="accordion-group">
+				<div class="accordion-heading">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFive">
+					<h5>Opportunity Title</h5>
+					</a>
+					<span class="org_name">Organisation Name:</span>
+					<span class="org_name_val">Name Goes Here</span>
+					<span class="opp_type">Opp Type:</span>
+					<span class="opp_type_val">Opp Type Goes Here</span>
+					<span class="deadline">Application Deadline:</span>
+					<span class="deadline_val">Deadline goes here</span>
+					<span class="upvote">
+						<form>
+						<button>
+						<img src="img/like_thumbs_up.png" height="20px" width="20px">
+						</button>
+						</form>
+					</span>
+					<span class="downvote">
+						<form>
+						<button>
+						<img src="img/like_thumbs_down.png" height="20px" width="20px">
+						</button>
+						</form>
+					</span>
+				</div>
+				<div id="collapseFive" class="accordion-body collapse ">
+					<div class="accordion-inner">
+					<span class="username">Username:</span>
+					<span class="username_val">Username goes here</span><br />
+					<span class="location">Location:</span>
+					<span class="location_val">location goes here</span>
+					<span class="stipend">Stipend:</span>
+					<span class="stipend_val">stipend goes here</span><br />
+					<span class="strt_date">Start date:</span>
+					<span class="strt_date_val">Start date goes here</span>
+					<span class="end_date">End date:</span>
+					<span class="end_date_val">End date goes here</span><br />
+					<span class="description">Description:</span>
+					<span class="description_val">Description goes here</span>
+					</div>
+				</div>
+			</div>
+			<div class="freespace">
+			</div>
+			<div class="accordion-group">
+				<div class="accordion-heading">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseSix">
+					<h5>Opportunity Title</h5>
+					</a>
+					<span class="org_name">Organisation Name:</span>
+					<span class="org_name_val">Name Goes Here</span>
+					<span class="opp_type">Opp Type:</span>
+					<span class="opp_type_val">Opp Type Goes Here</span>
+					<span class="deadline">Application Deadline:</span>
+					<span class="deadline_val">Deadline goes here</span>
+					<span class="upvote">
+						<form>
+						<button>
+						<img src="img/like_thumbs_up.png" height="20px" width="20px">
+						</button>
+						</form>
+					</span>
+					<span class="downvote">
+						<form>
+						<button>
+						<img src="img/like_thumbs_down.png" height="20px" width="20px">
+						</button>
+						</form>
+					</span>
+				</div>
+				<div id="collapseSix" class="accordion-body collapse ">
+					<div class="accordion-inner">
+					<span class="username">Username:</span>
+					<span class="username_val">Username goes here</span><br />
+					<span class="location">Location:</span>
+					<span class="location_val">location goes here</span>
+					<span class="stipend">Stipend:</span>
+					<span class="stipend_val">stipend goes here</span><br />
+					<span class="strt_date">Start date:</span>
+					<span class="strt_date_val">Start date goes here</span>
+					<span class="end_date">End date:</span>
+					<span class="end_date_val">End date goes here</span><br />
+					<span class="description">Description:</span>
+					<span class="description_val">Description goes here</span>
+					</div>
+				</div>
+			</div>
+			<div class="freespace">
+			</div>
+			<div class="accordion-group">
+				<div class="accordion-heading">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseSeven">
+					<h5>Opportunity Title</h5>
+					</a>
+					<span class="org_name">Organisation Name:</span>
+					<span class="org_name_val">Name Goes Here</span>
+					<span class="opp_type">Opp Type:</span>
+					<span class="opp_type_val">Opp Type Goes Here</span>
+					<span class="deadline">Application Deadline:</span>
+					<span class="deadline_val">Deadline goes here</span>
+					<span class="upvote">
+						<form>
+						<button>
+						<img src="img/like_thumbs_up.png" height="20px" width="20px">
+						</button>
+						</form>
+					</span>
+					<span class="downvote">
+						<form>
+						<button>
+						<img src="img/like_thumbs_down.png" height="20px" width="20px">
+						</button>
+						</form>
+					</span>
+				</div>
+				<div id="collapseSeven" class="accordion-body collapse ">
+					<div class="accordion-inner">
+					<span class="username">Username:</span>
+					<span class="username_val">Username goes here</span><br />
+					<span class="location">Location:</span>
+					<span class="location_val">location goes here</span>
+					<span class="stipend">Stipend:</span>
+					<span class="stipend_val">stipend goes here</span><br />
+					<span class="strt_date">Start date:</span>
+					<span class="strt_date_val">Start date goes here</span>
+					<span class="end_date">End date:</span>
+					<span class="end_date_val">End date goes here</span><br />
+					<span class="description">Description:</span>
+					<span class="description_val">Description goes here</span>
+					</div>
+				</div>
+			</div>
+			<div class="freespace">
+			</div>
+			<div class="accordion-group">
+				<div class="accordion-heading">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseEight">
+					<h5>Opportunity Title</h5>
+					</a>
+					<span class="org_name">Organisation Name:</span>
+					<span class="org_name_val">Name Goes Here</span>
+					<span class="opp_type">Opp Type:</span>
+					<span class="opp_type_val">Opp Type Goes Here</span>
+					<span class="deadline">Application Deadline:</span>
+					<span class="deadline_val">Deadline goes here</span>
+					<span class="upvote">
+						<form>
+						<button>
+						<img src="img/like_thumbs_up.png" height="20px" width="20px">
+						</button>
+						</form>
+					</span>
+					<span class="downvote">
+						<form>
+						<button>
+						<img src="img/like_thumbs_down.png" height="20px" width="20px">
+						</button>
+						</form>
+					</span>
+				</div>
+				<div id="collapseEight" class="accordion-body collapse ">
+					<div class="accordion-inner">
+					<span class="username">Username:</span>
+					<span class="username_val">Username goes here</span><br />
+					<span class="location">Location:</span>
+					<span class="location_val">location goes here</span>
+					<span class="stipend">Stipend:</span>
+					<span class="stipend_val">stipend goes here</span><br />
+					<span class="strt_date">Start date:</span>
+					<span class="strt_date_val">Start date goes here</span>
+					<span class="end_date">End date:</span>
+					<span class="end_date_val">End date goes here</span><br />
+					<span class="description">Description:</span>
+					<span class="description_val">Description goes here</span>
+					</div>
+				</div>
+			</div>
+			<div class="freespace">
+			</div>
+			<div class="accordion-group">
+				<div class="accordion-heading">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseNine">
+					<h5>Opportunity Title</h5>
+					</a>
+					<span class="org_name">Organisation Name:</span>
+					<span class="org_name_val">Name Goes Here</span>
+					<span class="opp_type">Opp Type:</span>
+					<span class="opp_type_val">Opp Type Goes Here</span>
+					<span class="deadline">Application Deadline:</span>
+					<span class="deadline_val">Deadline goes here</span>
+					<span class="upvote">
+						<form>
+						<button>
+						<img src="img/like_thumbs_up.png" height="20px" width="20px">
+						</button>
+						</form>
+					</span>
+					<span class="downvote">
+						<form>
+						<button>
+						<img src="img/like_thumbs_down.png" height="20px" width="20px">
+						</button>
+						</form>
+					</span>
+				</div>
+				<div id="collapseNine" class="accordion-body collapse ">
+					<div class="accordion-inner">
+					<span class="username">Username:</span>
+					<span class="username_val">Username goes here</span><br />
+					<span class="location">Location:</span>
+					<span class="location_val">location goes here</span>
+					<span class="stipend">Stipend:</span>
+					<span class="stipend_val">stipend goes here</span><br />
+					<span class="strt_date">Start date:</span>
+					<span class="strt_date_val">Start date goes here</span>
+					<span class="end_date">End date:</span>
+					<span class="end_date_val">End date goes here</span><br />
+					<span class="description">Description:</span>
+					<span class="description_val">Description goes here</span>
+					</div>
+				</div>
+			</div>
+			<div class="freespace">
+			</div>
+			<div class="accordion-group">
+				<div class="accordion-heading">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTen">
+					<h5>Opportunity Title</h5>
+					</a>
+					<span class="org_name">Organisation Name:</span>
+					<span class="org_name_val">Name Goes Here</span>
+					<span class="opp_type">Opp Type:</span>
+					<span class="opp_type_val">Opp Type Goes Here</span>
+					<span class="deadline">Application Deadline:</span>
+					<span class="deadline_val">Deadline goes here</span>
+					<span class="upvote">
+						<form>
+						<button>
+						<img src="img/like_thumbs_up.png" height="20px" width="20px">
+						</button>
+						</form>
+					</span>
+					<span class="downvote">
+						<form>
+						<button>
+						<img src="img/like_thumbs_down.png" height="20px" width="20px">
+						</button>
+						</form>
+					</span>
+				</div>
+				<div id="collapseTen" class="accordion-body collapse ">
+					<div class="accordion-inner">
+					<span class="username">Username:</span>
+					<span class="username_val">Username goes here</span><br />
+					<span class="location">Location:</span>
+					<span class="location_val">location goes here</span>
+					<span class="stipend">Stipend:</span>
+					<span class="stipend_val">stipend goes here</span><br />
+					<span class="strt_date">Start date:</span>
+					<span class="strt_date_val">Start date goes here</span>
+					<span class="end_date">End date:</span>
+					<span class="end_date_val">End date goes here</span><br />
+					<span class="description">Description:</span>
+					<span class="description_val">Description goes here</span>
+					</div>
+				</div>
+			</div>
+			<div class="freespace">
+			</div>
+		</div>
+		<div class="pagination">
+			<ul>
+			<li><a href="#">Prev</a></li>
+			<li><a href="#">1</a></li>
+			<li><a href="#">2</a></li>
+			<li><a href="#">3</a></li>
+			<li><a href="#">4</a></li>
+			<li><a href="#">5</a></li>
+			<li><a href="#">Next</a></li>
+			</ul>
+		</div>
+		
+		
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/modernizr-2.6.2.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> <!-- or use local jquery -->
+		<script src="js/jqBootstrapValidation.js"></script>
+		<script src="js/jquery-1.9.1.min.js"></script>
+		<script src="js/bootstrap-transition.js"></script>
+		<script src="js/bootstrap-alert.js"></script>
+		<script src="js/bootstrap-modal.js"></script>
+		<script src="js/bootstrap-dropdown.js"></script>
+		<script src="js/bootstrap-scrollspy.js"></script>
+		<script src="js/bootstrap-tab.js"></script>
+		<script src="js/bootstrap-tooltip.js"></script>
+		<script src="js/bootstrap-popover.js"></script>
+		<script src="js/bootstrap-button.js"></script>
+		<script src="js/bootstrap-collapse.js"></script>
+		<script src="js/bootstrap-carousel.js"></script>
+		<script src="js/bootstrap-typeahead.js"></script>
+		<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+
+		<script>
+
+			$(document).ready(function() {
+			$("#datepicker").datepicker();
+			$("#datepicker1").datepicker();
+			$("#datepicker2").datepicker();
+			});
+
+		</script>
+	</body>
+</html>

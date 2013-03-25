@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Edit Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+	    <link href="css/bootstrap.css" rel="stylesheet">
+		
+
+  </head>
+  <body>
+  
+ <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+<div class="jumbotron">
+
+    <h1> INTERN CORNER!!!</h1>
+  </div>
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Edit Your Profile</h3>
+  </div>
+  
+  <div class="modal-body">
+    
+				<form class="form-horizontal">
+					
+					<div class="control-group">
+					<label class="control-label">Name</label>
+						<div class="controls">
+						<input type="text" pattern="^[A-Za-z]{3,20}" data-validation-pattern-message="Do not use special characters or numbers" placeholder="name" required/>
+						</div>
+					</div>
+					<div class="control-group">
+					<label class="control-label">Username</label>
+						<div class="controls">
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" data-validation-pattern-message="Username should be unique" placeholder="Username" required/>
+						</div>
+					</div>
+					<div class="control-group">
+					<label class="control-label">Other Email address</label>
+						<div class="controls">
+						<input type="email" data-validation-email-message="Not a valid email id!" pattern=	"^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)" data-validation-pattern-message="Must be a valid email id" required/>
+						</div>
+					</div>
+					
+					<div class="control-group">
+					<label class="control-label">current employee</label>
+						<div class="controls">
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" data-validation-pattern-message="Username should be unique" placeholder="company name" >
+						
+						
+						</div>
+					</div>
+					
+					<div class="control-group">
+					<label class="control-label">Past Internships</label>
+						<div class="controls">
+						<div id="xyz1">
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" data-validation-pattern-message="Username should be unique" placeholder="Internship1" >
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" data-validation-pattern-message="Username should be unique" placeholder="Internship2" name="ip2" >
+						</div>
+						
+						<input type="button" value="Add another text input" onClick="addInput1('xyz1');">
+						</div>
+					</div>
+					
+					<div class="control-group">
+					<label class="control-label">Past companies</label>
+						<div class="controls">
+						<div id="xyz">
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" data-validation-pattern-message="Username should be unique" placeholder="company1" >
+						
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" data-validation-pattern-message="Username should be unique" placeholder="company2" name="ip1">
+						
+						</div>
+						<input type="button" value="Add another text input" onClick="addInput('xyz');">
+						</div>
+					</div>
+					
+					
+					
+					
+					<div class="control-group">
+					<label class="control-label">Other Information</label>
+						<div class="controls">
+							<div align="left">
+							<textarea cols="20" rows="2" name="myname" placeholder="Any additional information.."></textarea>
+							</div>
+												
+						</div>
+					</div>
+					
+				
+           </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    <button class="btn btn-primary">Save changes</button>
+  </div>
+  </form>
+</div>
+<!-- Button to trigger modal -->
+  <ul class="nav nav-tabs">
+  <li class="active">
+    <a href="#">Home</a>
+  </li>
+  <li><a href="#">Nav bar 1</a></li>
+  <li><a href="#">Nav bar 2</a></li>
+  
+  <li><a href="#">Nav bar 2</a></li>
+  
+  <li><a href="#">Nav bar 2</a></li>
+  <li><a href="#myModal" data-toggle="modal">Edit Profile</a></li>
+</ul>
+ 
+<!-- Modal -->
+
+<!--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@-->
+<!--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@-->
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> <!-- or use local jquery -->
+  <script src="js/jqBootstrapValidation.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap-transition.js"></script>
+    <script src="js/bootstrap-alert.js"></script>
+    <script src="js/bootstrap-modal.js"></script>
+    <script src="js/bootstrap-dropdown.js"></script>
+    <script src="js/bootstrap-scrollspy.js"></script>
+    <script src="js/bootstrap-tab.js"></script>
+    <script src="js/bootstrap-tooltip.js"></script>
+    <script src="js/bootstrap-popover.js"></script>
+    <script src="js/bootstrap-button.js"></script>
+    <script src="js/bootstrap-collapse.js"></script>
+    <script src="js/bootstrap-carousel.js"></script>
+    <script src="js/bootstrap-typeahead.js"></script>
+	  <script>
+  $(function () { $("form,input").not("[type=submit]").jqBootstrapValidation(); } );
+  </script>
+	
+  </body>
+</html>
+
