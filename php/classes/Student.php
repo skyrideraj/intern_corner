@@ -1,6 +1,8 @@
-<?
-require_once 'User.php';
-/**
+<?php
+echo 111;
+include './User.php';
+require_once '../includes/initialize_database.php';
+echo 333;/**
 * 
 */
 class Student extends User
@@ -14,7 +16,10 @@ class Student extends User
 	var $resume;
 	var $experience;
 	var $areas_of_interest;
-	function professorRate(){
+
+	function professorRate($faculty,$rate){
+		$db=(new Database())->connectToDatabase;
+		$db->query("INSERT INTO rating values($this->user_name,$faculty,$rate)");
 
 	}
 	function displayProfile(){
@@ -31,20 +36,67 @@ class Student extends User
 	function updateStudent(){
 
 	}
-	function updateAreasOfInterest(){
+
+
+	function updateAreasOfInterest($type, $area_of_interest){
+		if($type==1)
+		{
+
+			$db=(new Database())->connectToDatabase();
+			echo $this->username;
+			$db->query(" INSERT INTO student_area_of_intrest values ('$this->username','$area_of_interest')");
+		}
+		if($type==-1)
+		{
+
+			$db=(new Database())->connectToDatabase();
+			$db->query("DELETE FROM student_area_of_intrest WHERE user_name='$this->username' and area_of_intrest='$area_of_interest';");
+		}
 
 	}
-	function updateExperience(){
+
+	function updateExperience($experince_id,$experine_title,$experince_description,$type){
+
+
+		if($type==1)
+		{
+
+			$db=(new Database())->connectToDatabase();
+			$db->query("INSERT INTO user_experince values('$this->$username','$experince_id','$experince_title','$experince_description')");
+		}
+		if($type==-1)
+		{
+
+			$db=(new Database())->connectToDatabase();
+			$db->query("DELETE FROM user_experince WHERE user_name='$this->username'and experince_id='$experince_id';");
+		}
+
+
 
 	}
-	function updateField(){
 
+
+	function updateField($field,$type){
+		if($type==1)
+		{
+
+			$db=(new Database())->connectToDatabase();
+			echo "$this->username";
+			$db->query("UPDATE field SET '$field'=1 where user_name='$this->username';");
+		}
+		if($type==-1)
+		{
+
+			$db=(new Database())->connectToDatabase();
+			$db->query("UPDATE field SET '$field'=0 where user_name='$this->username';");
+
+		}
 	}
 	
 	function __construct($username,$full_name,$email_id,$contact_details,$account_type,$field,$cpi,$batch,$reputation,$areas_of_interest,$profile_complete,$professor_rating_average,$resume,$experience)
 	{
 		# code...
-		parent::__construct($username,$full_name,$email,$account_type,$contact_details);
+		parent::__construct($username,$full_name,$email_id,$account_type,$contact_details);
 
 		$this->field=$field;
 		$this->cpi=$cpi;
@@ -57,5 +109,9 @@ class Student extends User
 		$this->experience=$experience;
 	}
 
+
 }
+
+$stud= new Student('a','a','a','a',1,'ct',5,'btech',0,NULL,NULL,NULL,NULL,NULL);
+//$student->updateAreasOfInterest(-1,"area_of_interest11");
 ?>
