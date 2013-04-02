@@ -2,15 +2,249 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Sign in &middot; Intern Corner</title>
+    <title>Carousel Template &middot; Bootstrap</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
 
     <!-- Le styles -->
-    <link href="css/bootstrap-responsive.css" rel="stylesheet" media="screen">
-		<link rel="stylesheet" href="css/home.css">
-		<link href="css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <style>
+
+    /* GLOBAL STYLES
+    -------------------------------------------------- */
+    /* Padding below the footer and lighter body text */
+
+    body {
+      padding-bottom: 40px;
+      color: #5a5a5a;
+    }
+
+
+
+    /* CUSTOMIZE THE NAVBAR
+    -------------------------------------------------- */
+
+    /* Special class on .container surrounding .navbar, used for positioning it into place. */
+    .navbar-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      margin-top: 20px;
+      margin-bottom: -90px; /* Negative margin to pull up carousel. 90px is roughly margins and height of navbar. */
+    }
+    .navbar-wrapper .navbar {
+
+    }
+
+    /* Remove border and change up box shadow for more contrast */
+    .navbar .navbar-inner {
+      border: 0;
+      -webkit-box-shadow: 0 2px 10px rgba(0,0,0,.25);
+         -moz-box-shadow: 0 2px 10px rgba(0,0,0,.25);
+              box-shadow: 0 2px 10px rgba(0,0,0,.25);
+    }
+
+
+    /* Navbar links: increase padding for taller navbar */
+    .navbar .nav > li > a {
+      padding: 15px 20px;
+    }
+
+    /* Offset the responsive button for proper vertical alignment */
+    .navbar .btn-navbar {
+      margin-top: 10px;
+    }
+
+
+
+    /* CUSTOMIZE THE CAROUSEL
+    -------------------------------------------------- */
+
+    /* Carousel base class */
+    .carousel {
+      margin-bottom: 60px;
+    }
+
+    .carousel .container {
+      position: relative;
+      z-index: 9;
+    }
+
+    .carousel-control {
+      height: 80px;
+      margin-top: 0;
+      font-size: 120px;
+      text-shadow: 0 1px 1px rgba(0,0,0,.4);
+      background-color: transparent;
+      border: 0;
+      z-index: 10;
+    }
+
+    .carousel .item {
+      height: 500px;
+    }
+    .carousel img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      min-width: 100%;
+      height: 500px;
+    }
+
+    .carousel-caption {
+      background-color: transparent;
+      position: static;
+      max-width: 550px;
+      padding: 0 20px;
+      margin-top: 100px;
+    }
+    .carousel-caption h1,
+    .carousel-caption .lead {
+      margin: 0;
+      line-height: 1.25;
+      color: #fff;
+      text-shadow: 0 1px 1px rgba(0,0,0,.4);
+    }
+    .carousel-caption .btn {
+      margin-top: 10px;
+    }
+
+
+
+    /* MARKETING CONTENT
+    -------------------------------------------------- */
+
+    /* Center align the text within the three columns below the carousel */
+    .marketing .span4 {
+      text-align: center;
+    }
+    .marketing h2 {
+      font-weight: normal;
+    }
+    .marketing .span4 p {
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+
+
+    /* Featurettes
+    ------------------------- */
+
+    .featurette-divider {
+      margin: 80px 0; /* Space out the Bootstrap <hr> more */
+    }
+    .featurette {
+      padding-top: 120px; /* Vertically center images part 1: add padding above and below text. */
+      overflow: hidden; /* Vertically center images part 2: clear their floats. */
+    }
+    .featurette-image {
+      margin-top: -120px; /* Vertically center images part 3: negative margin up the image the same amount of the padding to center it. */
+    }
+
+    /* Give some space on the sides of the floated elements so text doesn't run right into it. */
+    .featurette-image.pull-left {
+      margin-right: 40px;
+    }
+    .featurette-image.pull-right {
+      margin-left: 40px;
+    }
+
+    /* Thin out the marketing headings */
+    .featurette-heading {
+      font-size: 50px;
+      font-weight: 300;
+      line-height: 1;
+      letter-spacing: -1px;
+    }
+
+
+
+    /* RESPONSIVE CSS
+    -------------------------------------------------- */
+
+    @media (max-width: 979px) {
+
+      .container.navbar-wrapper {
+        margin-bottom: 0;
+        width: auto;
+      }
+      .navbar-inner {
+        border-radius: 0;
+        margin: -20px 0;
+      }
+
+      .carousel .item {
+        height: 500px;
+      }
+      .carousel img {
+        width: auto;
+        height: 500px;
+      }
+
+      .featurette {
+        height: auto;
+        padding: 0;
+      }
+      .featurette-image.pull-left,
+      .featurette-image.pull-right {
+        display: block;
+        float: none;
+        max-width: 40%;
+        margin: 0 auto 20px;
+      }
+    }
+
+
+    @media (max-width: 767px) {
+
+      .navbar-inner {
+        margin: -20px;
+      }
+
+      .carousel {
+        margin-left: -20px;
+        margin-right: -20px;
+      }
+      .carousel .container {
+
+      }
+      .carousel .item {
+        height: 300px;
+      }
+      .carousel img {
+        height: 300px;
+      }
+      .carousel-caption {
+        width: 65%;
+        padding: 0 70px;
+        margin-top: 100px;
+      }
+      .carousel-caption h1 {
+        font-size: 30px;
+      }
+      .carousel-caption .lead,
+      .carousel-caption .btn {
+        font-size: 18px;
+      }
+
+      .marketing .span4 + .span4 {
+        margin-top: 40px;
+      }
+
+      .featurette-heading {
+        font-size: 30px;
+      }
+      .featurette .lead {
+        font-size: 18px;
+        line-height: 1.5;
+      }
+
+    }
+    </style>
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -18,70 +252,127 @@
     <![endif]-->
 
     <!-- Fav and touch icons -->
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="ico/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="ico/apple-touch-icon-114-precomposed.png">
-      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="ico/apple-touch-icon-72-precomposed.png">
-                    <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
-                                   <link rel="shortcut icon" href="ico/favicon.png">
-	<script src="js/modernizr-2.6.2.min.js"></script>
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+                    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
+                                   <link rel="shortcut icon" href="../assets/ico/favicon.png">
   </head>
-  
 
   <body>
-	<!--[if lt IE 7]>
-            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-	<![endif]-->
-  <div class="navbar navbar-inverse navbar-fixed-top">
-            <div class="navbar-inner">
-                <div class="container">
-                    <a class="brand" href="#">Intern Corner</a>
-                    
-                </div>
+
+
+
+    <!-- NAVBAR
+    ================================================== -->
+
+
+
+
+    <!-- Carousel
+    ================================================== -->
+    <div id="myCarousel" class="carousel slide">
+      <div class="carousel-inner">
+        <div class="item active">
+          <img src="img/slide-01.jpg" alt="">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>Intern Corner</h1>
+			  <br/>
+              <p class="lead">Intern Corner is a web based application that provides vital updates about industrial,
+			  research and rural internships to the students of DA-IICT.</p>
+			  <br/>
+              <a class="btn btn-large btn-primary" href="signin.html">Login Now !</a>
             </div>
+          </div>
         </div>
+        <div class="item">
+          <img src="img/slide-02.jpg" alt="">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>Discussion Corner</h1>
+			  <br/>
+				<p class="lead">This allows various categories of users to upload various
+								internship opportunities in a structured format, and also to share various
+								views and have different discussions which may arise in the due course.It is a common platform where
+								students can interact with alumni as well as other users and
+								can be helpful to clear various doubts.
+				</p>
+				<br/>
+              <a class="btn btn-large btn-primary" href="signup.html">Regsiter Now !</a>
+            </div>
+          </div>
+        </div>
+		<div class="item">
+          <img src="img/slide-02.jpg" alt="">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>Oppurtunity Corner</h1>
+			  <br/>
+				<p class="lead">This allows various categories of users to upload various internship
+								opportunities in a structured format. There will be several fields that the user
+								will be asked to fill up while posting, like company name, stipend, work field,
+								duration, etc.
+								Here professors can also post research internship opportunities and they can
+								also include a form that can help him to select students for his project.
+				<br/>
+              <a class="btn btn-large btn-primary" href="signup.html">Regsiter Now !</a>
+            </div>
+          </div>
+        </div>
+        <div class="item">
+          <img src="img/slide-03.jpg" alt="">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>Experience Corner</h1>
+			  <br/>
+              <p class="lead">Students and Alumni can share all their
+								experiences in their profile in a structured form which will prove useful to internship seeking students. Their experiences will be
+								categorized based on their field, name of company/organization or professor
+								in case of research internship.</p>
+								<br/>
+              <a class="btn btn-large btn-primary" href="signup.html">Regsiter Now !</a>
+            </div>
+          </div>
+        </div>
+		<div class="item">
+          <img src="img/slide-01.jpg" alt="">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>Search Corner</h1>
+			  <br/>
+              <p class="lead">Are you looking for something??? Maybe this is the right corner to look for. 
+								Students,professors and alumni can search for information using certain search filters to get the information
+								they were seeking. Search through tags and other details and dig out your own information! </p>
+								<br/>
+              <a class="btn btn-large btn-primary" href="signup.html">Regsiter Now !</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <a class="left carousel-control" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+      <a class="right carousel-control" href="#myCarousel" data-slide="next">&rsaquo;</a>
+    </div><!-- /.carousel -->
 
-    <div class="container">
-
-      <!--form class="form-signin">
-        <h2 class="form-signin-heading">Please sign in</h2>
-        <input type="email" class="input-block-level" placeholder="Something@daiict.ac.in" required>
-        <input type="password" class="input-block-level" placeholder="Password" required>
-
-        <input type="submit" class="btn btn-large btn-primary" formaction="404.html" value="Sign in">
-		<input type="submit" class="btn btn-large btn-primary" formaction="signup.html" value="Sign up" >
-      </form -->
-	  
-
-		<form class="form-horizontal">
-			<h2 class="form-signin-heading">Please sign in</h2>
-			<div class="control-group">
-			<label class="control-label">Email address</label>
-				<div class="controls">
-				<input type="email" data-validation-email-message="Not a valid email id!" pattern="[A-Za-z0-9._%+-]+@daiict.ac.in" data-validation-pattern-message="Must be a valid DA-IICT email id" placeholder="someone@daiict.ac.in" required/>
-				</div>
-			</div>
-			<div class="control-group">
-			<label class="control-label">Password</label>
-				<div class="controls">
-				<input type="password" placeholder="password" required/>
-				</div>
-			</div>
-			<div class="submit-buttons">
-				<input type="submit" class="btn btn-large btn-primary" formaction="404.html" value="Sign in"/>
-				<a type="submit" class="btn btn-large btn-primary" href="signup.html" >Sign Up</a>
-			</div>
-		</form>
 
 
 
-    </div> <!-- /container -->
 
-    <!-- javascript
+
+      <!-- FOOTER -->
+      
+
+    </div><!-- /.container -->
+	<footer class="container">
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        <p>&copy; Intern Corner 2013 SEN Group 8. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+      </footer>
+
+
+    <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> <!-- or use local jquery -->
-	<script src="js/jqBootstrapValidation.js"></script>
-    <script src="js/jquery.js"></script>
+    <script src="js/jquery-1.9.1.min.js"></script>
     <script src="js/bootstrap-transition.js"></script>
     <script src="js/bootstrap-alert.js"></script>
     <script src="js/bootstrap-modal.js"></script>
@@ -94,12 +385,16 @@
     <script src="js/bootstrap-collapse.js"></script>
     <script src="js/bootstrap-carousel.js"></script>
     <script src="js/bootstrap-typeahead.js"></script>
-
-	<script>
-	$(function () { $("form,input").not("[type=submit]").jqBootstrapValidation(); } );
-	</script>
-	
-	
-
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> <!-- or use local jquery -->
+	<script src="js/jqBootstrapValidation.js"></script>
+    <script>
+      !function ($) {
+        $(function(){
+          // carousel demo
+          $('#myCarousel').carousel()
+        })
+      }(window.jQuery)
+    </script>
+    <script src="js/holder/holder.js"></script>
   </body>
 </html>

@@ -1,10 +1,8 @@
 <?php
-echo 111;
-include './User.php';
-require_once '../includes/initialize_database.php';
-echo 333;/**
-* 
-*/
+//echo 111;
+require_once __DIR__.'/./User.php';
+require_once __DIR__.'/../includes/initialize_database.php';
+//echo 333;
 class Student extends User
 {
 	var $field;
