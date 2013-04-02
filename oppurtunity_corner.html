@@ -25,6 +25,11 @@
 				}
 			}
 		</script>
+		<script>
+		function load(){
+		document.getElementById("username_tag").innerHTML=sessionStorage.getItem("user");
+		}
+		</script>
 		<style>
 			.dropdown{
 			margin-left:100px;
@@ -149,7 +154,7 @@
 			
 		</style>
 	</head>
-	<body>
+	<body onload="load()">
 		<div class="navbar navbar-inverse navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container">
@@ -162,7 +167,7 @@
 						<li><a href="experience_corner.html">Experience Corner</a></li>
 						<li><a href="search_main">Search Corner</a></li>
 						<li class="dropdown">
-						  <a href="#" class="dropdown-toggle" data-toggle="dropdown">skyrideraj <b class="caret"></b></a>
+						  <a id="username_tag" href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="caret"></b></a>
 						  <ul class="dropdown-menu">
 							<li class="nav-header">Profile actions</li>
 							<li><a href="#">Edit Profile</a></li>

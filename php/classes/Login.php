@@ -46,14 +46,14 @@ class Login
 
 		}
 		if($num_rows==1){
-			//username and password exits and are cool
+			//username and password exists and are cool
 			$user = new User($result[0]['user_name'],$result[0]['full_name'],$result[0]['email'],$result[0]['account_type'],$result[0]['contact_details']);
 
 			//start session variables
 			session_start();
 			$_SESSION['user'] = $user;
 			//check if student
-			if($result[0]['account_type']==2)//student
+			/*if($result[0]['account_type']==2)//student
 				{
 					
 					//extract student's information from student table
@@ -62,7 +62,7 @@ class Login
 					if($result[0]['profile_complete']==0){
 						//user should be redirected to build profile page
 						//accepted
-						return array('status_code'=>202,'detail'=>'build_profile');
+						return array('status_code'=>201,'detail'=>'build_profile');
 
 					}
 					else{
@@ -71,7 +71,8 @@ class Login
 						return array('status_code'=>202,'detail'=>'home screen');
 					}
 
-				}
+				}*/
+				return array('status_code'=>202,'detail'=>'home screen');
 			
 
 		}			

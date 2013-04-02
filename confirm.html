@@ -35,7 +35,7 @@
 	var form = document.forms["confirmform"];
 	$.post("php/controller.php",{func:'confirm',username:form["username"].value,activation_code:form["code"].value},function(ret_data){
 		if(ret_data.status_code==200){
-			alert("You must be redirected to homepage now!");
+			window.location= "signin.html";
 		}
 		else if(ret_data.status_code==400){
 			alert("Wrong Code!");

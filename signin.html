@@ -24,6 +24,24 @@
                     <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
                                    <link rel="shortcut icon" href="ico/favicon.png">
 	<script src="js/modernizr-2.6.2.min.js"></script>
+	<script type="text/javascript">
+	function send_data(){
+	var form = document.forms["loginform"];
+	$.post("php/controller.php",{func:'login',username:form["username"].value,password:form["password"].value},function(ret_data){
+		if(ret_data.status_code==202){
+			sessionStorage.setItem("user",form["username"].value);
+			window.location= "oppurtunity_corner.html";
+		}
+		else if(ret_data.status_code==404){
+			alert("Username or password incorrect..");
+		}
+		else{
+		alert("Something wrong");
+		}
+
+	},"json");
+	}
+	</script>
   </head>
   
 
@@ -52,22 +70,22 @@
       </form -->
 	  
 
-		<form class="form-horizontal">
+		<form class="form-horizontal" name="loginform">
 			<h2 class="form-signin-heading">Please sign in</h2>
-			<div class="control-group">
-			<label class="control-label">Email address</label>
+				<div class="control-group">
+			<label class="control-label">Username</label>
 				<div class="controls">
-				<input type="email" data-validation-email-message="Not a valid email id!" pattern="[A-Za-z0-9._%+-]+@daiict.ac.in" data-validation-pattern-message="Must be a valid DA-IICT email id" placeholder="someone@daiict.ac.in" required/>
+				<input type="text" name="username" maxlength="15" minlength="5" placeholder="Username" required/>
 				</div>
 			</div>
 			<div class="control-group">
 			<label class="control-label">Password</label>
 				<div class="controls">
-				<input type="password" placeholder="password" required/>
+				<input type="password" name="password" placeholder="password" required/>
 				</div>
 			</div>
 			<div class="submit-buttons">
-				<input type="submit" class="btn btn-large btn-primary" formaction="404.html" value="Sign in"/>
+				<input type="button" class="btn btn-large btn-primary" onclick="send_data()" value="Sign in"/>
 				<a type="submit" class="btn btn-large btn-primary" href="signup.html" >Sign Up</a>
 			</div>
 		</form>
