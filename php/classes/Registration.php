@@ -1,8 +1,9 @@
-<?
+
+<?php
 /**
 * 
 */
-require_once '../includes/initialize_database.php';
+require_once __DIR__.'/../includes/initialize_database.php';
 class Registration
 {
 
@@ -34,7 +35,7 @@ class Registration
 		//mail code to email id
 	}
 	function validateDetails(){
-		$db=(new Database())->connectToDatabase();
+		$db = (new Database())->connectToDatabase();
 		$db->query("SELECT * FROM User WHERE user_name='$this->username'");
 		if($db->returned_rows>=1){
 		return false;
@@ -59,6 +60,8 @@ class Registration
 			//enter details in Activation_Codes table
 			$db = (new Database())->connectToDatabase();
 			$db->insert('Activation_Codes',array('user_name'=>$this->username,'full_name'=>$this->full_name,'email'=>$this->email,'account_type'=>$this->account_type,'password'=>$this->hashed_password,'activation_code'=>$this->activation_code));
+			return array('status_code'=>200);
+			
 		}
 	}
 
@@ -78,6 +81,7 @@ class Registration
 		$result = $db->fetch_assoc_all();
 		$db->insert('User',array('user_name' => $result[0]['user_name'], 'full_name' =>$result[0]['full_name'] ,'email' => $result[0]['email'],'account_type' => $result[0]['account_type'],'password' => $result[0]['password'],'contact_details' =>NULL));
 		$db->query("DELETE from Activation_Codes WHERE user_name='$this->username'");
+		return array('status_code'=>200);
 	}
 	
 	
@@ -87,8 +91,15 @@ class Registration
 
 //testing.....
 
-// $reg = new Registration('testuser','full name','email@email.com','sen','1',NULL);
-// $reg->handleRegistration();
+
+    /*$username = $_POST['username'];
+	$full_name = $_POST['fullname'];
+    $password = $_POST['password'];
+	$email = $_POST['email'];
+	$account_type = $_POST['category'];
+	$activation_code;
+    $reg = new Registration($username,$full_name,$email,$password,$account_type,NULL);
+    $reg->handleRegistration();*/
 // $reg = new Registration('testuser',NULL,NULL,NULL,NULL,73);
 // $reg->register();
 // session_start();

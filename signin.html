@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Sign in &middot; Intern Corner</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+		<link rel="stylesheet" href="css/home.css">
+		<link href="css/bootstrap.css" rel="stylesheet" media="screen">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="ico/apple-touch-icon-114-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="ico/apple-touch-icon-72-precomposed.png">
+                    <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
+                                   <link rel="shortcut icon" href="ico/favicon.png">
+	<script src="js/modernizr-2.6.2.min.js"></script>
+  </head>
+  
+
+  <body>
+	<!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+	<![endif]-->
+  <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="brand" href="#">Intern Corner</a>
+                    
+                </div>
+            </div>
+        </div>
+
+    <div class="container">
+
+      <!--form class="form-signin">
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <input type="email" class="input-block-level" placeholder="Something@daiict.ac.in" required>
+        <input type="password" class="input-block-level" placeholder="Password" required>
+
+        <input type="submit" class="btn btn-large btn-primary" formaction="404.html" value="Sign in">
+		<input type="submit" class="btn btn-large btn-primary" formaction="signup.html" value="Sign up" >
+      </form -->
+	  
+
+		<form class="form-horizontal">
+			<h2 class="form-signin-heading">Please sign in</h2>
+			<div class="control-group">
+			<label class="control-label">Email address</label>
+				<div class="controls">
+				<input type="email" data-validation-email-message="Not a valid email id!" pattern="[A-Za-z0-9._%+-]+@daiict.ac.in" data-validation-pattern-message="Must be a valid DA-IICT email id" placeholder="someone@daiict.ac.in" required/>
+				</div>
+			</div>
+			<div class="control-group">
+			<label class="control-label">Password</label>
+				<div class="controls">
+				<input type="password" placeholder="password" required/>
+				</div>
+			</div>
+			<div class="submit-buttons">
+				<input type="submit" class="btn btn-large btn-primary" formaction="404.html" value="Sign in"/>
+				<a type="submit" class="btn btn-large btn-primary" href="signup.html" >Sign Up</a>
+			</div>
+		</form>
+
+
+
+    </div> <!-- /container -->
+
+    <!-- javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> <!-- or use local jquery -->
+	<script src="js/jqBootstrapValidation.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap-transition.js"></script>
+    <script src="js/bootstrap-alert.js"></script>
+    <script src="js/bootstrap-modal.js"></script>
+    <script src="js/bootstrap-dropdown.js"></script>
+    <script src="js/bootstrap-scrollspy.js"></script>
+    <script src="js/bootstrap-tab.js"></script>
+    <script src="js/bootstrap-tooltip.js"></script>
+    <script src="js/bootstrap-popover.js"></script>
+    <script src="js/bootstrap-button.js"></script>
+    <script src="js/bootstrap-collapse.js"></script>
+    <script src="js/bootstrap-carousel.js"></script>
+    <script src="js/bootstrap-typeahead.js"></script>
+
+	<script>
+	$(function () { $("form,input").not("[type=submit]").jqBootstrapValidation(); } );
+	</script>
+	
+	
+
+  </body>
+</html>

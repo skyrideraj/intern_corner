@@ -7,6 +7,7 @@
 		<link href="css/bootstrap-responsive.css" rel="stylesheet" media="screen">
 		<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 		<link href="css/bootstrap.css" rel="stylesheet" media="screen">
+		<link href="css/home.css" rel="stylesheet">
 		
 		<script>    
 			var counter = 1;
@@ -25,9 +26,8 @@
 			}
 		</script>
 		<style>
-			.navbar .brand
-			{
-				float:right;
+			.dropdown{
+			margin-left:100px;
 			}
 			.accordion-heading
 			{
@@ -37,6 +37,10 @@
 			{
 				position:relative;
 				left:10px;
+			}
+			.opp_top
+			{
+			margin-top:50px;
 			}
 			.org_name_val
 			{
@@ -146,25 +150,35 @@
 		</style>
 	</head>
 	<body>
-		<div class="navbar navbar-inverse">
-			<div class="navbar-inner">
-				<div class="container">
-				<!-- .btn-navbar is used as the toggle for collapsed navbar content -->
-				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				</a>
-				<!-- Be sure to leave the brand out there if you want it shown -->
-				<a class="brand" href="#">USERNAME</a>
-				<a class="brand" href="#">HOME</a>
-				<!-- Everything you want hidden at 940px or less, place within here -->
-					<div class="nav-collapse collapse">
-					<!-- .nav, .navbar-search, .navbar-form, etc -->
+		<div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    
+                    <a class="brand" href="#">Intern Corner</a>
+                    <div class="nav-collapse collapse">
+					  <ul class="nav">
+						<li ><a href="#">Discussion Corner</a></li>
+						<li class="active"><a href="oppurtunity_corner.html">Oppurtunity Corner</a></li>
+						<li><a href="experience_corner.html">Experience Corner</a></li>
+						<li><a href="search_main">Search Corner</a></li>
+						<li class="dropdown">
+						  <a href="#" class="dropdown-toggle" data-toggle="dropdown">skyrideraj <b class="caret"></b></a>
+						  <ul class="dropdown-menu">
+							<li class="nav-header">Profile actions</li>
+							<li><a href="#">Edit Profile</a></li>
+							<li><a href="#">View Profile</a></li>
+							<li class="divider"></li>
+							<li class="nav-header">Logout</li>
+							<li><a href="#">Logout</a></li>
+						  </ul>
+						</li>
+					  </ul>
 					</div>
-				</div>
-			</div>
-		</div>
+                </div>
+            </div>
+        </div>
+
+    <div class="container">
 		<div class="opp_top">
 			<h1>Opportunity Corner</h1>
 		</div>
@@ -725,6 +739,11 @@
 			<li><a href="#">Next</a></li>
 			</ul>
 		</div>
+		
+		<footer >
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        <p>&copy; Intern Corner 2013 SEN Group 8. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+		</footer>
 		
 		
 		<script src="js/bootstrap.min.js"></script>
