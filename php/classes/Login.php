@@ -72,15 +72,19 @@ class Login
 					}
 
 				}
+			else if($result[0]['account_type']==1||$result[0]['account_type']==3){
+				//student or faculty
+				return array('status_code'=>202,'detail'=>'home screen');
+			}
 			
 
 		}			
 	}
 	
-	function logout()
+	static function logout()
 	{
 
-		if($this->checkSetAndEmpty($_SESSION['user'])){
+		if(Login::checkSetAndEmpty($_SESSION['user'])){
 			//user logged in?
 			//okay
 			unset($_SESSION['user']);
@@ -100,11 +104,11 @@ class Login
 
 
 	}
-	function forgotPasswordHandler($username){
+	static function forgotPasswordHandler($username){
 		// $db = (new Database())->connectToDatabase();
-		$this->getDatabase();
-		$this->db->query("SELECT email FROM User WHERE user_name='$username'");
-		if($this->db->returned_rows==0){
+		// $this->getDatabase();
+		$db->query("SELECT email FROM User WHERE user_name='$username'");
+		if($db->returned_rows==0){
 			//username not found
 			// 400 => 'Bad Request',
 			return array('status_code'=>400,'detail'=>'username not found');
@@ -144,9 +148,16 @@ class Login
 }
 // session_start();
 // $login = new Login("sen","password");
+// print($_SESSION['user']);
 // $ret_val = $login -> validateAndLogin();
 // print_r($ret_val);
 // print_r($_SESSION['user']);
 // $login -> logout();
 // print_r($_SESSION['user']);
+// 
+session_start();
+$login = new Login("testuser2","password");
+
+$ret_val = $login->validateAndLogin();
+print($_SESSION['user']->username);
 ?>

@@ -1,46 +1,76 @@
 <?php
 
-require_once '../includes/initialize_database.php';
-class experince
+require_once __DIR__.'/../includes/initialize_database.php';
+class Comment
 {
 var $username;
 var $comment;
-var $postid;
-var $commentid;
+var $post_id;
+var $comment_id;
 
 
-function __construct($username,$postid,$id,$text)
+function __construct($username,$post_id,$comment_id,$text)
 {
-$this->commentid=$id;
+$this->comment_id=$comment_id;
 $this->username=$username;
 $this->comment=$text;
-$this->postid=$postid;
+$this->post_id=$post_id;
 }
 
 function insertIntoDatabase()
 {
 $db = (new Database())->connectToDatabase();
-$db->query("INSERT INTO post_comments values('$this->comment','this->commentid','$this->postid','$this->description');");
+$db->query("SELECT * from post_comments where comment_id=$this->comment_id");
+$rows=$db->returned_rows;
+if($rows==1)
+{
+	return array('status_code'=>400, 'detail'=>'comment already exist');
+}
+else
+{
+$db->query("INSERT INTO post_comments values('$this->comment','$this->comment_id','$this->post_id','$this->username');");
+return array('status_code'=>200);
+}
 }
 
 
 function deleteComment()
 {
 $db = (new Database())->connectToDatabase();
-$db->query("DELETE from post_comments where commentid='$this->commentid';");
+$db->query("SELECT * from post_comments where comment_id='$this->comment_id';");
+$rows=$db->returned_rows;
+if($rows==1)
+{
+$db->query("DELETE from post_comments where comment_id='$this->comment_id';");
+return array('status_code'=>200);
+}
+else 
+return array('status_code'=>404,'detail'=>'comment not found');
 }
 
 
 function editComment()
 {
 $db = (new Database())->connectToDatabase();
-$db->query("UPDATE post_comments set comment='$this->comment' where commentid='$this->commentid' ;");
+$db->query("SELECT * from post_comments where comment_id='$this->comment_id';");
+$rows=$db->returned_rows;
+if($rows==1)
+{
+$db->query("UPDATE post_comments set comment='$this->comment' where comment_id='$this->comment_id' ;");
+return array('status_code'=>200);
+}
+else 
+return array('status_code'=>404,'detail'=>'comment not found');
 }
 
 
 
 }
 
-//$eid=new experince(1,1,1,"bb");
-$//eid->editComment();
+//$eid=new Comment(11,11,11,"babbb");
+//$eid->insertIntoDatabase();
+//echo $eid->insertIntoDatabase()['detail'];
+//$eid->editComment();
+//$eid->deleteComment();
+//echo $eid->deleteComment()['detail'];
 ?>

@@ -1,0 +1,18 @@
+<html>                                                                  
+ <head>                                                                  
+ <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+ </head>                                                                 
+ <body>
+   <input type="button" id="bakwas">
+    <script type="text/javascript">                                         
+ $(document).ready(function() {
+   $("#bakwas").click(function() {
+     $.post('http://54.249.240.120/qcorner/login',function(result){
+     	alert("result");
+     });
+   });
+ });
+ </script>                                                               
+
+ </body>                                                                 
+ </html>

@@ -19,15 +19,25 @@ class Answer{
 		return $this->db;
 	}
 	
-	function __construct($answer_id,$post_id,$username,$answer_text,$total_votes,$timestamp)
+	function __construct($answer_id,$post_id,$username,$answer_text,$timestamp)
 	{
 		# code...
+		if($answer_id==NULL){
+		$this->post_id=$post_id;
+		$this->username=$username;
+		$this->answer_text=$answer_text;
+		$this->total_votes=0;	
+
+			
+		}
+		else{
 		$this->post_id=$post_id;
 		$this->answer_id=$answer_id;
 		$this->username=$username;
 		$this->answer_text=$answer_text;
-		$this->total_votes=$total_votes;
 		$this->timestamp=$timestamp;
+
+		$this->calculateVotes();}
 	}
 	function calculateVotes(){
 		$this->getDatabase();
@@ -37,7 +47,7 @@ class Answer{
 		for($i=0;$i<($this->db->returned_rows);$i++){	
 			$this->total_votes = $this->total_votes + $result[$i]['vote_type'];
 		}
-		echo $this->total_votes;
+		// echo $this->total_votes;
 
 
 	}
@@ -127,7 +137,8 @@ class Answer{
 ////////////
 
 
-// $ans = new Answer(1,NULL,'inuishan',NULL,NULL,NULL);
+// $ans = new Answer(1,1,'inuishan',NULL,NULL);
+// print_r($ans);
 // $ans->upVote('inuishan');
 // $ans->upVote('inui');
 // $ans->upVote('inshan');

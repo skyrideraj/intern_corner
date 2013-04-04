@@ -59,25 +59,49 @@ class Registration
 			//enter details in Activation_Codes table
 			$db = (new Database())->connectToDatabase();
 			$db->insert('Activation_Codes',array('user_name'=>$this->username,'full_name'=>$this->full_name,'email'=>$this->email,'account_type'=>$this->account_type,'password'=>$this->hashed_password,'activation_code'=>$this->activation_code));
+			return array('status_code'=>200);
 		}
 	}
 
-	function register(){
+	static function register($username,$activation_code){
 		
 		//called when user enters activation code
 		//construct an object with username, NULL, NULL, NULL ,NULL
 
 		//check if correct activation code
 		$db = (new Database())->connectToDatabase();
-		$db->query("SELECT * FROM Activation_Codes WHERE user_name='$this->username' AND activation_code='$this->activation_code'");
+		$db->query("SELECT * FROM Activation_Codes WHERE user_name='$username' AND activation_code='$activation_code'");
 		if($db->returned_rows==0){
 			return array('status_code'=>400,'detail'=>"username doesn't exist in the table or wrong activation code");
 		}
 		//successful
-		//move entries to User table
+		//move entries to User table and account type table
 		$result = $db->fetch_assoc_all();
 		$db->insert('User',array('user_name' => $result[0]['user_name'], 'full_name' =>$result[0]['full_name'] ,'email' => $result[0]['email'],'account_type' => $result[0]['account_type'],'password' => $result[0]['password'],'contact_details' =>NULL));
-		$db->query("DELETE from Activation_Codes WHERE user_name='$this->username'");
+		$db->query("DELETE from Activation_Codes WHERE user_name='$username'");
+		switch ($result[0]['account_type']) {
+			case 2:
+				# code...
+				$username = $result[0]['user_name'];
+				$db->query("INSERT INTO Student (user_name,profile_complete) VALUES('$username',0)");
+				break;
+			case 1:
+				//faculty
+				$username = $result[0]['user_name'];
+				$db->query("INSERT INTO faculty (user_name) VALUES('$username')");
+				break;
+			case 3:
+				$username = $result[0]['user_name'];
+				$db->query("INSERT INTO alumni (user_name) VALUES('$username')");
+				break;		
+			
+			default:
+				# code...
+				break;
+		}
+
+		
+		return array('status_code'=>200);
 	}
 	
 	
@@ -87,11 +111,12 @@ class Registration
 
 //testing.....
 
-// $reg = new Registration('testuser','full name','email@email.com','sen','1',NULL);
+// $reg = new Registration('testuser8','full name','email@email.com','sen','1',NULL);
 // $reg->handleRegistration();
 // $reg = new Registration('testuser',NULL,NULL,NULL,NULL,73);
 // $reg->register();
 // session_start();
 // print_r($_SESSION['user']);
+Registration::register('testuser8',8690);
 
 ?>
