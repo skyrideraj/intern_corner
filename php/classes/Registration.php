@@ -82,6 +82,7 @@ class Registration
 		switch ($result[0]['account_type']) {
 			case 2:
 				# code...
+				echo "yup";
 				$username = $result[0]['user_name'];
 				$db->query("INSERT INTO Student (user_name,profile_complete) VALUES('$username',0)");
 				break;
@@ -111,12 +112,12 @@ class Registration
 
 //testing.....
 
-// $reg = new Registration('testuser8','full name','email@email.com','sen','1',NULL);
+// $reg = new Registration('testuser13','full name','email@email.com','sen','2',NULL);
 // $reg->handleRegistration();
 // $reg = new Registration('testuser',NULL,NULL,NULL,NULL,73);
 // $reg->register();
 // session_start();
 // print_r($_SESSION['user']);
-Registration::register('testuser8',8690);
+// Registration::register('testuser13',7904);
 
 ?>

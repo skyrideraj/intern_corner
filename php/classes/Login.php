@@ -53,7 +53,7 @@ class Login
 			session_start();
 			$_SESSION['user'] = $user;
 			//check if student
-			/*if($result[0]['account_type']==2)//student
+			if($result[0]['account_type']==2)//student
 				{
 					
 					//extract student's information from student table
@@ -71,7 +71,7 @@ class Login
 						return array('status_code'=>202,'detail'=>'home screen');
 					}
 
-				}*/
+				}
 			else if($result[0]['account_type']==1||$result[0]['account_type']==3){
 				//student or faculty
 				return array('status_code'=>202,'detail'=>'home screen');
@@ -83,7 +83,7 @@ class Login
 	
 	static function logout()
 	{
-
+		session_start();
 		if(Login::checkSetAndEmpty($_SESSION['user'])){
 			//user logged in?
 			//okay
@@ -96,7 +96,7 @@ class Login
 			return array('status_code'=>400);
 		}
 	}
-	function checkSetAndEmpty($var){
+	static function checkSetAndEmpty($var){
 		if(isset($var)&&!empty($var)){
 			return true;
 		}
@@ -146,18 +146,21 @@ class Login
 	}
 
 }
+
 // session_start();
-// $login = new Login("sen","password");
-// print($_SESSION['user']);
+// $login = new Login("testuser13","sen");
+// print_r($_SESSION['user']);
 // $ret_val = $login -> validateAndLogin();
 // print_r($ret_val);
 // print_r($_SESSION['user']);
 // $login -> logout();
 // print_r($_SESSION['user']);
 // 
-session_start();
-$login = new Login("testuser2","password");
+// Login::logout();
+// session_start();
+// $login = new Login("sen","password");
 
-$ret_val = $login->validateAndLogin();
-print($_SESSION['user']->username);
+// $ret_val = $login->validateAndLogin();
+// print_r($ret_val);
+// print($_SESSION['user']->username);
 ?>

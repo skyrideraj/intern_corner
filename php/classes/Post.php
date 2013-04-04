@@ -1,8 +1,5 @@
 <?
-// phpinfo();
-/**
-* 
-*/
+
 require_once __DIR__.'/../includes/initialize_database.php';
 require_once __DIR__.'/../includes/GlobalConstants.php';
 require_once __DIR__.'/./Answer.php';
@@ -57,25 +54,42 @@ class Post
 			// echo 1;
 			$db->query("SELECT * FROM Student WHERE user_name='$username'");
 			$result = $db->fetch_assoc_all();
+			// print_r($result);
 			$num_results=$db->returned_rows;
 
 			if($num_results==0){
 				//no post has been added by user
-				echo 1;
+				// echo 1;
 			}
 			else{
-				echo 'inside';
-				$reputation = $result['reputation'];
+				// echo 'inside';
+				$reputation = $result[0]['reputation'];
 				if($reputation<$threshold){
 				//retrieve his last limit posts and then check their timestamps
 					$db->query("SELECT * FROM post WHERE user_name = '$username' LIMIT $limit_of_day");
 					$results = $db->fetch_assoc_all();
 					$num_results = $db->returned_rows;
-					if($num_results>$limit_of_day){
+					// echo "no of results "+$num_results;
+					$count = 0;
+					if($num_results==$limit_of_day){
 						//retrieve timestamps of the posts
 						for($i=0;$i<$num_results;$i++){
-							$timestamp = $result[i]['timestamp'];
-							echo $timestamp;
+							$timestamp = $results[$i]['timestamp'];
+							// echo "hdjsdkjsadfklsadfklsdnfklsdnfkl";
+							// echo $timestamp;
+							$date_year = explode(" ",$timestamp);
+							$day = explode("-",$date_year[0])[2];
+							$day = intval($day);
+							$ser_day = intval(date("d"));
+							// echo $ser_day;
+							if($day==$ser_day){
+								$count++;
+							}
+
+							// echo '<br>';
+						}
+						if($count==$limit_of_day){
+							$allowed_to_post=0;
 						}
 					}
 				}
@@ -87,9 +101,12 @@ class Post
 		if($allowed_to_post==1){
 
 			$db->query("INSERT INTO post (title,user_name,description,closed) VALUES('$this->title','$username','$this->description',0)");
+			return array('status_code'=>200);
+
 		}
 		else{
-
+			// forbidden
+			return array('status_code'=>403,'detail'=>"User exceeded the limit");
 		}
 		
 	}
@@ -102,6 +119,7 @@ class Post
 		$db->query("SELECT * FROM post ORDER BY timestamp DESC LIMIT $no_of_posts");
 		$result = $db->fetch_assoc_all();
 		$rows_ret = $db->returned_rows;
+
 		// print_r($result);
 		//$result contains all results we want for specific page
 		$low = $page_no*$page_length;
@@ -109,9 +127,12 @@ class Post
 		$high = $low+$page_length;
 		// echo 'low'.$low.' high '.$high.' rows '.$rows_ret.'<br>';
 		$results_to_send = array();
+		$count = 0;
 		for($i=$low;($i<$high)&&($i<$rows_ret);$i++){
 			// echo $result[$i]['post_id'];
 			// echo '<br>';
+			
+			$count++;
 			
 			$total_votes = Post::calculateVotes($result[$i]['post_id']);
 			
@@ -125,6 +146,10 @@ class Post
 			array_push($results_to_send, $ques);
 				
 		}
+		if($count==0){
+			return array("status_code"=>204,"detail"=>"No more content");
+		}
+		array_push($results_to_send);
 		return $results_to_send;
 		
 
@@ -399,8 +424,10 @@ class Post
 //////////////////////
 // add post testing //
 //////////////////////
-session_start();
-echo $_SESSION['user']->username;
-$post = new Post(NULL,'testT1','testd1',NULL,NULL,$_SESSION['user']->username,0,NULL,NULL,0,0);
-$post->addPost();
+// session_start();
+// echo $_SESSION['user']->username;
+// session_start();
+// $post = new Post(NULL,'testT1','testd1',NULL,NULL,$_SESSION['user']->username,0,NULL,NULL,0,0);
+// $rr = $post->addPost();
+// print_r($rr);
 ?>
