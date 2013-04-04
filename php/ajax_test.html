@@ -8,25 +8,16 @@
 
 	<script type="text/javascript">
 	function send_data(){
-		// alert("hi");
-		alert(document.getElementById("username").value);
-	$.post("controller.php",{func:'login',username:"sen",password:"password"},function(ret_data){
+	$.post("controller.php",{func:'login',username:'sen',password:'password'},function(ret_data){
 		if(ret_data.status_code==202){
-			 // xx.innerHTML=ret_data[i]['post_title']
+			window.location= "demo.html";
 		}
 
 	},"json");
-	return false;
 }
-
-</script>
-
-<form onsubmit="return send_data()" action="#">
-username:<input type="text" id="username">
-password:<input type="text" id="password">
-<a onclick="send_data()" href="#">Submit</a>
-</form>
-
-	
+// alert("Hello1");
+send_data();
+// alert("Hello2");
+	</script>
 </body>
 </html>
