@@ -385,6 +385,49 @@ class Post
 		
 	}
 
+	static function delete($post_id){
+		session_start();
+		$threshold_to_delete = 50; //reputation
+		$db=(new Database)->connectToDatabase();
+		$username = $_SESSION['username']->username;
+		//check if user is the author
+		$db->query("SELECT * FROM post WHERE post_id=$post_id");
+		$results = $db->fetch_assoc_all();
+		$post_author = $results['user_name'];
+		if($post_author==$username || ($_SESSION['user']->account_type==1)|| ($_SESSION['user']->account_type==3)){
+			$db->query("DELETE FROM post WHERE post_id=$post_id");
+			return array('status_code'=>200,'detail'=>'deleted');
+		}
+		// fetch reputation of the current user .... he is a student
+		$db->query("SELECT * FROM Student WHERE user_name = '$username'");
+		$results = $db->fetch_assoc_all();
+		$reputation = $results['reputation'];
+		if($reputation>$threshold_to_delete){
+			
+			//has user already requested?
+			$db->query("SELECT * FROM post_close_requests WHERE post_id=$post_id AND user_name='$username'");
+			if($db->returned_rows==1){
+				// bad request
+				return array('status_code'=>400,'detail'=>'already requested');
+			}
+						// insert into close request
+			$db->query("INSERT INTO post_close_requests VALUES($post_id,$username)");
+			//calculate the new value
+			$db->query("SELECT * FROM post_close_requests WHERE post_id=$post_id");
+			$num_results = $db->returned_rows;
+			if($num_results>=3){
+				//delete the post
+				$db->query("DELETE FROM posts WHERE post_id=$post_id");
+				return array('status_code'=>200,'detail'=>'deleted');
+			}
+
+		}
+		
+		return array('status_code'=>400,'detail'=>'not enough reputation');
+
+		$db=null;
+	}
+
 
 }
 
