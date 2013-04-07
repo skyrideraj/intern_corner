@@ -2,8 +2,8 @@
 /**
 * 
 */
-require_once '../includes/initialize_database.php';
-require_once 'User.php';
+require_once __DIR__.'/../includes/initialize_database.php';
+require_once __DIR__.'/User.php';
 class Answer{
 	var $post_id;
 	var $answer_id;
@@ -12,13 +12,7 @@ class Answer{
 	var $total_votes;
 	var $timestamp;
 	var $db;
-	function getDatabase(){
-		if(!isset($this->db)){
-			$this->db = (new Database())->connectToDatabase();
-		}
-		return $this->db;
-	}
-	
+
 	function __construct($answer_id,$post_id,$username,$answer_text,$timestamp)
 	{
 		# code...
@@ -39,6 +33,33 @@ class Answer{
 
 		$this->calculateVotes();}
 	}
+	function addAnswer(){
+		$db = (new Database)->connectToDatabase();
+		//has user already answered
+		$db->query("SELECT * FROM post_answer WHERE post_id=$this->post_id AND user_name='$this->username'");
+		if($db->returned_rows==1){
+			// BAD REQUEST
+			// echo 'hola';
+			return array('status_code'=>400,'detail'=>'user already answered');
+		}
+		// $username = 
+		
+		$db->query("INSERT INTO post_answer (post_id,answer,user_name) VALUES ($this->post_id,'$this->answer_text','$this->username')");
+		return array('status_code'=>200);
+
+
+	}
+
+
+
+	function getDatabase(){
+		if(!isset($this->db)){
+			$this->db = (new Database())->connectToDatabase();
+		}
+		return $this->db;
+	}
+	
+	
 	function calculateVotes(){
 		$this->getDatabase();
 		$this->db->query("SELECT vote_type FROM post_answer_votes WHERE answer_id=$this->answer_id");
@@ -125,8 +146,18 @@ class Answer{
 		}
 
 	
-	function delete($username){
+	static function delete($username,$post_id,$answer_id){
 		//check if user is the author??
+		$db=(new Database())->connectToDatabase();
+		$username = $_SESSION['user']->username;
+		$db->query("SELECT * FROM post_answer WHERE answer_id=$answer_id AND post_id=$post_id AND user_name=$username");
+		if($db->returned_rows==0){
+			// bad request
+			return array('status_code'=>400,);
+		}
+		$db->query("DELETE FROM post_answer WHERE answer_id=$answer_id AND post_id=$post_id");
+		return array('status_code'=>200);
+		
 
 
 	}
@@ -150,5 +181,13 @@ class Answer{
 // $ans->calculateVotes();
 // Answer::upVote(1);
 
+
+
+////////////////////////
+// add answer testing //
+////////////////////////
+// session_start();
+// $ans = new Answer(NULL,1,$_SESSION['user']->username,'Hi I am dynamically attached answer',NULL);
+// $ans->addAnswer();
 
 ?>

@@ -88,6 +88,7 @@ class Login
 			//user logged in?
 			//okay
 			unset($_SESSION['user']);
+			session_destroy();
 			return array('status_code'=>200);
 
 		}
@@ -147,10 +148,10 @@ class Login
 
 }
 
-// session_start();
-// $login = new Login("testuser13","sen");
+session_start();
+$login = new Login("testuser13","sen");
 // print_r($_SESSION['user']);
-// $ret_val = $login -> validateAndLogin();
+$ret_val = $login -> validateAndLogin();
 // print_r($ret_val);
 // print_r($_SESSION['user']);
 // $login -> logout();

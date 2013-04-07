@@ -2,7 +2,7 @@
 /**
 * 
 */
-require_once '../includes/initialize_database.php';
+require_once __DIR__.'/../includes/initialize_database.php';
 class Registration
 {
 

@@ -7,14 +7,16 @@ var $username;
 var $comment;
 var $post_id;
 var $comment_id;
+var $timestamp;
 
 
-function __construct($username,$post_id,$comment_id,$text)
+function __construct($username,$post_id,$comment_id,$text,$timestamp)
 {
 $this->comment_id=$comment_id;
 $this->username=$username;
 $this->comment=$text;
 $this->post_id=$post_id;
+$this->timestamp = $timestamp;
 }
 
 function insertIntoDatabase()

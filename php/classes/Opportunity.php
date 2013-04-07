@@ -9,35 +9,54 @@ require_once __DIR__.'/comment.php';
 class Post
 {
 
-	var $post_id;
+	// var $post_id;
+	// var $title;
+	// var $description;
+	// var $answers;
+	// var $comments;
+	// var $username;
+	// var $total_votes;
+	// var $tags;
+	// var $timestamp;
+	// var $closed;
+	// var $no_of_close_requests;
+
+	var $opportunity_id;
 	var $title;
 	var $description;
-	var $answers;
-	var $comments;
-	var $username;
-	var $total_votes;
+	var $deadline;
+	var $start_date;
+	var $end_date;
+	var $stipend;
+	var $organization;
+	var $location;
 	var $tags;
 	var $timestamp;
-	var $closed;
-	var $no_of_close_requests;
 	
-	function __construct($post_id, $title, $description, $answers, $comments, $username, $total_votes, $tags, $timestamp, $closed, $no_of_close_requests)
+	function __construct($opportunity_id, $title, $description, $deadline, $start_date, $end_date, $stipend, $organization, $location, $tags, $timestamp)
 	{
 		# code...
-	$this->post_id=$post_id;
+	$this->opportunity_id=$opportunity_id;
 	$this->title=$title;
 	$this->description=$description;
-	$this->answers=$answers;
-	$this->comments=$comments;
-	$this->username=$username;
-	$this->total_votes=$total_votes;
-	$this->tags=$tags;
+	$this->deadline=$deadline;
+	$this->start_date=$start_date;
+	$this->end_date=$end_date;
+	$this->stipend=$stipend;
+	$this->organization=$organization;
+	$this->location=$location;
+	$this->tags = $tags;
 	$this->timestamp=$timestamp;
-	$this->closed=$closed;
-	$this->no_of_close_requests=$no_of_close_requests;
+	
 	}
 
-	function addPost(){
+
+
+
+
+
+	
+	function addOpportunity(){
 		$threshold = 50;
 		$limit_of_day = 3;
 		$allowed_to_post = 1;
@@ -177,7 +196,7 @@ class Post
 		$result = $db->fetch_assoc_all();
 		$comment_array = array();
 		for($i=0;$i<$db->returned_rows;$i++){
-			$comment = new Comment($result[$i]['user_name'],$post_id,$result[$i]['comment_id'],$result[$i]['comment'],$result[$i]['timestamp']);
+			$comment = new Comment($result[$i]['user_name'],$post_id,$post_id,$result[$i]['comment_id'],$result[$i]['comment'],$result[$i]['timestamp']);
 			$comment->db=NULL;
 			array_push($comment_array,$comment);
 
@@ -226,7 +245,7 @@ class Post
 	}
 	static function addAnswer($ans_obj){
 		//check if user has already voted?
-		// var_dump($ans_obj);
+		var_dump($ans_obj);
 		session_start();
 		$username = $_SESSION['user']->username;
 		$db = (new Database)->connectToDatabase();
@@ -304,7 +323,7 @@ class Post
 		//finally insert his vote
 		$db->insert('post_votes',array('post_id'=>$post_id,'user_name'=>$username,'vote_type'=>1));
 		//200=OKAY
-		return array('status_code'=>200,'tot_votes'=>Post::calculateVotes($post_id));
+		return array('status_code'=>200);
 		}
 		else{
 			//user has already voted on this post
@@ -337,7 +356,7 @@ class Post
 		//finally insert his vote
 		$db->insert('post_votes',array('post_id'=>$post_id,'user_name'=>$username,'vote_type'=>-1));
 		//200=OKAY
-		return array('status_code'=>200,'tot_votes'=>Post::calculateVotes($post_id));
+		return array('status_code'=>200);
 		}
 		else{
 			//user has already voted on this post

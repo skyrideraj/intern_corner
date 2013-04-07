@@ -9,8 +9,9 @@
 	<script type="text/javascript">
 	function send_data(){
 	$.post("controller.php",{func:'login',username:'sen',password:'password'},function(ret_data){
-		if(ret_data.status_code==202){
-			window.location= "demo.html";
+		if(ret_data.status_code==201){
+			// window.location= "demo.html";
+			alert("hola");
 		}
 
 	},"json");
