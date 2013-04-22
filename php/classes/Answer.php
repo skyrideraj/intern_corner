@@ -2,8 +2,8 @@
 /**
 * 
 */
-require_once '../includes/initialize_database.php';
-require_once 'User.php';
+require_once __DIR__.'/../includes/initialize_database.php';
+require_once __DIR__.'/User.php';
 class Answer{
 	var $post_id;
 	var $answer_id;
@@ -19,17 +19,27 @@ class Answer{
 		return $this->db;
 	}
 	
-	function __construct($answer_id,$post_id,$username,$answer_text,$total_votes,$timestamp)
+	function __construct($answer_id,$post_id,$username,$answer_text,$timestamp)
 	{
 		# code...
+		if($answer_id==NULL){
+		$this->post_id=$post_id;
+		$this->username=$username;
+		$this->answer_text=$answer_text;
+		$this->total_votes=0;	
+
+			
+		}
+		else{
 		$this->post_id=$post_id;
 		$this->answer_id=$answer_id;
 		$this->username=$username;
 		$this->answer_text=$answer_text;
-		$this->total_votes=$total_votes;
 		$this->timestamp=$timestamp;
+
+		$this->calculateVotes($answer_id);}
 	}
-	function calculateVotes(){
+	/*function calculateVotes(){
 		$this->getDatabase();
 		$this->db->query("SELECT vote_type FROM post_answer_votes WHERE answer_id=$this->answer_id");
 		$result = $this->db->fetch_assoc_all();
@@ -37,8 +47,20 @@ class Answer{
 		for($i=0;$i<($this->db->returned_rows);$i++){	
 			$this->total_votes = $this->total_votes + $result[$i]['vote_type'];
 		}
-		echo $this->total_votes;
+		// echo $this->total_votes;
 
+
+	}*/
+	static function calculateVotes($answer_id){
+		$db = (new Database())->connectToDatabase();
+		$db->query("SELECT vote_type FROM post_answer_votes WHERE answer_id=$answer_id");
+		$result = $db->fetch_assoc_all();
+		$total_votes=0;
+		for($i=0;$i<($db->returned_rows);$i++){	
+			$total_votes = $total_votes + $result[$i]['vote_type'];
+		}
+		// echo "$post_id "."$total_votes "."<br>";
+		return $total_votes;
 
 	}
 	function edit(){
@@ -48,7 +70,7 @@ class Answer{
 
 		//controller must check if user is logged in or not
 
-		session_start();
+		@session_start();
 		$username = $_SESSION['user']->getUsername();
 		$db = (new Database())->connectToDatabase();
 		//fIRSTLY CHECK IF USER IS THE AUTHOR OF THE ANSWER?
@@ -70,7 +92,7 @@ class Answer{
 		//finally insert his vote
 		$db->insert('post_answer_votes',array('answer_id'=>$answer_id,'user_name'=>$username,'vote_type'=>1));
 		//200=OKAY
-		return array('status_code'=>200);
+		return array('status_code'=>200,'tot_votes'=>Answer::calculateVotes($answer_id));
 		}
 		else{
 			//user has already voted on this answer
@@ -83,7 +105,7 @@ class Answer{
 	static function downVote($answer_id){
 		//controller must check if user is logged in or not
 
-		session_start();
+		@session_start();
 		$username = $_SESSION['user']->getUsername();
 		$db = (new Database())->connectToDatabase();
 		//fIRSTLY CHECK IF USER IS THE AUTHOR OF THE ANSWER?
@@ -104,7 +126,7 @@ class Answer{
 		//finally insert his vote
 		$db->insert('post_answer_votes',array('answer_id'=>$answer_id,'user_name'=>$username,'vote_type'=>-1));
 		//200=OKAY
-		return array('status_code'=>200);
+		return array('status_code'=>200,'tot_votes'=>Answer::calculateVotes($answer_id));
 		}
 		else{
 			//user has already voted on this answer
@@ -115,10 +137,20 @@ class Answer{
 		}
 
 	
-	function delete($username){
-		//check if user is the author??
-
-
+	static function deleteAnswer($id)
+	{
+	@session_start();
+	$username=$_SESSION['user']->username;
+	$db = (new Database())->connectToDatabase();
+	$db->query("SELECT * from post_answer where answer_id='$id' and user_name='$username'");
+	$rows=$db->returned_rows;
+	if($rows>0){
+		$db->query("DELETE from post_answer where answer_id='$id' and user_name='$username'");
+		return array('status_code'=>200,'detail'=>'Answer deleted');
+		}
+	else{
+		return array('status_code'=>203,'detail'=>'not permitted');
+		}
 	}
 }
 
@@ -127,7 +159,8 @@ class Answer{
 ////////////
 
 
-// $ans = new Answer(1,NULL,'inuishan',NULL,NULL,NULL);
+// $ans = new Answer(1,1,'inuishan',NULL,NULL);
+// print_r($ans);
 // $ans->upVote('inuishan');
 // $ans->upVote('inui');
 // $ans->upVote('inshan');

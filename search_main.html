@@ -10,11 +10,7 @@
 			{
 				float : right;
 			}
-			.opp_top
-			{
-				z-index:1;
-				margin-top:100px;
-			}
+
 			.four_corners
 			{
 				position:relative;
@@ -57,25 +53,34 @@
 				position:relative;
 				margin-left:20px;
 			}
-			.dropdown{
-			margin-left:100px;
-			}
+		.dropdown{
+		margin-left:50px;
+		}
+		.opp_top
+				{
+				margin-top:50px;
+				}
+		.pull-right
+				{
+				margin-right:20px;
+				}
 		</style>
 		<link href="css/bootstrap-responsive.css" rel="stylesheet" media="screen">
 		<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 		<link href="css/bootstrap.css" rel="stylesheet" media="screen">
+				<script src="js/jquery-1.9.1.min.js"></script>
 	</head>
-	<body>
+	<body onload="load()">
 	<div id="myModal_1" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
    
-    <form class="form-horizontal">
+    <form class="form-horizontal" id="experience_search">
       <h2 class="form-signin-heading">Experience based Search </h2>
       <div class="control-group">
       <label class="control-label">Company Name: </label>
         <div class="controls">
-        <input type="text" maxlength="25" minlength="4" data-validation-pattern-message="sas" placeholder="Company_Name" required/>
+        <input name="company" type="text" maxlength="25" minlength="4" data-validation-pattern-message="sas" placeholder="Company_Name" required/>
         </div>
       </div>
       
@@ -84,7 +89,7 @@
  
   </div>
   <div class="modal-footer">
-          <input type="submit" class="btn btn-primary" formaction="404.html" value="Search"/>   
+          <input type="button" class="btn btn-primary" onclick="search_experience()" value="Search"/>   
     <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
      
   </div>
@@ -99,39 +104,36 @@
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
    
-    <form class="form-horizontal">
+    <form class="form-horizontal" name="opp_search">
       <h2 class="form-signin-heading">Opportunity based Search </h2>
       <div class="control-group">
       <label class="control-label">Company Name: </label>
         <div class="controls">
-        <input type="text" maxlength="25" minlength="4" data-validation-pattern-message="sas" placeholder="Company_Name" required/>
-        </div>
-      </div>
-      <div class="control-group">
-      <label class="control-label">Tag: </label>
-        <div class="controls">
-        <input type="text" maxlength="25" minlength="4" data-validation-pattern-message="sas" placeholder="Tags Interested In"/>
+		<input type="radio" name="radio" value="1" checked>&nbsp&nbsp
+        <input name="opp_org" type="text" maxlength="25" minlength="4" data-validation-pattern-message="sas" placeholder="Company_Name" required/>
         </div>
       </div>
 	  <div class="control-group">
       <label class="control-label">Location: </label>
         <div class="controls">
-        <input type="text" maxlength="25" minlength="4" data-validation-pattern-message="sas" placeholder="Location"/>
+		<input type="radio" name="radio" value="2" checked>&nbsp&nbsp
+        <input id="opp_location" type="text" maxlength="25" minlength="4" data-validation-pattern-message="sas" placeholder="Location"/>
         </div>
       </div>
 	  <div class="control-group">
-      <label class="control-label">Stipend greator than: </label>
+      <label class="control-label">Stipend: </label>
         <div class="controls">
-        <input type="range" name="points" id="stip" min="1" max="1000000" value="2500" step="10000" onChange="change()">&nbsp;&nbsp;&nbsp;<span id="stip_value"></span>
+		<input type="radio" name="radio" value="3" checked>&nbsp&nbsp
+        <input name="opp_stipend" type="range" name="points" id="stip" min="0" max="50000" value="2500" step="100" onChange="change()">&nbsp;&nbsp;&nbsp;<span id="stip_value"></span>
         </div>
       </div>
       <div class="control-group">
       <label class="control-label">Type: </label>
         <div class="controls">
-        <select>
-        	<option>Rural</option>
-        	<option>Research</option>
-        	<option>Industrial</option>
+        <select id="opp_type">
+        	<option value="rural">Rural</option>
+        	<option value="research">Research</option>
+        	<option value="industrial">Industrial</option>
         </select>
         </div>
       </div>
@@ -141,7 +143,7 @@
  
   </div>
   <div class="modal-footer">
-          <input type="submit" class="btn btn-primary" formaction="404.html" value="Search"/>   
+          <input type="button" class="btn btn-primary" onclick="search_opp()" value="Search"/>   
     <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
      
   </div>
@@ -157,29 +159,32 @@
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
    
-    <form class="form-horizontal">
-      <h2 class="form-signin-heading">Search For Faculty</h2>
+    <form class="form-horizontal" id="faculty_search" method="post">
+      <h2 class="form-signin-heading">Search For Faculty By</h2>
       <div class="control-group">
       <label class="control-label">Faculty Name: </label>
         <div class="controls">
-        <input type="text" maxlength="25" minlength="4" data-validation-pattern-message="sas" placeholder="Faculty Name" />
+		<input type="radio" name="radio" value="1" checked>&nbsp&nbsp
+        <input name="faculty_name" type="text" maxlength="25" minlength="4"  placeholder="Faculty Name" />
         </div>
       </div>
       <div class="control-group">
       <label class="control-label">Area Of Expertise </label>
         <div class="controls">
-        <input type="text" maxlength="25" minlength="4" data-validation-pattern-message="sas" placeholder="Area Of Expertise" />
+		<input type="radio" name="radio" value="2" >&nbsp&nbsp
+        <input name="faculty_expertise" type="text" maxlength="25" minlength="4" data-validation-pattern-message="sas" placeholder="Area Of Expertise" />
         </div>
       </div>
       <div class="control-group">
       <label class="control-label">Area Of Interest </label>
         <div class="controls">
-        <input type="text" maxlength="25" minlength="4" data-validation-pattern-message="sas" placeholder="Area Of Interest" />
+		<input type="radio" name="radio" value="3" >&nbsp&nbsp
+        <input type="text" name="faculty_interest" maxlength="25" minlength="4" data-validation-pattern-message="sas" placeholder="Area Of Interest" />
         </div>
       </div>
       </div>
   <div class="modal-footer">
-          <input type="submit" class="btn btn-primary" formaction="404.html" value="Search"/>   
+          <input type="button" class="btn btn-primary" onclick="search_faculty()" value="Search"/>   
     <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
      
   </div>
@@ -192,23 +197,27 @@
             <div class="navbar-inner">
                 <div class="container">
                     
-                    <a class="brand" href="#">Intern Corner</a>
                     <div class="nav-collapse collapse">
 					  <ul class="nav">
-						<li ><a href="#">Discussion Corner</a></li>
-						<li><a href="oppurtunity_corner.html">Oppurtunity Corner</a></li>
-						<li><a href="experience_corner.html">Experience Corner</a></li>
+						<li ><p class="brand">Intern Corner</p></li>
+						<li ><a href="discussion_page.html">Q & A Corner</a></li>
+						<li ><a href="opportunity_corner.html">Opportunity Corner</a></li>
+						<li ><a href="experience_corner.html">Experience Corner</a></li>
 						<li class="active"><a href="search_main.html">Search Corner</a></li>
-						<li class="dropdown">
-						  <a href="#" class="dropdown-toggle" data-toggle="dropdown">skyrideraj <b class="caret"></b></a>
+						<li class="dropdown pull-right">
+						<div class="btn-group">
+						  <a id="username_tag" class="btn btn-small btn-primary" href="#"><i class="icon-user icon-white"></i></a>
+							<a class="btn btn-small btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
 						  <ul class="dropdown-menu">
 							<li class="nav-header">Profile actions</li>
-							<li><a href="#">Edit Profile</a></li>
-							<li><a href="#">View Profile</a></li>
+							
+							<li><a href="view_profile.html">View Profile</a></li>
 							<li class="divider"></li>
-							<li class="nav-header">Logout</li>
-							<li><a href="#">Logout</a></li>
+							<li class="nav-header">Account</li>
+							<li><a href="change.html">Change Password</a></li>
+							<li><a href="#" onclick="logout()">Logout</a></li>
 						  </ul>
+						</div>
 						</li>
 					  </ul>
 					</div>
@@ -229,12 +238,10 @@
         <p class="pull-right"><a href="#">Back to top</a></p>
         <p>&copy; Intern Corner 2013 SEN Group 8. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
       </footer>
-		
-		<script src="js/bootstrap.min.js"></script>
-		<script src="js/modernizr-2.6.2.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> <!-- or use local jquery -->
+		<script src="js/modernizr-2.6.2.min.js"></script>
 		<script src="js/jqBootstrapValidation.js"></script>
-		<script src="js/jquery-1.9.1.min.js"></script>
+		<script src="js/html5slider.js"></script>
 		<script src="js/bootstrap-transition.js"></script>
 		<script src="js/bootstrap-alert.js"></script>
 		<script src="js/bootstrap-modal.js"></script>
@@ -251,6 +258,115 @@
 			$("#stip").change(function(){
 			document.getElementById("stip_value").innerHTML=($(this).val());
 			}).change();
-</script>
+		</script>
+		
+		<script>
+				function search_opp(){
+				var form = document.forms["opp_search"];
+				if(form["radio"][0].checked==true){
+					if(form['opp_org'].value=='')
+						alert("Search Query field empty!");
+					else{
+					sessionStorage.setItem("searchtype","o1");
+					sessionStorage.setItem("attribute","organization");
+					sessionStorage.setItem("value",form['opp_org'].value);
+					sessionStorage.setItem("type",form['opp_type'].value);
+					window.location= "search_output.html";
+					}
+				
+				}
+				else if(form["radio"][1].checked==true){
+					if(form['opp_location'].value=='')
+						alert("Search Query field empty!");
+					else{
+					sessionStorage.setItem("searchtype","o1");
+					sessionStorage.setItem("attribute","location");
+					sessionStorage.setItem("value",form['opp_location'].value);
+					sessionStorage.setItem("type",form['opp_type'].value);
+					window.location= "search_output.html";
+					}
+				
+				}
+				else if(form["radio"][2].checked==true){
+					if(form['opp_stipend'].value=='')
+						alert("Search Query field empty!");
+					else{
+					sessionStorage.setItem("searchtype","o1");
+					sessionStorage.setItem("attribute","stipend");
+					sessionStorage.setItem("value",form['opp_stipend'].value);
+					sessionStorage.setItem("type",form['opp_type'].value);
+					window.location= "search_output.html";
+					}
+				}
+				}
+		</script>
+		<script>
+				function search_experience(){
+				var form = document.forms["experience_search"];
+					if(form["company"].value=='')
+						alert("Search Query field empty!");
+					else{
+					sessionStorage.setItem("searchtype","e1");
+					sessionStorage.setItem("company",form["company"].value);
+					window.location= "search_output.html";
+					}
+					}
+		</script>
+		<script>
+				function search_faculty(){
+				var form = document.forms["faculty_search"];
+				if(form["radio"][0].checked==true){
+					if(form["faculty_name"].value=='')
+						alert("Search Query field empty!");
+					else{
+					sessionStorage.setItem("searchtype","f1");
+					sessionStorage.setItem("facultyname",form["faculty_name"].value);
+					window.location= "search_output.html";
+					}
+				
+				}
+				else if(form["radio"][1].checked==true){
+					if(form["faculty_expertise"].value=='')
+						alert("Search Query field empty!");
+					else{
+					sessionStorage.setItem("searchtype","f2");
+					sessionStorage.setItem("expertise",form["faculty_expertise"].value);
+					window.location= "search_output.html";
+					}
+				
+				}
+				else if(form["radio"][2].checked==true){
+					if(form["faculty_interest"].value=='')
+						alert("Search Query field empty!");
+					else{
+					sessionStorage.setItem("searchtype","f3");
+					sessionStorage.setItem("interest",form["faculty_interest"].value);
+					window.location= "search_output.html";
+					}
+				}
+				}
+		</script>
+		<script>
+		function load(){
+		if(sessionStorage.length>0){
+			document.getElementById("username_tag").innerHTML+=sessionStorage.getItem("user");
+			}
+		else{
+			window.location= "notloggedin.html";
+			}
+		}
+		</script>
+		<script>
+		function logout(){
+		$.post("/intern_corner/logout",{},function(ret_data){
+			if(ret_data.status_code==200){
+				sessionStorage.clear();
+				window.location="signin.html";
+			}
+
+		},"json");
+		}
+		</script>
+		
 	</body>
 </html>

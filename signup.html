@@ -8,10 +8,12 @@
     <meta name="author" content="">
 
     <!-- Le styles -->
-    <link href="css/bootstrap-responsive.css" rel="stylesheet" media="screen">
-		<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+
 		<link href="css/bootstrap.css" rel="stylesheet" media="screen">
 		<link href="css/home.css" rel="stylesheet">
+		    <!-- Loading Flat UI -->
+    <link href="css/flat-ui.css" rel="stylesheet">
+		
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -20,13 +22,17 @@
 	<script type="text/javascript">
 	function send_data(){
 	var form = document.forms["registerform"];
-	$.post("php/controller.php",{func:'register',username:form["username"].value,password:form["password"].value,email:form["email"].value,category:form["category"].value,fullname:form["fullname"].value},function(ret_data){
+	$.post("/intern_corner/register",{username:form["username"].value,password:form["password"].value,email:form["email"].value,category:form["category"].value,fullname:form["fullname"].value},function(ret_data){
 		if(ret_data.status_code==200){
 			sessionStorage.setItem("user",form["username"].value);
+			alert("Registered! Check email for confirmation code");
 			window.location= "confirm.html";
 		}
 		else if(ret_data.status_code==412){
 			alert("Oops! username already taken!");
+		}
+		else if(ret_data.status_code==413){
+			alert("Oops! email already taken!");
 		}
 
 	},"json");
@@ -43,25 +49,7 @@
                 <div class="container">
                     
                     <a class="brand" href="#">Intern Corner</a>
-                    <div class="nav-collapse collapse">
-					  <ul class="nav">
-						<li class="active"><a href="#">Discussion Corner</a></li>
-						<li><a href="oppurtunity_corner.html">Oppurtunity Corner</a></li>
-						<li><a href="#contact">Experience Corner</a></li>
-						<li><a href="#contact">Search Corner</a></li>
-						<li class="dropdown">
-						  <a href="#" class="dropdown-toggle" data-toggle="dropdown">skyrideraj <b class="caret"></b></a>
-						  <ul class="dropdown-menu">
-							<li class="nav-header">Profile actions</li>
-							<li><a href="#">Edit Profile</a></li>
-							<li><a href="#">View Profile</a></li>
-							<li class="divider"></li>
-							<li class="nav-header">Logout</li>
-							<li><a href="#">Logout</a></li>
-						  </ul>
-						</li>
-					  </ul>
-					</div>
+                    
                 </div>
             </div>
         </div>
@@ -89,46 +77,47 @@
 			<div class="control-group">
 			<label class="control-label">Full Name</label>
 				<div class="controls">
-				<input type="text" name="fullname" maxlength="25" minlength="5" placeholder="Full Name" required/>
+				<input type="text" name="fullname" maxlength="25" minlength="5" placeholder="Full Name" required aria-invalid="false">
 				</div>
 			</div>
 			<div class="control-group">
 			<label class="control-label">Username</label>
 				<div class="controls">
-				<input type="text" name="username" maxlength="15" minlength="5" placeholder="Username" required/>
+				<input type="text" name="username" maxlength="15" minlength="5" placeholder="Username" required>
+				<p class="help-block"></p>
 				</div>
 			</div>
 			<div class="control-group">
 			<label class="control-label">Email address</label>
 				<div class="controls">
-				<input type="email" name="email" data-validation-email-message="Not a valid email id!" pattern="[A-Za-z0-9._%+-]+@daiict.ac.in" data-validation-pattern-message="Must be a valid DA-IICT email id" placeholder="someone@daiict.ac.in" required/>
+				<input type="email" name="email" id="emailid" data-validation-email-message="Not a valid email id!" pattern="[0-9]+@daiict.ac.in" data-validation-pattern-message="Must be a valid DA-IICT email id" placeholder="someone@daiict.ac.in" oninput="check(this)" required/>
 				</div>
 			</div>
 			<div class="control-group">
 			<label class="control-label">Password</label>
 				<div class="controls">
-				<input type="password" name="password" placeholder="password" required/>
+				<input type="password" minlength="4" name="password" placeholder="password" required/>
 				</div>
 			</div>
 			<div class="control-group">
 			<label class="control-label">Renter Password</label>
 				<div class="controls">
-				<input type="password" name="password_again" data-validation-match-match="password" data-validation-match-message="Passwords do not match!" placeholder="password again" required/>
+				<input type="password" minlength="4" name="password_again" data-validation-match-match="password" data-validation-match-message="Passwords do not match!" placeholder="password again" required/>
 				</div>
 			</div>
 			<div class="control-group">
 			<label class="control-label">User Category</label>
 				<div class="controls">
-				<select class="input-block-level" name="category">
+				<select class="input-block-level" name="category" id="category">
 				<optgroup label="User Category">
-				<option value="1">Professor</option>
-				<option value="2">Student</option>
+				<option value="1" >Professor</option>
+				<option value="2" selected>Student</option>
 				<option value="3">Alumni</option>
 				</select>
 				</div>
 			</div>
 			<div class="submit-buttons">
-				<input type="button" class="btn btn-large btn-primary" onclick="send_data()" value="Sign up"/>
+				<input type="submit" class="btn btn-large btn-primary"  value="Sign up"/>
 			</div>
 			<input type="hidden" name="func" value="register"/>
 		</form>
@@ -136,9 +125,11 @@
     </div> <!-- /container -->
 
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="js/jquery-1.9.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> <!-- or use local jquery -->
 	<script src="js/jqBootstrapValidation.js"></script>
     <script src="js/bootstrap-transition.js"></script>
+	
+	<script src="js/jqBootstrapValidation.js"></script>
     <script src="js/bootstrap-alert.js"></script>
     <script src="js/bootstrap-modal.js"></script>
     <script src="js/bootstrap-dropdown.js"></script>
@@ -150,10 +141,72 @@
     <script src="js/bootstrap-collapse.js"></script>
     <script src="js/bootstrap-carousel.js"></script>
     <script src="js/bootstrap-typeahead.js"></script>
+	<script src="js/jquery-ui-1.10.0.custom.min.js"></script>
+    <script src="js/jquery.dropkick-1.0.0.js"></script>
+    <script src="js/custom_checkbox_and_radio.js"></script>
+    <script src="js/custom_radio.js"></script>
+    <script src="js/jquery.tagsinput.js"></script>
+    <script src="js/bootstrap-tooltip.js"></script>
+    <script src="js/jquery.placeholder.js"></script>
+    <script src="http://vjs.zencdn.net/c/video.js"></script>
+    <script src="js/application.js"></script>
 	
 	<script>
-	$(function () { $("form,input").not("[type=submit]").jqBootstrapValidation(); } );
+	function check(input) {
+	  var atpos = input.value.indexOf("@");
+	  var profval = input.value.substring(4,6);
+	  var option = document.getElementById('category').value;
+	  if (atpos<9){
+	  input.setCustomValidity('DA-IICT email address must contain your id');
+	  }
+	  else if(option==1 && profval!='91'){
+	  input.setCustomValidity('Invalid Faculty ID!');
+	  }
+	  else {
+		// input is valid -- reset the error message
+		input.setCustomValidity('');
+		}
+	  
+	}
 	</script>
+	
+
+	
+	<script>
+	$('#category').change(function() {
+    checkprof(); // get the current value of the input field.
+	});
+	</script>
+	
+	<script>
+	function checkprof() {
+		var email = document.getElementById('emailid').value;
+		var option = document.getElementById('category').value;
+	  var profval = email.substring(4,6);
+	  
+	  if(option==1 && profval!='91'){
+	  document.getElementById('emailid').setCustomValidity('Invalid Faculty ID!');
+	  }
+	  else {
+		// input is valid -- reset the error message
+		document.getElementById('emailid').setCustomValidity('');
+		}
+	  
+	}
+	</script>
+	
+	
+	<script>
+	
+	$(function () { $("input,select,textarea").not("[type=submit]").jqBootstrapValidation() } );
+	</script>
+	<script>
+	$('form').submit(function(e) {
+    e.preventDefault();
+    send_data();
+    });
+	</script>
+	
 	
 
   </body>

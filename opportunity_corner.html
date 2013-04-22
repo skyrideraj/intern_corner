@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Internship Corner</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!-- Bootstrap -->
+		<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+		<link href="css/bootstrap.css" rel="stylesheet">
+		<link href="css/home.css" rel="stylesheet">
+		
+		<script>    
+			var counter = 1;
+			var counter1=1;
+			var limit = 5;
+			function addInput(divName){
+				if (counter == limit)  {
+					alert("You have reached the limit of adding " + counter + " inputs");
+				}
+				else {
+					var newdiv = document.createElement('div');
+					newdiv.innerHTML = "<input type='text' name='tag1' placeholder='Additional Tag'>";
+					document.getElementById(divName).appendChild(newdiv);
+					counter++;
+				}
+			}
+		</script>
+		<script>
+		function load(){
+		document.getElementById("username_tag").innerHTML+=sessionStorage.getItem("user");
+		}
+		</script>
+		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+		<script type="text/javascript">
+		function logout(){
+		$.post("/intern_corner/logout",{},function(ret_data){
+			if(ret_data.status_code==200){
+				sessionStorage.clear();
+				window.location="signin.html";
+			}
+
+		},"json");
+		}
+		</script>
+		
+		
+			<script>
+			var page = 0;
+			var element="opp_posts_1";
+			$(document).ready(function (){
+				element="opp_posts_1";
+				fetchAllOpp(page);
+				});
+			
+				function fetchMore(){
+				fetchAllOpp(page+1);
+				page++;
+				}
+				
+				function putAllOpp(Opp){
+				
+				for(i = 0; i < Opp.length ; i++){
+					oppArticle = makeAllOpp( Opp[i].username,Opp[i].opportunity_id,Opp[i].title,Opp[i].description,Opp[i].deadline,Opp[i].start_date,Opp[i].end_date,Opp[i].stipend,Opp[i].organization,Opp[i].location,Opp[i].timestamp,Opp[i].total_votes);
+					//$('#discussion').append(discussionArticle);
+					
+					document.getElementById(element).insertAdjacentHTML("afterbegin",oppArticle);
+					}
+					document.getElementById(element).insertAdjacentHTML("afterbegin",'<div class="freespace"></div>');
+				}
+				
+				
+				function makeAllOpp(user,id,title,desc,deadline,start,end,stipend,organ,location,timestamp,total_votes){
+					var exp = '<div id="oppposted'+id+'"><div id="opppost'+id+'"><div class="accordion-group"><div class="accordion-heading"><a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse'+id+'"><h5>'+title+'</h5></a><a onclick="subscribe_opp('+id+')" class="subscribe" href="#">subscribe</a><a onclick="unsubscribe_opp('+id+')"  class="unsubscribe" href="#">unsubscribe</a><span class="org_name">Organisation Name:</span><span class="org_name_val">'+organ+'</span><span class="total">Total Votes:</span><span id="cal_votes'+id+'" class="total_val">'+total_votes+'</span><span class="deadline">Application Deadline:</span><span class="deadline_val">'+deadline+'</span><a href="#" onclick="delete_opp('+id+')" class="del">Delete</a><span class="upvote"><button onclick="upvote('+id+')"><img src="img/like_thumbs_up.png" height="20px" width="20px"></button></span><span class="downvote"><button onclick="downvote('+id+')"><img src="img/like_thumbs_down.png" height="20px" width="20px"></button></span></div><div id="collapse'+id+'" class="accordion-body collapse "><div class="accordion-inner"><span class="username">Posted by:</span><span class="username_val">'+user+'</span><br /><span class="location">Location:</span><span class="location_val">'+location+'</span><br/><span class="stipend">Stipend:</span><span class="stipend_val">'+stipend+'</span><br /><span class="strt_date">Start date:</span><span class="strt_date_val">'+start+'</span><br/><span class="end_date">End date:</span><span class="end_date_val">'+end+'</span><br /><span class="description">Description:</span><span class="description_val">'+desc+'</span></div></div></div><div class="freespace"></div></div></div>';
+					return exp;
+				}
+				
+				function fetchAllOpp(pgno){
+				$.post("/intern_corner/all_opp",{page_no:pgno,req:element},function(ret_data){
+					if(ret_data.length >0){//accepted
+						putAllOpp(ret_data);
+						}
+						if(ret_data.status_code==204){
+						alert("No more Content!");
+						}
+					},"json");
+					}
+				
+				function post_opp(){
+				var form = document.forms["oppform"];
+				var user = sessionStorage.getItem("user");
+				$.post("/intern_corner/post_opportunity",{username:user,type:form["opp_type"].value,title:form["opp_title"].value,location:form["opp_location"].value,description:form["opp_desc"].value,stipend:form["opp_stipend"].value,deadline:form["opp_deadline"].value,start:form["opp_start"].value,end:form["opp_end"].value,type:form["opp_type"].value,organization:form["opp_organization"].value,tags:form["opp_tags"].value},function(ret_data){
+						if(ret_data.status_code==200){
+							if(form["opp_type"].value==1){
+								$('#myModal').modal('hide');
+								element="opp_posts_1";
+								document.getElementById(element).innerHTML ='';
+								document.getElementById(element).innerHTML +='<div class="freespace"></div>';
+								fetchAllOpp(0);
+							}
+							else if (form["opp_type"].value==2) {
+								$('#myModal').modal('hide');
+								element="opp_posts_2";
+								document.getElementById(element).innerHTML ='';
+								document.getElementById(element).innerHTML +='<div class="freespace"></div>';
+								fetchAllOpp(0);
+							}
+							else if (form["opp_type"].value==3) {
+								$('#myModal').modal('hide');
+								element="opp_posts_3";
+								document.getElementById(element).innerHTML ='';
+								document.getElementById(element).innerHTML +='<div class="freespace"></div>';
+								fetchAllOpp(0);
+							}
+						}
+						else if(ret_data.status_code==403){
+						alert("Exceeded the day limit to post!");
+						}
+
+					},"json");
+				}
+				
+				function industrial(){
+				element="opp_posts_1";
+				document.getElementById(element).innerHTML ='';
+				document.getElementById(element).innerHTML +='<div class="freespace"></div>';
+				fetchAllOpp(0);
+				}
+				function research(){
+				element="opp_posts_2";
+				document.getElementById(element).innerHTML ='';
+				document.getElementById(element).innerHTML +='<div class="freespace"></div>';
+				fetchAllOpp(0);
+				}
+				function rural(){
+				element="opp_posts_3";
+				document.getElementById(element).innerHTML ='';
+				document.getElementById(element).innerHTML +='<div class="freespace"></div>';
+				fetchAllOpp(0);
+				}
+		</script>
+
+		<script>
+		function delete_opp(id){
+				$.post("/intern_corner/delete_opp",{id:id},function(ret_data){
+					if(ret_data.status_code==200){//accepted
+						var elem = document.getElementById("oppposted"+id);
+						elem.parentNode.removeChild(elem);
+						fetchAllOpp(0);
+						}
+					else if(ret_data.status_code==400){//accepted
+						alert("You are not author");
+						}
+					},"json");
+					}
+		</script>
+		
+		<script>
+		function subscribe_opp(id){
+				$.post("/intern_corner/subscribe_opp",{id:id},function(ret_data){
+					if(ret_data.status_code==200){//accepted
+						alert("Successfully subscribed!");
+						}
+					else if(ret_data.status_code==400){//accepted
+						alert("You are already subscribed for this opportunity!");
+						}
+					},"json");
+					}
+		</script>
+		
+		<script>
+		function unsubscribe_opp(id){
+				$.post("/intern_corner/unsubscribe_opp",{id:id},function(ret_data){
+					if(ret_data.status_code==200){//accepted
+						alert("Successfully unsubscribed!");
+						}
+					else if(ret_data.status_code==400){//accepted
+						alert("You haven't subscribed for this opportunity");
+						}
+					},"json");
+					}
+		</script>
+		
+		<script>
+		function upvote(id){
+				$.post("/intern_corner/opp_upvote",{id:id},function(ret_data){
+						if(ret_data.status_code==200){
+							elem='cal_votes'+id;
+							document.getElementById(elem).innerHTML=ret_data.tot_votes;
+							}
+						else if(ret_data.status_code==400){
+							alert("You cannot vote on your own posted opportunity!")
+							}
+
+					},"json");
+					}
+		</script>
+		
+		<script>
+		function downvote(id){
+				$.post("/intern_corner/opp_downvote",{id:id},function(ret_data){
+						if(ret_data.status_code==200){
+							elem='cal_votes'+id;
+							document.getElementById(elem).innerHTML=ret_data.tot_votes;
+							}
+						else if(ret_data.status_code==400){
+							alert("You cannot vote on your own posted opportunity!")
+							}
+
+					},"json");
+					}
+		</script>
+		
+		<style>
+			html,body{
+   			 height: 100%
+			}
+			.accordion-heading
+			{
+				height:80px;
+			}
+			.subscribe{
+				position:relative;
+				top:-40px;
+				right:-590px;
+			}
+			.unsubscribe{
+				position:relative;
+				top:-40px;
+				right:-620px;
+			}
+			.org_name
+			{
+				position:relative;
+				left:10px;
+			}
+			.opp_top
+			{
+			margin-top:50px;
+			}
+			.org_name_val
+			{
+				position:relative;
+				left:20px;
+			}
+			.total
+			{
+				position:absolute;
+				left:560px;
+			}
+			.total_val
+			{
+				position:absolute;
+				left:650px;
+			}
+			.deadline
+			{
+				position:absolute;
+				left:750px;
+				color:red;
+			}
+			.deadline_val
+			{
+				position:absolute;
+				left:890px;
+				color:red;
+			}
+			.del{
+				position:absolute;
+				left:1050px;
+			}
+
+			.opp_type
+			{
+				position:relative;
+				left:100px;
+			}
+			.opp_type_val
+			{
+				position:relative;
+				left:110px;
+			}
+			.username
+			{
+				position:relative;
+				left:10px;
+			}
+			.username_val
+			{
+				position:absolute;
+				left:120px;
+			}
+			.location
+			{
+				position:relative;
+				left:10px;
+			}
+			.location_val
+			{
+				position:absolute;
+				left:120px;
+			}
+			.stipend
+			{
+				position:relative;
+				left:10px;
+			}
+			.stipend_val
+			{
+				position:absolute;
+				left:120px;
+			}
+			.strt_date
+			{
+				position:relative;
+				left:10px;
+			}
+			.strt_date_val
+			{
+				position:absolute;
+				left:120px;
+			}
+			.end_date
+			{
+				position:relative;
+				left:10px;
+			}
+			.end_date_val
+			{
+				position:absolute;
+				left:120px;
+			}
+			.description
+			{
+				position:relative;
+				left:10px;
+			}
+			.description_val
+			{
+				position:absolute;
+				left:120px;
+			}
+			.tags
+			{
+				position:relative;
+				left:10px;
+			}
+			.tags_val
+			{
+				position:absolute;
+				left:120px;
+			}
+			.upvote
+			{
+				float:right;
+				position:relative;
+				top:-45px;
+				right:50px;
+			}
+			.downvote
+			{
+				float:right;
+				position:relative;
+				top:-45px;
+				right:50px;
+				
+			}
+			.freespace
+			{
+				height:30px;
+			}
+		.dropdown{
+		margin-left:50px;
+		}
+		.opp_top
+				{
+				margin-top:50px;
+				}
+		.pull-right
+				{
+				margin-right:20px;
+				}
+			
+			
+		</style>
+		
+	</head>
+	<body onload="load()">
+		<div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    
+                    <div class="nav-collapse collapse">
+					  <ul class="nav">
+						<li ><p class="brand">Intern Corner</p></li>
+						<li ><a href="discussion_page.html">Q & A Corner</a></li>
+						<li class="active"><a href="opportunity_corner.html">Opportunity Corner</a></li>
+						<li ><a href="experience_corner.html">Experience Corner</a></li>
+						<li><a href="search_main.html">Search Corner</a></li>
+						<li class="dropdown pull-right">
+						<div class="btn-group">
+						  <a id="username_tag" class="btn btn-small btn-primary" href="#"><i class="icon-user icon-white"></i></a>
+							<a class="btn btn-small btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+						  <ul class="dropdown-menu">
+							<li class="nav-header">Profile actions</li>
+							
+							<li><a href="view_profile.html">View Profile</a></li>
+							<li class="divider"></li>
+							<li class="nav-header">Account</li>
+							<li><a href="change.html">Change Password</a></li>
+							<li><a href="#" onclick="logout()">Logout</a></li>
+						  </ul>
+						</div>
+						</li>
+					  </ul>
+					</div>
+                </div>
+            </div>
+        </div>
+
+    <div class="container">
+
+		<div class="opp_top">
+			<h1>Opportunity Corner</h1>
+			
+		</div>
+<div class="jumbotron">
+          <a href="#myModal" data-toggle="modal" class="btn btn-primary">Post New Opportunity</a>
+		  <button id="loadmore" onclick="fetchMore()" class="btn btn-primary pull-right" >Load more..</button>
+		</div>
+		<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+				<h3 id="myModalLabel">New Opportunity</h3>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal" name="oppform" id="opportunity_form">
+			<!--	<h2 class="form-signin-heading">New Experience</h2>-->
+				<div class="control-group">
+				<label class="control-label">Opportunity Title</label>
+					<div class="controls">
+					<input name="opp_title" type="text" placeholder="A suitable Title" required/>
+					</div>
+				</div>
+				<div class="control-group">
+				<label class="control-label">Organization Name</label>
+					<div class="controls">
+					<input type="text" name="opp_organization" placeholder="Organization Name" required/>
+					</div>
+				</div>
+				<div class="control-group">
+				<label class="control-label">Opportunity Type</label>
+					<div class="controls">
+					<select name="opp_type" required>
+						<option value="3">Rural</option>
+						<option value="2">Research</option>
+						<option value="1">Industrial</option>
+					</select>
+					</div>
+				</div>
+				<div class="control-group">
+				<label class="control-label">App Deadline</label>
+					<div class="controls">
+					<input name="opp_deadline" type="text" id="datepicker"/>
+					</div>
+				</div>
+				
+				<div class="control-group">
+				<label class="control-label">Location</label>
+					<div class="controls">
+					<input type="text" name="opp_location" placeholder="Place of Intern" required/>
+					</div>
+				</div>
+				<div class="control-group">
+				<label class="control-label">Stipend</label>
+					<div class="controls">
+					<input name="opp_stipend" type="text" pattern="[0-9]+" data-validation-pattern-message="Enter valid stipend value"placeholder="0 in case of no stipend" required/>
+					</div>
+				</div>
+				<div class="control-group">
+				<label class="control-label">Start Date</label>
+					<div class="controls">
+					<input name="opp_start" type="text" id="datepicker1"/>
+					</div>
+				</div>
+				<div class="control-group">
+				<label class="control-label">End Date</label>
+					<div class="controls">
+					<input name="opp_end" type="text" id="datepicker2"/>
+					</div>
+				</div>
+				<div class="control-group">
+				<label class="control-label">Description</label>
+					<div class="controls">
+					<textarea name="opp_desc" rows="4" columns="20"></textarea>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">Associated Tags</label>
+						<div class="controls">
+						<input name="opp_tags" type="text" pattern="(\s?([\w\s]*|\d*)\s?(;|$)){1,20}" data-validation-pattern-message="Separate tags by  ;  only" placeholder="Enter tags separated by  ;">
+						</div>
+					</div>
+					<div class="modal-footer">
+					<input type="submit" class="btn btn-primary" aria-hidden="true" value="Post Oppurtunity"/>
+					</div>
+				</form>
+			</div>
+			
+		</div></br>
+
+
+		<div class="tabbable"> <!-- Only required for left/right tabs -->
+		  <ul class="nav nav-tabs">
+			<li class="active"><a href="#tab1" data-toggle="tab" onclick="industrial()">Industrial Oppurtunities</a></li>
+			<li><a href="#tab2" data-toggle="tab" onclick="research()">Research Oppurtunities</a></li>
+			<li><a href="#tab3" data-toggle="tab" onclick="rural()">Rural Oppurtunities</a></li>
+		  </ul>
+		  <div class="tab-content">
+			<div class="tab-pane active" id="tab1">
+				<div id="opp_posts_1" class="accordion" id="accordion2">
+					<div class="freespace">
+					</div>
+					<div class="freespace">
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane" id="tab2">
+				<div id="opp_posts_2" class="accordion" id="accordion2">
+					<div class="freespace">
+					</div>
+					<div class="freespace">
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane" id="tab3">
+				<div id="opp_posts_3" class="accordion" id="accordion2">
+					<div class="freespace">
+					</div>
+					<div class="freespace">
+					</div>
+				</div>
+			</div>
+		  </div>
+		</div>
+		
+
+		
+		<footer >
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        <p>&copy; Intern Corner 2013 SEN Group 8. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+		</footer>
+		
+		
+		<script>
+			var page = 0;
+			function load(){
+			if(sessionStorage.length>0){
+				document.getElementById("username_tag").innerHTML+=sessionStorage.getItem("user");
+					if(sessionStorage.getItem("accounttype")==2){
+					//document.getElementById("buildprofile").href="#myModal_student";
+					}
+					else if(sessionStorage.getItem("accounttype")==1){
+					//document.getElementById("buildprofile").href="#myModal_faculty";
+					}
+					else{
+					//document.getElementById("buildprofile").href="#myModal_alumni";
+					}
+				}
+			else{
+				window.location= "notloggedin.html";
+				}
+			}
+		</script>
+		
+		
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> <!-- or use local jquery -->
+	<script src="js/jqBootstrapValidation.js"></script>
+	
+	<script src="js/bootstrap-filestyle-0.1.0.min.js"></script>
+    <script src="js/bootstrap-transition.js"></script>
+    <script src="js/bootstrap-alert.js"></script>
+    <script src="js/bootstrap-modal.js"></script>
+    <script src="js/bootstrap-dropdown.js"></script>
+    <script src="js/bootstrap-scrollspy.js"></script>
+    <script src="js/bootstrap-tab.js"></script>
+    <script src="js/bootstrap-tooltip.js"></script>
+    <script src="js/bootstrap-popover.js"></script>
+    <script src="js/bootstrap-button.js"></script>
+    <script src="js/bootstrap-collapse.js"></script>
+    <script src="js/bootstrap-carousel.js"></script>
+    <script src="js/bootstrap-typeahead.js"></script>
+		<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+		
+		<script>
+
+			$(document).ready(function() {
+			$("#datepicker").datepicker();
+			$("#datepicker1").datepicker();
+			$("#datepicker2").datepicker();
+			});
+
+		</script>
+		<script>
+		$(function () { $("form,input").not("[type=submit]").jqBootstrapValidation(); } );
+		</script>
+		<script>
+		$('#opportunity_form').submit(function(e) {
+		e.preventDefault();
+		post_opp();
+		});
+		</script>
+
+		
+	</body>
+</html>

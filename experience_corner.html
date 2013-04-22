@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Internship Corner</title>
+    <title>Intern Corner</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
@@ -10,37 +10,162 @@
 	<link href="css/home.css" rel="stylesheet">
 	<style>
 		.dropdown{
-				margin-left:100px;
-				}
+		margin-left:50px;
+		}
 		.opp_top
 				{
 				margin-top:50px;
-				}		
+				}
+		.pull-right
+				{
+				margin-right:20px;
+				}
 	</style>
+	<script>
+		var page = 0;
+		function load(){
+		$.post("/intern_corner/checkProfileComplete",{},function(ret_data){
+		if(ret_data.status_code==2){
+			$('#buildprofile').hide();
+		}
 
+		},"json");
+		if(sessionStorage.length>0){
+			
+			document.getElementById("username_tag").innerHTML+=sessionStorage.getItem("user");
+			fetchAllExp(page);
+				if(sessionStorage.getItem("accounttype")==2){
+				document.getElementById("buildprofile").href="#myModal_student";
+				}
+				else if(sessionStorage.getItem("accounttype")==1){
+				document.getElementById("buildprofile").href="#myModal_faculty";
+				}
+				else{
+				document.getElementById("buildprofile").href="#myModal_alumni";
+				}
+			}
+		else{
+			window.location= "notloggedin.html";
+			}
+		}
+		
+		function fetchMore(){
+		fetchAllExp(page+1);
+		page++;
+		}
+
+			function putAllExp(Exp){
+			for(i = 0; i < Exp.length ; i++){
+				expArticle = makeAllExp( Exp[i].username, Exp[i].title, Exp[i].description,Exp[i].experince_id);
+				//$('#discussion').append(discussionArticle);
+				document.getElementById("exp_posts").insertAdjacentHTML("beforeend",expArticle);
+				}
+			}
+			
+			
+			function makeAllExp(user,title,desc,id){
+				var descpost;
+				if(desc.length>200){
+					descpost=desc.substring(0,199);
+				}
+				else{
+					descpost=desc;
+				}
+				var exp = '<div id="'+id+'"class="page-header"><p> Author: <u><a href ="#">'+user+'</a></u>   <span style="float:right;">Company Name: <u><a href="#" >'+title+'</a></u></span></p><p>'+descpost+'.......<a class="exp_modal_expand" href="#myModal" onclick="fetchExp('+id+')" data-toggle="modal">More>></a><a class="exp_modal_expand pull-right" href="#" onclick="delOneExp('+id+')">Delete Experience</a></p></div>';
+				return exp;
+			}
+			
+			function fetchAllExp(pgno){
+			$.post("/intern_corner/all_exp",{page_no:pgno},function(ret_data){
+				if(ret_data.result.length >0){//accepted
+					putAllExp(ret_data.result);
+					}
+				},"json");
+				}
+			
+			function send_data(){
+			var form = document.forms["experienceform"];
+			var user = sessionStorage.getItem("user");
+			var desc = form["description"].value;
+			var descpost;
+			//$('.modal').modal('hide');
+			if(desc.length>200){
+				descpost=desc.substring(0,199);
+			}
+			else{
+				descpost=desc;
+			}
+			$.post("/intern_corner/post_experience",{username:user,title:form["title"].value,designation:form["designation"].value,description:form["description"].value},function(ret_data){
+				if(ret_data.status_code==200){
+					$('.modal').modal('hide');
+					form["title"].value='';
+					form["designation"].value='';
+					form["description"].value='';
+					document.getElementById("exp_posts").innerHTML="";
+					fetchAllExp(page);
+				}
+				else if(ret_data.status_code==1){
+					alert("Profile is incomplete!");
+					$('.modal').modal('hide');
+
+				}
+				else if(ret_data.status_code==403){
+						alert("Exceeded the day limit to post!");
+						}
+				else
+				{
+				alert("you can not post experience");
+				$('.modal').modal('hide');
+				}
+
+			},"json");
+			}
+	</script>
+	
+	<script type="text/javascript">
+	function logout(){
+	$.post("/intern_corner/logout",{},function(ret_data){
+		if(ret_data.status_code==200){
+			sessionStorage.clear();
+			window.location="signin.html";
+		}
+
+	},"json");
+	}
+	</script>	
+	
+	
+
+	
+
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
   </head>
-  <body>
+  <body onload="load()">
   <div class="navbar navbar-inverse navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container">
                     
-                    <a class="brand" href="#">Intern Corner</a>
                     <div class="nav-collapse collapse">
 					  <ul class="nav">
-						<li ><a href="#">Discussion Corner</a></li>
-						<li ><a href="oppurtunity_corner.html">Oppurtunity Corner</a></li>
+						<li ><p class="brand">Intern Corner</p></li>
+						<li ><a href="discussion_page.html">Q & A Corner</a></li>
+						<li ><a href="opportunity_corner.html">Opportunity Corner</a></li>
 						<li class="active"><a href="experience_corner.html">Experience Corner</a></li>
 						<li><a href="search_main.html">Search Corner</a></li>
 						<li class="dropdown">
-						  <a href="#" class="dropdown-toggle" data-toggle="dropdown">skyrideraj <b class="caret"></b></a>
+						<div class="btn-group">
+						  <a id="username_tag" class="btn btn-small btn-primary" href="#"><i class="icon-user icon-white"></i></a>
+							<a class="btn btn-small btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
 						  <ul class="dropdown-menu">
 							<li class="nav-header">Profile actions</li>
-							<li><a href="#">Edit Profile</a></li>
-							<li><a href="#">View Profile</a></li>
+							
+							<li><a href="view_profile.html">View Profile</a></li>
 							<li class="divider"></li>
-							<li class="nav-header">Logout</li>
-							<li><a href="#">Logout</a></li>
+							<li class="nav-header">Account</li>
+							<li><a href="change.html">Change Password</a></li>
+							<li><a href="#" onclick="logout()">Logout</a></li>
 						  </ul>
+						</div>
 						</li>
 					  </ul>
 					</div>
@@ -57,26 +182,26 @@
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
    
-    <form class="form-horizontal">
+    <form class="form-horizontal" name="experienceform" id="experience_form">
       <h2 class="form-signin-heading">Share your Experience </h2>
       <div class="control-group">
       <label class="control-label">Company Name: </label>
         <div class="controls">
-        <input type="text" maxlength="25" minlength="4" data-validation-pattern-message="sas" placeholder="Company_Name" required/>
+        <input id="post_title" type="text" name="title" maxlength="25" minlength="4" placeholder="Company_Name" required/>
         </div>
       </div>
       
       <div class="control-group">
       <label class="control-label">Designation: </label>
         <div class="controls">
-        <input type="text" maxlength="25" minlength="2" data-validation-pattern-message="" placeholder="(eg: Software Intern/TA)" required/>
+        <input id="post_designation" type="text" name="designation" maxlength="25" minlength="2" placeholder="(eg: Software Intern/TA)" required/>
         </div>
       </div>
       
 <div class="control-group">
       <label class="control-label">Describe your Experience : </label>
         <div class="controls">
-        <textarea rows="10" cols="50" data-validation-pattern-message="" placeholder="Your Experience goes here..." required>
+        <textarea id="post_description" rows="10" name="description" cols="50" placeholder="Your Experience goes here..." required>
 </textarea>        </div>
       </div>
       
@@ -85,8 +210,7 @@
  
   </div>
   <div class="modal-footer">
-          <input type="submit" class="btn btn-primary" formaction="404.html" value="Post"/>   
-    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+          <input type="submit" class="btn btn-primary" aria-hidden="true" value="Post"/>
      
   </div>
       </form>
@@ -97,42 +221,263 @@
 
 
 <div class="container">
+		    <div id="buildprofile" class="alert alert-block">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<strong>Profile is incomplete</strong> 
+			<a  class="btn btn-primary pull-right"  data-toggle="modal" >Complete profile now!</a>
+			</div>
 		<div class="opp_top">
 			<h1>Experience Corner</h1>
 			<a href="#myModal_1" data-toggle="modal" class="btn btn-primary">Post New Experience</a>
+			<button id="getuserexp" class="btn btn-primary" >My Experiences</button>
+			<button id="loadmore" onclick="fetchMore()" class="btn btn-primary pull-right" >Load more..</button>
 		</div>
 <!-- Modal -->
 
-<!-- my_MODAL DETAILS -->
-<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="myModal_student" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    <p id="myModalLabel">Author: <u><a href ="#">Aakash Sharma</a></u>  
-	&nbsp &nbsp &nbsp &nbsp  Company Name: <u><a href="#">Direct i</a></u>
-	 &nbsp &nbsp &nbsp &nbsp Date: <a href="#"><u>08/01/2013</u></a></p>
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3 id="myModalLabel">Create Your own Profile!!</h3>
+  </div>
+  
+  <div class="modal-body">
+    
+				<form class="form-horizontal">
+					
+		
+					
+					<div class="control-group">
+					<label class="control-label">Other Email address</label>
+						<div class="controls">
+						<input type="email" data-validation-email-message="Not a valid email id!" pattern=	"^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)" data-validation-pattern-message="Must be a valid email id" required/>
+						</div>
+					</div>
+					<div class="control-group">
+					<label class="control-label">Program:</label>
+						<div class="controls">
+						<select id="program" name="program"> 						
+						<option value="0">Select Program</option><option value="1">B-Tech</option><option value="2">M-Tech</option><option value="3">Msc-IT</option>
+						</select>
+						</div>
+					</div>
+					
+					<div class="control-group">
+					<label class="control-label">Batch*</label>
+						<div class="controls">
+						<input type="text" pattern="^[0-9]{4}" data-validation-pattern-message="Enter Numeric value" placeholder="Batch" required/>
+						</div>
+					</div>
+					
+					<div class="control-group">
+					<label class="control-label">Area of Interest</label>
+						<div class="controls">
+						<div id="s_interest">
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" name="student_interest" placeholder="intrest1" id="si1">	
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" name="student_interest" placeholder="Intrest2" id="si2">
+						
+						</div>
+						<input type="button" value="Add another text input" onClick="addInput2('s_interest');">
+						</div>
+					</div>
+					
+					<div class="control-group">
+					<label class="control-label">CPI</label>
+						<div class="controls">
+						<input type="text" pattern="([0-9]{1})(\.[0-9][0-9]?)?" data-validation-pattern-message="Enter Numeric value" placeholder="0.00" />
+						</div>
+					</div>
+					
+					<div class="control-group">
+										<label class="control-label" for="input01">Default filestyle</label>
+										<div class="controls">
+											<input type="file" class="input-xlarge" id="input01">
+										</div>
+									</div>
+					
+					
+					<div class="control-group">
+					<label class="control-label">Contact_No</label>
+						<div class="controls">
+						<input type="text" pattern="^[0-9]{10,15}" data-validation-pattern-message="Enter Numeric value" placeholder="9999999999" />
+						</div>
+					</div>
+					
+					
+					<div class="control-group">
+					<label class="control-label">Other Information</label>
+						<div class="controls">
+							<div align="left">
+							<textarea cols="20" rows="2" name="myname" placeholder="Any additional information.."></textarea>
+							</div>
+												
+						</div>
+					</div>
+					
+				
+           </div>
+  
+  <div class="modal-footer">
+          <input type="submit" class="btn btn-primary" formaction="404.html" value="Save"/>   
+    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+     
+  </div>
+  </form>
+</div>
+
+
+
+
+<div id="myModal_faculty" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3 id="myModalLabel">Create Your own Profile!!</h3>
+  </div>
+  
+  <div class="modal-body">
+    
+				<form class="form-horizontal">
+					
+
+		
+					
+					<div class="control-group">
+					<label class="control-label">Area of Interest</label>
+						<div class="controls">
+						<div id="f_interest">
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" name="faculty_interest" placeholder="intrest1" id="fi1">	
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" name="faculty_interest" placeholder="Intrest2" id="fi2">
+						
+						</div>
+						<input type="button" value="Add another text input" onClick="addInput('f_interest');">
+						</div>
+					</div>
+					
+					
+					<div class="control-group">
+					<label class="control-label">Area of expertise</label>
+						<div class="controls">
+						<div id="f_expertise">
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" name="faculty_experitse" placeholder="field1" id="fe1">
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" name="faculty_experitse" placeholder="field2" id="fe2" >
+						</div>
+						
+						<input type="button" value="Add another text input" onClick="addInput1('f_expertise');">
+						</div>
+					</div>
+					
+					<div class="control-group">
+					<label class="control-label">Project Information</label>
+						<div class="controls">
+							<div align="left">
+							<textarea cols="20" rows="2" name="myname" placeholder="Add any additional project information.."></textarea>
+							</div>
+												
+						</div>
+					</div>
+					
+					<div class="control-group">
+					<label class="control-label">Other Information</label>
+						<div class="controls">
+							<div align="left">
+							<textarea cols="20" rows="2" name="myname" placeholder="Add any additional information.. "></textarea>
+							</div>
+												
+						</div>
+					</div>
+					
+				
+           </div>
+  
+  <div class="modal-footer">
+          <input type="submit" class="btn btn-primary" formaction="404.html" value="Save"/>   
+    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+     
+  </div>
+  </form>
+</div>
+
+
+
+<div id="myModal_alumni" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3 id="myModalLabel">Create Your own Profile!!</h3>
+  </div>
+  
+  <div class="modal-body">
+    
+				<form class="form-horizontal">
+					
+					<label class="control-label">Other Email address</label>
+						<div class="controls">
+						<input type="email" data-validation-email-message="Not a valid email id!" pattern=	"^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)" data-validation-pattern-message="Must be a valid email id" required/>
+						</div>
+					
+					<div class="control-group">
+					<label class="control-label">current employee</label>
+						<div class="controls">
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" data-validation-pattern-message="Username should be unique" placeholder="company name" >
+						
+						
+						</div>
+					</div>
+					
+					<div class="control-group">
+					<label class="control-label">Past Internships</label>
+						<div class="controls">
+						<div id="internships">
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" name="past_internship" placeholder="Internship1" id="pi1">
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" name="past_internship" placeholder="Internship2" id="pi2" >
+						</div>
+						
+						<input type="button" value="Add another text input" onClick="addInput3('internships');">
+						</div>
+					</div>
+					
+					<div class="control-group">
+					<label class="control-label">Past companies</label>
+						<div class="controls">
+						<div id="companies">
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" name="past_company" placeholder="company1" id="pc1">
+						
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" name="past_company" placeholder="company2" id="pc2">
+						
+						</div>
+						<input type="button" value="Add another text input" onClick="addInput4('companies');">
+						</div>
+					</div>
+					
+					
+					
+					
+					<div class="control-group">
+					<label class="control-label">Other Information</label>
+						<div class="controls">
+							<div align="left">
+							<textarea cols="20" rows="2" name="myname" placeholder="Any additional information.."></textarea>
+							</div>
+												
+						</div>
+					</div>
+					
+				
+           </div>
+  
+  <div class="modal-footer">
+          <input type="submit" class="btn btn-primary" formaction="404.html" value="Save"/>   
+			<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+     
+  </div>
+  </form>
+</div>
 	
 
-  </div>
-  <div class="modal-body">
-  <h4> Description:  </h4>
-  You'll see they've reduced padding-left by 1px to allow for the addition of the new left border. 
-  Since this rule appears later in the source order, it overrides any previous or external declarations.
-I'd argue this isn't exactly the most robust or elegant approach, but it illustrates the most basic example.
 
-  You'll see they've reduced padding-left by 1px to allow for the addition of the new left border.
-  Since this rule appears later in the source order, it overrides any previous or external declarations.
-I'd argue this isn't exactly the most robust or elegant approach, but it illustrates the most basic example.
 
-  You'll see they've reduced padding-left by 1px to allow for the addition of the new left border. 
-  Since this rule appears later in the source order, it overrides any previous or external declarations.
-I'd argue this isn't exactly the most robust or elegant approach, but it illustrates the most basic example.
- 
- You'll see they've reduced padding-left by 1px to allow for the addition of the new left border. 
-  Since this rule appears later in the source order, it overrides any previous or external declarations.
-I'd argue this isn't exactly the most robust or elegant approach, but it illustrates the most basic example.
- </br> </br>&nbsp &nbsp &nbsp &nbsp &nbsp (Not More than 1000 words.)
+<!-- my_MODAL DETAILS -->
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div id="modal_exp">
 
- <p></p>
   </div>
   <div class="modal-footer">
     <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -141,78 +486,190 @@ I'd argue this isn't exactly the most robust or elegant approach, but it illustr
 
 <!--  MODAL ENDS HERE-->
 <!--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@-->
+<div>
+	<div id="exp_posts" class="container">
 
-<div class="page-header">
-          <p> Author: <u><a href ="#">Aakash Sharma</a></u>   &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Company Name: <u><a href="#">Direct i</a></u></p>
-		  <p>
-		  Michael Phelps receives his Laureus Academy Exceptional Acheivement Award from Laureus Academy Member 
-		  Sir Steve Redgrave during the awards show for the 2013 and is the gretaest Olympian of all timeMember 
-		  Sir Steve Redgrave during the awards show for the 2013 and is the gretaest Olympian of all time....
-<a href="#myModal" data-toggle="modal">More>></a>
-
-		  </p>
-		  
-
-	  </div>
-
-<div class="page-header">
-          <p> Author: <u><a href ="#">Saransh Shah</a></u>   &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Company Name: <u><a href="#">Direct i</a></u></p>
-		  <p>
-		  Michael Phelps receives his Laureus Academy Exceptional Acheivement Award from Laureus Academy Member 
-		  Sir Steve Redgrave during the awards show for the 2013 and is the gretaest Olympian of all timeMember 
-		  Sir Steve Redgrave during the awards show for the 2013 and is the gretaest Olympian of all time....
-<a href="#myModal" data-toggle="modal">More>></a>
-
-		  </p>
-		  
-
-	  </div>
-
-<div class="page-header">
-          <p> Author: <u><a href ="#">Ishan  Jain	</a></u>   &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Company Name: <u><a href="#">Direct i</a></u></p>
-		  <p>
-		  Michael Phelps receives his Laureus Academy Exceptional Acheivement Award from Laureus Academy Member 
-		  Sir Steve Redgrave during the awards show for the 2013 and is the gretaest Olympian of all timeMember 
-		  Sir Steve Redgrave during the awards show for the 2013 and is the gretaest Olympian of all time....
-<a href="#myModal" data-toggle="modal">More>></a>
-
-		  </p>
-		  
-
-	  </div>
-
-<div class="page-header">
-          <p> Author: <u><a href ="#">Kesha Shah</a></u>   &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Company Name: <u><a href="#">Direct i</a></u></p>
-		  <p>
-		  Michael Phelps receives his Laureus Academy Exceptional Acheivement Award from Laureus Academy Member 
-		  Sir Steve Redgrave during the awards show for the 2013 and is the gretaest Olympian of all timeMember 
-		  Sir Steve Redgrave during the awards show for the 2013 and is the gretaest Olympian of all time....
-<a href="#myModal" data-toggle="modal">More>></a>
-
-		  </p>
-		  
-
-	  </div>
-	  <div class="pagination">
-			<ul>
-			<li><a href="#">Prev</a></li>
-			<li><a href="#">1</a></li>
-			<li><a href="#">2</a></li>
-			<li><a href="#">3</a></li>
-			<li><a href="#">4</a></li>
-			<li><a href="#">5</a></li>
-			<li><a href="#">Next</a></li>
-			</ul>
-		</div>
-		
+	  
+	</div>
+	<button id="loadmore" onclick="fetchMore()" class="btn btn-primary pull-right" >Load more..</button><br/><hr/>
+</div>
+	  
+	
 		<footer >
         <p class="pull-right"><a href="#">Back to top</a></p>
         <p>&copy; Intern Corner 2013 SEN Group 8. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
 		</footer>
 	<script src="js/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript">
+
+			  $("#getuserexp").click(function(){
+				fetchRecentExp();
+			  });
+
+			function putExp(Exp){
+			for(i = 0; i < Exp.length ; i++){
+				expArticle = makeExp( Exp[i].username, Exp[i].title, Exp[i].description,Exp[i].experince_id);
+				//$('#discussion').append(discussionArticle);
+				document.getElementById("exp_posts").insertAdjacentHTML("afterbegin",expArticle);
+				}
+			}
+			
+			
+			function makeExp(user,title,desc,id){
+				var descpost;
+				if(desc.length>200){
+					descpost=desc.substring(0,199);
+				}
+				else{
+					descpost=desc;
+				}
+				var exp = '<div id="'+id+'"class="page-header"><p> Author: <u><a href ="#">'+user+'</a></u>   <span style="float:right;">Company Name: <u><a href="#" >'+title+'</a></u></span></p><p>'+descpost+'.......<a class="exp_modal_expand" href="#myModal" onclick="fetchExp('+id+')" data-toggle="modal">More>></a><a class="exp_modal_expand pull-right" href="#" onclick="delExp('+id+')">Delete Experience</a></p></div>';
+				return exp;
+			}
+			
+			function fetchRecentExp(){
+			$.post("/intern_corner/user_exp",{},function(ret_data){
+				if(ret_data.result.length >0){//accepted
+					putExp(ret_data.result);
+					}
+				},"json");
+				}
+	</script>
+	
+	<script type="text/javascript">	  
+	function fetchExp(id){
+			$.post("/intern_corner/get_exp",{expid:id},function(ret_data){
+					var user = ret_data.result[0].username;
+					var tit = ret_data.result[0].title;
+					var desig = ret_data.result[0].designation;
+					var desc = ret_data.result[0].description;
+					var date = ret_data.result[0].timestamp;
+					var exp = '<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><p id="myModalLabel">Author: <u><a href ="#">'+user+'</a></u>  <span class="pull-right"> Company Name: <u><a href="#">'+tit+'</a></u></span><br/>Date: <a href="#"><u>'+date+'</u></a><span class="pull-right"> Designation: <a href="#"><u>'+desig+'</u></a></span></p></div><div class="modal-body"><h4> Description:  </h4>'+desc+'</br> </br></div>'
+					document.getElementById("modal_exp").innerHTML=exp;
+				},"json");
+				}
+	</script>
+	
+	
+	
+	<script>    
+	var counter = 3;
+	var counter1=3;
+	var counter2=3;
+	var counter3=3;
+	var counter4=3;
+	var limit = 7;
+	function addInput(divName){
+		 if (counter == limit)  {
+			  alert("You have reached the limit of adding " + counter + " inputs");
+		 }
+		 else {
+			  newdiv= '<input type="text" pattern="^[A-Za-z0-9_]{1,20}" name="faculty_interest" placeholder="interest" id="fi'+counter+'">';
+			  document.getElementById("f_interest").innerHTML+=newdiv;
+			  counter++;
+		 }
+	}
+	function addInput1(divName1){
+		 if (counter1 == limit)  {
+			  alert("You have reached the limit of adding " + counter1 + " inputs");
+		 }
+		 else {
+			  newdiv= '<input type="text" pattern="^[A-Za-z0-9_]{1,20}" name="faculty_expertise" placeholder="interest" id="fe'+counter1+'">';
+			  document.getElementById("f_expertise").innerHTML+=newdiv;
+			  counter1++;
+		 }
+	}
+	function addInput2(divName){
+		 if (counter2 == limit)  {
+			  alert("You have reached the limit of adding " + counter2 + " inputs");
+		 }
+		 else {
+			  newdiv= '<input type="text" pattern="^[A-Za-z0-9_]{1,20}" name="student_interest" placeholder="interest" id="si'+counter2+'">';
+			  document.getElementById("s_interest").innerHTML+=newdiv;
+			  counter2++;
+		 }
+	}
+	function addInput3(divName){
+		 if (counter3 == limit)  {
+			  alert("You have reached the limit of adding " + counter3 + " inputs");
+		 }
+		 else {
+			  newdiv= '<input type="text" pattern="^[A-Za-z0-9_]{1,20}" name="past_internship" placeholder="interest" id="pi'+counter3+'">';
+			  document.getElementById("internships").innerHTML+=newdiv;
+			  counter3++;
+		 }
+	}
+	
+	function addInput4(divName){
+		 if (counter4 == limit)  {
+			  alert("You have reached the limit of adding " + counter4 + " inputs");
+		 }
+		 else {
+			  newdiv= '<input type="text" pattern="^[A-Za-z0-9_]{1,20}" name="past_company" placeholder="company" id="pc'+counter4+'">';
+			  document.getElementById("companies").innerHTML+=newdiv;
+			  counter4++;
+		 }
+	}
+	
+
+	</script>
+	
+	
+	<script type="text/javascript">
+	function delOneExp(id){
+			$.post("/intern_corner/del_one_exp",{expid:id},function(ret_data){
+				if(ret_data.status_code==200){
+					var elem = document.getElementById(id);
+					elem.parentNode.removeChild(elem);
+					}
+				else if(ret_data.status_code==203){
+				alert("You are not permitted to delete");
+					}
+				},"json");
+				}
+	</script>
+	
+	
+	<script type="text/javascript">	  
+	
+				
+	function putExp(Exp){
+			document.getElementById("exp_posts").innerHTML="";
+			for(i = 0; i < Exp.length ; i++){
+				expArticle = makeExp( Exp[i].username, Exp[i].title, Exp[i].description,Exp[i].experince_id);
+				//$('#discussion').append(discussionArticle);
+				
+				document.getElementById("exp_posts").insertAdjacentHTML("afterbegin",expArticle);
+				}
+			}
+			
+			
+			function makeExp(user,title,desc,id){
+				var descpost;
+				if(desc.length>200){
+					descpost=desc.substring(0,199);
+				}
+				else{
+					descpost=desc;
+				}
+				var exp = '<div id="'+id+'"class="page-header"><p> Author: <u><a href ="#">'+user+'</a></u>   <span style="float:right;">Company Name: <u><a href="#" >'+title+'</a></u></span></p><p>'+descpost+'.......<a class="exp_modal_expand" href="#myModal" onclick="fetchExp('+id+')" data-toggle="modal">More>></a><a class="exp_modal_expand pull-right" href="#" onclick="delOneExp('+id+')">Delete Experience</a></p></div>';
+				return exp;
+			}
+			
+			function fetchRecentExp(){
+			$.post("/intern_corner/user_exp",{},function(ret_data){
+				if(ret_data.result.length >0){//accepted
+					putExp(ret_data.result);
+					}
+				},"json");
+				}
+	</script>
+	
+	
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> <!-- or use local jquery -->
   <script src="js/jqBootstrapValidation.js"></script>
-    <script src="js/jquery.js"></script>
+	
+	<script src="js/bootstrap-filestyle-0.1.0.min.js"></script>
     <script src="js/bootstrap-transition.js"></script>
     <script src="js/bootstrap-alert.js"></script>
     <script src="js/bootstrap-modal.js"></script>
@@ -227,10 +684,16 @@ I'd argue this isn't exactly the most robust or elegant approach, but it illustr
     <script src="js/bootstrap-typeahead.js"></script>
 	<script>
 	$(function () { $("form,input").not("[type=submit]").jqBootstrapValidation(); } );
-  </script>
+	</script>
+	<script>
+	$('#experience_form').submit(function(e) {
+    e.preventDefault();
+    send_data();
+    });
+	</script>
 <!--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@-->
  
-
+	</div>
   </body>
 </html>
 

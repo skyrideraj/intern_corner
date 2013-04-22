@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Internship Corner</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!-- Bootstrap -->
+		<link href="css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+		<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+		<link href="css/bootstrap.css" rel="stylesheet" media="screen">
+		<link href="css/home.css" rel="stylesheet">
+
+		
+		<script>
+		function load(){
+			if(sessionStorage.length>0){
+			document.getElementById("username_tag").innerHTML+=sessionStorage.getItem("user");
+			}
+			else{
+				window.location= "notloggedin.html";
+				}
+			var type = sessionStorage.getItem("searchtype");
+			if (type=="f1"){
+				var name=sessionStorage.getItem("facultyname");
+				$.post("/intern_corner/search_faculty",{type:"name",val:name},function(ret_data){
+						if(ret_data.status_code==404){
+						alert("No search results found");
+						window.history.back();
+						}
+						else if(ret_data.status_code==200){
+						var newdiv='<div class="accordion-group"><div class="accordion-heading"><a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne"><h5><span class="org_name">'+name+'</span> </h5></a></div><div id="collapseOne" class="accordion-body collapse "><div class="accordion-inner"><table><tr> <td class= "name"> Other details: <td class= "val"> '+ret_data.result[0].other_details+'</tr><tr> <td class= "name"> Project Details <td class= "val"> '+ret_data.result[0].project_details+'</tr></table></div></div></div><div class="freespace"></div>'
+						document.getElementById("accordion2").insertAdjacentHTML("afterbegin",newdiv);
+						}
+						
+						},"json");
+			}
+			if (type=="f2"){
+				var name=sessionStorage.getItem("expertise");
+				$.post("/intern_corner/search_faculty",{type:"area_of_expertise",val:name},function(ret_data){
+				if(ret_data.status_code==404){
+						alert("No search results found");
+						window.history.back();
+						}
+						else if(ret_data.status_code==200){
+							for(i=0;i<ret_data.result.length;i++){
+							var newdiv='<div class="accordion-group"><div class="accordion-heading"><a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#'+i+'"><h5><span class="org_name">'+name+'</span> </h5></a></div><div id="'+i+'" class="accordion-body collapse "><div class="accordion-inner"><table><tr> <td class= "name"> Username: <td class= "val"> '+ret_data.result[i].username+'</tr><tr> <td class= "name"> Full Name: <td class= "val"> '+ret_data.result[i].full_name+'</tr><tr> <td class= "name"> Email: <td class= "val"> '+ret_data.result[i].email+'</tr></table></div></div></div><div class="freespace"></div>'
+							document.getElementById("accordion2").insertAdjacentHTML("afterbegin",newdiv);
+							}
+						}
+						},"json");
+			}
+			if (type=="f3"){
+				var name=sessionStorage.getItem("interest");
+				$.post("/intern_corner/search_faculty",{type:"area_of_interest",val:name},function(ret_data){
+				if(ret_data.status_code==404){
+						alert("No search results found");
+						window.history.back();
+						}
+						else if(ret_data.status_code==200){
+						for(i=0;i<ret_data.result.length;i++){
+							var newdiv='<div class="accordion-group"><div class="accordion-heading"><a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#'+i+'"><h5><span class="org_name">'+name+'</span> </h5></a></div><div id="'+i+'" class="accordion-body collapse "><div class="accordion-inner"><table><tr> <td class= "name"> Username: <td class= "val"> '+ret_data.result[i].username+'</tr><tr> <td class= "name"> Full Name: <td class= "val"> '+ret_data.result[i].full_name+'</tr><tr> <td class= "name"> Email: <td class= "val"> '+ret_data.result[i].email+'</tr></table></div></div></div><div class="freespace"></div>'
+							document.getElementById("accordion2").insertAdjacentHTML("afterbegin",newdiv);
+							}
+							}
+						},"json");
+			}
+			if (type=="e1"){
+				var name=sessionStorage.getItem("company");
+				$.post("/intern_corner/search_exp",{company:name},function(ret_data){
+				if(ret_data.status_code==404){
+						alert("No search results found");
+						window.history.back();
+						}
+						else if(ret_data.status_code==200){
+						for(i=0;i<ret_data.result.length;i++){
+							var newdiv='<div class="accordion-group"><div class="accordion-heading"><a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#'+i+'"><h5><span class="org_name">'+name+'</span> </h5></a></div><div id="'+i+'" class="accordion-body collapse "><div class="accordion-inner"><table><tr> <td class= "name"> Username: <td class= "val"> '+ret_data.result[i].user_name+'</tr><tr> <td class= "name"> Designation: <td class= "val"> '+ret_data.result[i].designation+'</tr><tr> <td class= "name"> Experience Description: <td class= "desc_val"> '+ret_data.result[i].experince_description+'</tr><tr> <td class= "name"> Date Posted: <td class= "val"> '+ret_data.result[i].timestamp+'</tr></table></div></div></div><div class="freespace"></div>'
+							document.getElementById("accordion2").insertAdjacentHTML("afterbegin",newdiv);
+							}
+						}
+						},"json");
+			}
+			if (type=="o1"){
+				var value = sessionStorage.getItem("value");
+				var opptype = sessionStorage.getItem("type");
+				var attribute = sessionStorage.getItem("attribute");
+				$.post("/intern_corner/search_opp",{type:opptype,attr:attribute,val:value},function(ret_data){
+				if(ret_data.length==0){
+						alert("No search results found");
+						window.history.back();
+						}
+						else if(ret_data.status_code==200){
+						for(i=0;i<ret_data.result.length;i++){
+							var newdiv='<div class="accordion-group"><div class="accordion-heading"><a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#'+i+'"><h5><span class="org_name">'+opptype+'</span> </h5></a></div><div id="'+i+'" class="accordion-body collapse "><div class="accordion-inner"><table><tr> <td class= "name"> Author: <td class= "val"> '+ret_data.result[i].user_name+'</tr><tr> <td class= "name"> Title: <td class= "val"> '+ret_data.result[i].name+'</tr><tr> <td class= "name"> Opportunity Description: <td class= "desc_val"> '+ret_data.result[i].description+'</tr><tr> <td class= "name"> Deadline: <td class= "deadval"> '+ret_data.result[i].deadline_for_application+'</tr><tr> <td class= "name"> Start Date: <td class= "val"> '+ret_data.result[i].start_date+'</tr><tr> <td class= "name"> End Date: <td class= "val"> '+ret_data.result[i].end_date+'</tr><tr> <td class= "name"> Stipend: <td class= "val"> '+ret_data.result[i].stipend+'</tr><tr> <td class= "name"> Organization: <td class= "val"> '+ret_data.result[i].organization+'</tr><tr> <td class= "name"> Location: <td class= "val"> '+ret_data.result[i].location+'</tr></table></div></div></div><div class="freespace"></div>'
+							document.getElementById("accordion2").insertAdjacentHTML("afterbegin",newdiv);
+							}
+							}
+						},"json");
+			}
+		}
+		</script>
+		<script>
+		function backhistory(){
+		window.history.back();
+		}
+		</script>
+		<style>
+			.dropdown{
+		margin-left:50px;
+		}
+		.opp_top
+				{
+				margin-top:50px;
+				}
+		.pull-right
+				{
+				margin-right:20px;
+				}
+			.accordion-heading
+			{
+				height:80px;
+			}
+	
+			.freespace
+			{
+				height:30px;
+			}
+			.name{
+			padding-top :10px;
+			position:relative;
+			left:10px;
+			
+			}
+			.desc_val{
+			padding-top :10px;
+			position:relative;
+			left:150px;
+			width:40em; 
+			word-wrap:break-word;
+			}
+
+			.val{
+			padding-top :10px;
+			position:relative;
+			left:150px;
+			}
+			.deadval{
+			padding-top :10px;
+			position:relative;
+			left:150px;
+			color:red;
+			}
+
+
+		</style>
+	</head>
+	<body onload="load()">
+		<div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    
+                    <div class="nav-collapse collapse">
+					  <ul class="nav">
+						<li ><p class="brand">Intern Corner</p></li>
+						<li ><a href="discussion_page.html">Q & A Corner</a></li>
+						<li ><a href="opportunity_corner.html">Opportunity Corner</a></li>
+						<li ><a href="experience_corner.html">Experience Corner</a></li>
+						<li class="active"><a href="search_main.html">Search Corner</a></li>
+						<li class="dropdown">
+						<div class="btn-group">
+						  <a id="username_tag" class="btn btn-small btn-primary" href="#"><i class="icon-user icon-white"></i></a>
+							<a class="btn btn-small btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+						  <ul class="dropdown-menu">
+							<li class="nav-header">Profile actions</li>
+							
+							<li><a href="view_profile.html">View Profile</a></li>
+							<li class="divider"></li>
+							<li class="nav-header">Account</li>
+							<li><a href="change.html">Change Password</a></li>
+							<li><a href="#" onclick="logout()">Logout</a></li>
+						  </ul>
+						</div>
+						</li>
+					  </ul>
+					</div>
+                </div>
+            </div>
+        </div>
+
+    <div class="container">
+		<a class="btn btn-primary" onclick="backhistory()">Back to Search Corner</a><br><br>
+		<div class="search_op">
+			<h3>Click on individual output to expand</h3>
+		</div>
+		<div class="freespace">
+			</div>
+		<div class="accordion" id="accordion2">
+			
+
+		</div>	
+
+			
+
+		<footer >
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        <p>&copy; Intern Corner 2013 SEN Group 8. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+		</footer>
+
+
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/modernizr-2.6.2.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> <!-- or use local jquery -->
+		<script src="js/jqBootstrapValidation.js"></script>
+		<script src="js/jquery-1.9.1.min.js"></script>
+		<script src="js/bootstrap-transition.js"></script>
+		<script src="js/bootstrap-alert.js"></script>
+		<script src="js/bootstrap-modal.js"></script>
+		<script src="js/bootstrap-dropdown.js"></script>
+		<script src="js/bootstrap-scrollspy.js"></script>
+		<script src="js/bootstrap-tab.js"></script>
+		<script src="js/bootstrap-tooltip.js"></script>
+		<script src="js/bootstrap-popover.js"></script>
+		<script src="js/bootstrap-button.js"></script>
+		<script src="js/bootstrap-collapse.js"></script>
+		<script src="js/bootstrap-carousel.js"></script>
+		<script src="js/bootstrap-typeahead.js"></script>
+		<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+
+		<script>
+
+			$(document).ready(function() {
+			$("#datepicker").datepicker();
+			$("#datepicker1").datepicker();
+			$("#datepicker2").datepicker();
+			});
+
+		</script>
+
+		<script type="text/javascript">
+		function logout(){
+		$.post("/intern_corner/logout",{},function(ret_data){
+			if(ret_data.status_code==200){
+				sessionStorage.clear();
+				window.location="signin.html";
+			}
+
+		},"json");
+		}
+		</script>
+	</body>
+</html>

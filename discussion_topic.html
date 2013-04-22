@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Intern Corner</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!-- Bootstrap -->
+		<link href="css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+		<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+		<link href="css/bootstrap.css" rel="stylesheet" media="screen">
+		<script src="js/jquery-1.9.1.min.js"></script>
+
+		
+		<script>
+		
+		var id;
+		setInterval(fetchRecentDiscussions, 30000);
+		function fetchRecentDiscussions(){
+		page=0;
+		//document.getElementById("comments").innerHTML += "<span>as</span>";
+		$.post("/intern_corner/extractPost",{page_no: page },function(ret_data){
+		if(ret_data.length >0){//accepted
+			//alert(ret_data);
+			//alert(ret_data.length);
+			//putRecentDiscussions(ret_data);
+			document.getElementById("ans").innerHTML=" ";
+			document.getElementById("comments").innerHTML=" ";
+			var variable = sessionStorage.getItem("post_id");
+			//alert(variable);
+			for(i=0;i<ret_data.length;i++)
+			{
+			if(variable==ret_data[i].post_id)
+			{
+			id=ret_data[i];
+			//alert(i);
+			//alert(ret_data[i].comments[0].comment);
+			addPost(id);
+			addComments(id);
+			addAnswers(id);
+			break;
+			}
+			}
+			}
+		},"json");
+		}
+		
+		function addPost(id){
+		document.getElementById("post").innerHTML=id.description;
+		document.getElementById("title").innerHTML="Title : "+id.title;
+		document.getElementById("username").innerHTML=" -"+id.username;
+		document.getElementById("total_votes").innerHTML="&nbsp;&nbsp;&nbsp;votes:"+id.total_votes;
+		document.getElementById("timestamp").innerHTML=id.timestamp;
+		}
+		
+		function addComments(id){
+		//alert(id.comments[0].comment);
+		for(i = id.comments.length-1; i>=0; i--){
+			commentArticle = makeComments(id.comments[i].username,id.comments[i].post_id,id.comments[i].comment,id.comments[i].comment_id,id.comments[i].timestamp,i);
+			//$('#discussion').append(discussionArticle);
+			//alert(commentArticle);
+			document.getElementById("comments").insertAdjacentHTML("afterbegin",commentArticle);
+			}
+		
+		}
+		
+		function makeComments(username,postid,comment,comment_id,timestamp,i){
+			var comment='<p id="comment_'+comment_id+'" style="padding-left:15px"> <a href="#"> '+username+' </a> : '+comment+'</p><br /><span id="timestamp_com'+comment_id+'" style="position:relative; top:-25px; left:15px;">'+timestamp+'</span><button id="button_com'+comment_id+'" onClick="deleteComment('+comment_id+');" style="position:relative; left:1050px; top:-45px;">X</button>';
+			//alert(comment);
+			return comment;
+		}
+		
+		function deleteComment(comment_id){
+			$.post("/intern_corner/deleteComment",{comment_id:comment_id},function(ret_data){
+			if(ret_data.status_code==200){//accepted
+				var elem = document.getElementById("comment_"+comment_id);
+				elem.parentNode.removeChild(elem);
+				var elem1 = document.getElementById("timestamp_com"+comment_id);
+				elem1.parentNode.removeChild(elem1);
+				var elem2 = document.getElementById("button_com"+comment_id);
+				elem2.parentNode.removeChild(elem2);
+			}
+			if(ret_data.status_code==203){//accepted
+				alert("You are not permited to delete")
+			}
+			},"json");
+			
+		}
+		
+		function addAnswers(id){
+		//alert(id.comments[0].comment);
+		for(i = id.answers.length-1; i >= 0 ; i--){
+			answerArticle = makeAnswer(id.answers[i].username,id.answers[i].post_id,id.answers[i].answer_text,id.answers[i].answer_id,id.answers[i].timestamp,id.answers[i].total_votes,i);
+			//$('#discussion').append(discussionArticle);
+			//alert(commentArticle);
+			document.getElementById("ans").insertAdjacentHTML("afterbegin",answerArticle);
+			}
+		
+		}
+		
+		function makeAnswer(username,postid,answer,answerid,timestamp,tot_votes,i){
+			
+			var answer = '<p class="bcg" id="answer_'+answerid+'"><button id="button_ans'+answerid+'" onClick="deleteAnswer('+answerid+');" style="position:relative; left:-25px; top:-25px">X</button><a href="#">'+username+':</a>&nbsp;&nbsp;&nbsp;'+answer+'</p><button class="upvote_ans" onClick="upVoteAnswer('+answerid+');"><img src="img/like_thumbs_up.png" height="20px" width="20px"></button><button onClick="downVoteAnswer('+answerid+');" class="downvote_ans" ><img src="img/like_thumbs_down.png" height="20px" width="20px"></button><span id="tot_votes_'+answerid+'" style="position:relative; left:1025px; top:-50px">&nbsp;&nbsp;&nbsp;votes:'+tot_votes+'</span><span id="timestamp_ans'+answerid+'" style="position:relative; top:-90px; left:-95px;"><b>posted on </b>'+timestamp+'</span>';
+			return answer;
+		}
+		
+		function deleteAnswer(answer_id){
+			$.post("/intern_corner/deleteAnswer",{answer_id:answer_id},function(ret_data){
+			if(ret_data.status_code==200){//accepted
+				var elem = document.getElementById("answer_"+answer_id);
+				elem.parentNode.removeChild(elem);
+				var elem1 = document.getElementById("timestamp_ans"+answer_id);
+				elem1.parentNode.removeChild(elem1);
+				/*var elem2 = document.getElementById("button_ans"+answer_id);
+				elem2.parentNode.removeChild(elem2);*/
+			}
+			if(ret_data.status_code==203){//accepted
+				alert("You are not permited to delete")
+			}
+			},"json");
+			
+		}
+		
+		function upVotePost(){
+		$.post("/intern_corner/upVote",{post_id:id.post_id},function(ret_data){
+		if(ret_data.status_code==200){//accepted
+			document.getElementById("total_votes").innerHTML="&nbsp;&nbsp;&nbsp;votes:"+ret_data.tot_votes;
+			//alert(document.getElementById("tot_votes_"+postid).value);
+			}
+		if(ret_data.status_code==400){//accepted
+			alert("Author Cannot Upvote his own post")
+			}
+		},"json");
+		}
+		
+		function upVoteAnswer(answerid){
+		$.post("/intern_corner/upVoteAnswer",{answer_id:answerid},function(ret_data){
+		if(ret_data.status_code==200){//accepted
+			document.getElementById("tot_votes_"+answerid).innerHTML="&nbsp;&nbsp;&nbsp;votes:"+ret_data.tot_votes;
+			//alert(document.getElementById("tot_votes_"+postid).value);
+			}
+		if(ret_data.status_code==400){//accepted
+			alert("Author Cannot Upvote his own post")
+			}
+		},"json");
+		}
+		
+		function downVotePost(){
+		$.post("/intern_corner/downVote",{post_id:id.post_id},function(ret_data){
+		if(ret_data.status_code==200){//accepted
+			document.getElementById("total_votes").innerHTML="&nbsp;&nbsp;&nbsp;votes:"+ret_data.tot_votes;
+			//alert(document.getElementById("tot_votes_"+postid).value);
+			}
+		if(ret_data.status_code==400){//accepted
+			alert("Author Cannot Down his own post")
+			}
+		},"json");
+		}
+		
+		function downVoteAnswer(answerid){
+		$.post("/intern_corner/downVoteAnswer",{answer_id:answerid},function(ret_data){
+		if(ret_data.status_code==200){//accepted
+			document.getElementById("tot_votes_"+answerid).innerHTML="&nbsp;&nbsp;&nbsp;votes:"+ret_data.tot_votes;
+			//alert(document.getElementById("tot_votes_"+postid).value);
+			}
+		if(ret_data.status_code==400){//accepted
+			alert("Author Cannot downvote his own post")
+			}
+		},"json");
+		}
+		
+		function postComment(){
+			var comment_text = document.getElementById("new_comment").value;
+			//var i=id.comments.length;
+			//alert(i);
+			$.post("/intern_corner/addComment",{post_id:id.post_id, comment:comment_text},function(ret_data){
+			if(ret_data.status_code==200){//accepted
+				
+			var username=ret_data.username;
+			$.post("/intern_corner/extractPost",{page_no: page },function(ret_data){
+			if(ret_data.length >0){//accepted
+				document.getElementById("comments").innerHTML=" ";
+				var variable = sessionStorage.getItem("post_id");
+				for(i=0;i<ret_data.length;i++)
+				{
+					if(variable==ret_data[i].post_id)
+					{
+					curr=ret_data[i];
+					break;
+					}
+				}
+				$(document.getElementById("new_comment")).val('');
+				addComments(curr);
+				}
+		},"json");
+			//alert(username);
+			/*var comment='<p id="comment'+i+'"> <a href="#"> '+username+' </a> : '+comment_text+'</p><br /><span class="timestamp" style="position:relative; top:-25px; left:15px;">'+Date.now()+'</span>';
+		document.getElementById("new_comment").insertAdjacentHTML("beforebegin",comment);*/
+			//fetchRecentDiscussions();
+			}
+			},"json");
+		}
+		
+		
+		
+		
+		/*function postAnswer(){
+			var ans_text = document.getElementById("new_ans").value;
+			var i=id.answers.length;
+			//alert(i);
+			$.post("php/controller.php",{func:'addAnswer',post_id:id.post_id, answer:ans_text},function(ret_data){
+			if(ret_data.status_code==200){//accepted
+				
+			var username=ret_data.username;
+			//alert(username);
+			var answer = '<p class="bcg"><a href="#">'+username+':</a>&nbsp;&nbsp;&nbsp;'+answer+'</p><button class="upvote_ans" onClick="upVoteAnswer('+answerid+');"><img src="img/like_thumbs_up.png" height="20px" width="20px"></button><button onClick="downVoteAnswer('+answerid+');" class="downvote_ans" ><img src="img/like_thumbs_down.png" height="20px" width="20px"></button><span id="tot_votes_'+answerid+'" style="position:relative; left:1025px; top:-50px">&nbsp;&nbsp;&nbsp;votes:'+tot_votes+'</span>';
+		document.getElementById("new_ans").insertAdjacentHTML("beforebegin",answer);
+			//fetchRecentDiscussions();
+			}
+			},"json");
+		}*/
+		
+		function postAnswer(){
+			var ans_text = document.getElementById("new_ans").value;
+			var i=id.answers.length;
+			$.post("/intern_corner/addAnswer",{post_id:id.post_id, answer:ans_text},function(ret_data){
+			if(ret_data.status_code==200){//accepte
+			$(document.getElementById("new_ans")).val('');
+			fetchRecentDiscussions();
+			}
+			else{
+				alert(ret_data.detail+" "+"\nDelete your previous answer and add your new answer to post a different answer");
+			}
+			},"json");
+		}
+		
+		fetchRecentDiscussions();
+		
+			var counter = 1;
+			var counter1=1;
+			var limit = 5;
+			function addInput(divName){
+				if (counter == limit)  {
+					alert("You have reached the limit of adding " + counter + " inputs");
+				}
+				else {
+					var newdiv = document.createElement('div');
+					newdiv.innerHTML = "<input type='text' name='tag1' placeholder='Additional Tag'>";
+					document.getElementById(divName).appendChild(newdiv);
+					counter++;
+				}
+			}
+			
+		</script>
+		
+
+		<style>
+			.navbar .brand
+			{
+				float:right;
+			}
+			.accordion-heading
+			{
+				height:80px;
+			}
+			.org_name
+			{
+				position:relative;
+				left:10px;
+			}
+			.org_name_val
+			{
+				position:relative;
+				left:20px;
+			}
+			.deadline
+			{
+				position:relative;
+				left:200px;
+				color:red;
+			}
+			.deadline_val
+			{
+				position:relative;
+				left:210px;
+				color:red;
+			}
+			.opp_type
+			{
+				position:relative;
+				left:100px;
+			}
+			.opp_type_val
+			{
+				position:relative;
+				left:110px;
+			}
+			.username
+			{
+				position:relative;
+				left:10px;
+			}
+			.username_val
+			{
+				position:relative;
+				left:20px;
+			}
+			.location
+			{
+				position:relative;
+				left:10px;
+			}
+			.location_val
+			{
+				position:relative;
+				left:20px;
+			}
+			.stipend
+			{
+				position:relative;
+				left:800px;
+			}
+			.stipend_val
+			{
+				position:relative;
+				left:810px;
+			}
+			.strt_date
+			{
+				position:relative;
+				left:10px;
+			}
+			.strt_date_val
+			{
+				position:relative;
+				left:10px;
+			}
+			.end_date
+			{
+				position:relative;
+				left:780px;
+			}
+			.end_date_val
+			{
+				position:relative;
+				left:790px;
+			}
+			.description
+			{
+				position:relative;
+				left:10px;
+			}
+			.description_val
+			{
+				position:relative;
+				left:20px;
+			}
+			.upvote
+			{
+				position:relative;
+				top:-35px;
+				left:90px;
+			}
+			.upvote_ans
+			{
+				position:relative;
+				top:-55px;
+				left:1170px;
+			}
+			.downvote
+			{
+				position:relative;
+				top:-35px;
+				left:90px;
+			}
+			.downvote_ans
+			{
+				position:relative;
+				top:-55px;
+				left:1170px;
+			}
+			.freespace
+			{
+				height:30px;
+			}
+			.bcg
+			{
+				padding:30px;
+				background-color:#DDDDDD;
+				/*border: 2px solid #e5e5e5;
+				-webkit-border-radius: 4px;
+				-moz-border-radius: 4px;
+				border-radius: 4px;*/
+			
+			}
+			#total_votes
+			{
+				position:relative;
+				top:-30px;
+				left:100px;
+			}
+			.dropdown{
+		margin-left:50px;
+		}
+		.opp_top
+				{
+				margin-top:50px;
+				}
+		.pull-right
+				{
+				margin-right:20px;
+				}
+			
+		</style>
+		
+	</head>
+	<body onload="load()">
+		
+		<div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    
+                    <div class="nav-collapse collapse">
+					  <ul class="nav">
+						<li ><p class="brand">Intern Corner</p></li>
+						<li class="active"><a href="discussion_page.html">Q & A Corner</a></li>
+						<li ><a href="opportunity_corner.html">Opportunity Corner</a></li>
+						<li><a href="experience_corner.html">Experience Corner</a></li>
+						<li><a href="search_main.html">Search Corner</a></li>
+						<li class="dropdown pull-right">
+						<div class="btn-group">
+						  <a id="username_tag" class="btn btn-small btn-primary" href="#"><i class="icon-user icon-white"></i></a>
+							<a class="btn btn-small btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+						  <ul class="dropdown-menu">
+							<li class="nav-header">Profile actions</li>
+							
+							<li><a href="view_profile.html">View Profile</a></li>
+							<li class="divider"></li>
+							<li class="nav-header">Account</li>
+							<li><a href="change.html">Change Password</a></li>
+							<li><a href="#" onclick="logout()">Logout</a></li>
+						  </ul>
+						</div>
+						</li>
+					  </ul>
+					</div>
+                </div>
+            </div>
+        </div>
+	
+		
+		
+		
+		
+		<div class="jumbotron" style="padding-left:20px; margin-top:60px;">
+
+  		  <h1 align="center"> Discussion Topic</h1>
+          
+		</div>
+
+
+ 
+		<div class="question" style="padding-left:50px; padding-top:25px;" >
+          <h2 id="title"> </h2>
+		  <a style="padding-top:10px;" href="#" id="username" > </a> <b>posted at</b> <span id="timestamp"></span>
+		</div>
+		
+
+		<div class="Content" style="padding-left:50px; padding-top:25px; padding-right:50px; text-align:justify">
+		  <p id="post">
+		  
+		 </p>
+         <div class="accordion-group1">
+				<div class="accordion-heading" style="height:30px">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne" style="padding-left:0; font-size:18px;"> Comments </a>
+					 <button class="upvote" onClick="upVotePost();"><img src="img/like_thumbs_up.png" height="20px" width="20px"></button>
+		 			 <button class="downvote" onClick="downVotePost();"><img src="img/like_thumbs_down.png" height="20px" width="20px"></button><span id="total_votes"></span>
+		<!-- <button><img src="img/like_thumbs_up.png" height="20px" width="20px"></button>
+		 <button><img src="img/like_thumbs_down.png" height="20px" width="20px"></button> -->
+				
+				</div>	
+		 </div>
+		
+	
+		 <div id="collapseOne" class="accordion-body collapse ">
+				<div id="comments" class="accordion-inner" >	
+				
+				</div>
+				<div style="margin-left:15px;">
+				<textarea id="new_comment" rows=1 placeholder="Enter Your Comment Here....."></textarea><input type="button" value="post" onClick="postComment();" />
+ 				</div>
+		</div>
+	</div>
+	
+	
+	<h4 style="padding-left:50px;"> Answers </h4>
+	<div class="ans" id="ans" style="padding-left:50px; padding-top:40px"></div>
+	<div style="margin-left:50px;">
+		<textarea id="new_ans" rows=1 placeholder="Enter Your Answer Here....."></textarea><input type="button" value="post" onClick="postAnswer();" />
+ 		<!--</div>-->
+	</div>
+	
+	<div id="exp_posts" class="container">
+
+<button id="loadmore" onclick="fetchMore()" class="btn btn-primary pull-right" >Load more..</button><br/><hr/>	  
+</div>
+	  
+	
+		<footer >
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        <p>&copy; Intern Corner 2013 SEN Group 8. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+		</footer>
+	
+	
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> <!-- or use local jquery -->
+  <script src="js/jqBootstrapValidation.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap-transition.js"></script>
+    <script src="js/bootstrap-alert.js"></script>
+    <script src="js/bootstrap-modal.js"></script>
+    <script src="js/bootstrap-dropdown.js"></script>
+    <script src="js/bootstrap-scrollspy.js"></script>
+    <script src="js/bootstrap-tab.js"></script>
+    <script src="js/bootstrap-tooltip.js"></script>
+    <script src="js/bootstrap-popover.js"></script>
+    <script src="js/bootstrap-button.js"></script>
+    <script src="js/bootstrap-collapse.js"></script>
+    <script src="js/bootstrap-carousel.js"></script>
+    <script src="js/bootstrap-typeahead.js"></script>
+			<script>
+		function load(){
+		if(sessionStorage.length>0){
+			document.getElementById("username_tag").innerHTML+=sessionStorage.getItem("user");
+			}
+		else{
+			window.location= "notloggedin.html";
+			}
+		}
+		</script>
+		<script>
+		function logout(){
+		$.post("/intern_corner/logout",{},function(ret_data){
+			if(ret_data.status_code==200){
+				sessionStorage.clear();
+				window.location="signin.html";
+			}
+
+		},"json");
+		}
+		</script>
+	  <script>
+  $(function () { $("form,input").not("[type=submit]").jqBootstrapValidation(); } );
+  </script>
+		
+	
+		<!--<script src="js/jquery-1.9.1.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<!--<script src="js/modernizr-2.6.2.min.js"></script>-->
+		<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> <!-- or use local jquery -->
+		<!--<script src="js/jqBootstrapValidation.js"></script>
+		
+		<script src="js/bootstrap-transition.js"></script>
+		<script src="js/bootstrap-alert.js"></script>
+		<script src="js/bootstrap-modal.js"></script>
+		<script src="js/bootstrap-dropdown.js"></script>
+		<script src="js/bootstrap-scrollspy.js"></script>
+		<script src="js/bootstrap-tab.js"></script>
+		<script src="js/bootstrap-tooltip.js"></script>
+		<script src="js/bootstrap-popover.js"></script>
+		<script src="js/bootstrap-button.js"></script>
+		<script src="js/bootstrap-collapse.js"></script>
+		<script src="js/bootstrap-carousel.js"></script>
+		<script src="js/bootstrap-typeahead.js"></script>
+		<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>-->
+
+		
+	</body>
+</html>

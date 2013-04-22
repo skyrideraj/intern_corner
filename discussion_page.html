@@ -1,0 +1,361 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Intern Corner</title>
+	
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+	    <link href="css/bootstrap.css" rel="stylesheet">
+		
+		<script src="js/jquery-1.9.1.min.js"></script>
+		
+	<style>
+		.dropdown{
+		margin-left:50px;
+		}
+		.pull-right
+				{
+				margin-right:20px;
+				}
+	</style>
+  </head>
+  <body onload="load()">
+  
+ 
+    
+<!-- Button to trigger modal -->
+<script>
+function load(){
+		if(sessionStorage.length>0){
+			document.getElementById("username_tag").innerHTML+=sessionStorage.getItem("user");
+			}
+		else{
+			window.location= "notloggedin.html";
+			}
+		}
+</script>
+<script type="text/javascript">
+
+var page=0;
+var data;
+
+
+setInterval(fetchRecentDiscussions, 30000);
+
+	$(document).ready(function(){
+//	alert("hey");
+/*$("#btn_post").bind("click", function() {
+    $.addPost().close();
+  });*/
+	fetchRecentDiscussions();
+	
+
+});
+
+	function putRecentDiscussions(Discussions){
+	for(i = Discussions.length-1; i >= 0 ; i--){
+	//tags=Discussion[i].tags;
+		discussionArticle = makeDiscussions(Discussions[i].post_id, Discussions[i].title, Discussions[i].description, Discussions[i].answers, Discussions[i].comments, Discussions[i].username, Discussions[i].total_votes, Discussions[i].tags, Discussions[i].timestamp, Discussions[i].closed, Discussions[i].no_of_closed_requests,Discussions[i].anonymous,i);
+		//$('#discussion').append(discussionArticle);
+	////	x=addTags(i,Discussions[i].tags);
+	//tags_display=addTags(tags);
+		document.getElementById("discussion").insertAdjacentHTML("afterbegin",discussionArticle);
+		}
+	}
+	
+	
+	function makeDiscussions(postid, title, description, answers, comments, username, total_votes, tags, timestamp, closed, no_of_close_requests,anonymous,i){
+		if(anonymous==1){
+		var discussion = '<div class="page-header" style="padding-left:20px;"><li><a style="font-size:20px;font-weight:700; color:#000000;" id="title1" onClick="sesvar('+postid+');"> Title:"' + title + '" </a></li><button class="btn btn-primary" id="close'+postid+'"onClick="delete_post('+postid+');"style="position:relative; left:1200px; top:-15px;">x</button><li><a href="#" name="user1"> Username: &nbsp;Anonymous&nbsp; </a><b>posted at:</b> '+timestamp+'<div style="margin-left:10px"><p><pre>' + description + '</pre><br></p></div><a style="padding-left:3px" onClick="sesvar('+postid+');"> Comments </a><a style="padding-left:7px" onclick="sesvar('+postid+');"> Answers </a> <button style="padding-left:3px" onClick="upVote('+postid+')"><img src="img/like_thumbs_up.png" height="20px" width="20px"></button><button onClick="downVote('+postid+')"><img src="img/like_thumbs_down.png" height="20px" width="20px"></button><span id="tot_votes_'+postid+'">&nbsp;&nbsp;&nbsp;votes:'+total_votes+'&nbsp;&nbsp;&nbsp; ';
+		}
+		else{
+			var discussion = '<div class="page-header" style="padding-left:20px;"><li><a style="font-size:20px;font-weight:700; color:#000000;" id="title1" onClick="sesvar('+postid+');"> Title:"' + title + '" </a></li><button class="btn btn-primary" id="close'+postid+'"onClick="delete_post('+postid+');"style="position:relative; left:1200px; top:-15px;">x</button><li><a href="#" name="user1"> Username:&nbsp; '+username+' &nbsp;</a><b>posted at:</b> '+timestamp+'<div style="margin-left:10px"><p><pre>' + description + '</pre><br></p></div><a style="padding-left:3px" onClick="sesvar('+postid+');"> Comments </a><a style="padding-left:7px" onclick="sesvar('+postid+');"> Answers </a> <button style="padding-left:3px" onClick="upVote('+postid+')"><img src="img/like_thumbs_up.png" height="20px" width="20px"></button><button onClick="downVote('+postid+')"><img src="img/like_thumbs_down.png" height="20px" width="20px"></button><span id="tot_votes_'+postid+'">&nbsp;&nbsp;&nbsp;votes:'+total_votes+'&nbsp;&nbsp;&nbsp; ';
+		}
+		for(i=0;i<tags.length;i++)
+		{
+			d=tags[i].tag_id;
+			//if(tags[i].tag_name!=" ")
+			{
+			var str='<button onclick="tag_subs('+d+')" id="tag'+d+'">'+tags[i].tag_name+'</button>';
+			discussion=discussion+str;
+			}
+		}
+		
+		
+		
+	
+		return discussion;
+	}
+	
+/*	function addTags(tags)
+	{
+	alert(hi!);
+	return 0;
+	}
+	*/
+
+	
+	function upVote(postid){
+	$.post("/intern_corner/upVote",{post_id:postid},function(ret_data){
+		if(ret_data.status_code==200){//accepted
+			document.getElementById("tot_votes_"+postid).innerHTML="&nbsp;&nbsp;&nbsp;votes:"+ret_data.tot_votes;
+			//alert(document.getElementById("tot_votes_"+postid).value);
+			}
+		if(ret_data.status_code==400){//accepted
+			alert("Author Cannot Upvote his own post")
+			}
+		},"json");
+	}
+	function downVote(postid){
+	$.post("/intern_corner/downVote",{post_id:postid},function(ret_data){
+		if(ret_data.status_code==200){//accepted
+			document.getElementById("tot_votes_"+postid).innerHTML="&nbsp;&nbsp;&nbsp;votes:"+ret_data.tot_votes;
+			//alert(document.getElementById("tot_votes_"+postid).value);
+			}
+		if(ret_data.status_code==400){//accepted
+			alert("Author Cannot downVote his own post");
+			}
+		},"json");
+	}
+	function sesvar(post_id)
+		{
+		//var id= document.getElementById(this.id).id;
+		//alert(id);
+		//alert(post_id);
+		sessionStorage.setItem("post_id",post_id);
+		window.location="discussion_topic.html";
+		
+		}
+	function fetchRecentDiscussions(){
+	
+	$.post("/intern_corner/extractPost",{page_no:page},function(ret_data){
+		if(ret_data.length >0){//accepted
+			//alert(ret_data);
+			
+			document.getElementById("discussion").innerHTML=" ";
+			//data=ret_data;
+			putRecentDiscussions(ret_data);
+			}
+		},"json");
+		}
+		
+		/*function fetchRecentDiscussions_loadMore(){
+	page = sessionStorage.getItem("page");
+	$.post("php/controller.php",{func:'extractPost',page_no: page },function(ret_data){
+		if(ret_data.length >0){//accepted
+			//alert(ret_data);
+			
+			//document.getElementById("discussion").innerHTML=" ";
+			//data=ret_data;
+			putRecentDiscussions(ret_data);
+			}
+		},"json");
+		
+		}*/
+		
+		function addPost(){
+		$('#myModal_1').modal('hide')
+			var title = document.getElementById("q_title").value;
+			var des = document.getElementById("des").value;
+			var tag = document.getElementById("tag").value;
+			var anony = document.getElementById("anon").checked;
+			//alert(title);
+		//	var i=data.length;
+			//alert(i);
+			//alert(anony);
+			$.post("/intern_corner/addPost",{'title':title, 'description': des, 'tags' : tag, 'anonymous' : anony },function(ret_data){
+			if(ret_data.status_code==200){//accepte
+			$(document.getElementById("q_title")).val('');
+			$(document.getElementById("des")).val('');
+			$(document.getElementById("tag")).val('');
+			fetchRecentDiscussions();
+			}
+			else if(ret_data.status_code==403){
+						alert("Exceeded the day limit to post!");
+						}
+			},"json");
+		}
+		function delete_post(postid)
+		{
+		$.post("/intern_corner/deletePost",{'post_id':postid},function(ret_data){
+			if(ret_data.status_code==200){//accepte
+			//alert(ret_data.detail);
+			fetchRecentDiscussions();
+			}
+			else if(ret_data.status_code==203){
+			alert(ret_data.detail+"\nPost will be deleted after 3 such requests from different users");
+			}
+			else
+			{
+			alert(ret_data.detail);
+			}
+			},"json");
+		
+		}
+		function fetchMore(){
+			sessionStorage.setItem("page",page+1);
+			window.location="discussion_page_change_page.html";
+		}
+		
+	</script>
+	<script>
+		function tag_subs(tagid){
+	$.post("/intern_corner/subscribe_tag",{tag_id:tagid},function(ret_data){
+		if(ret_data.status_code==200){//accepted
+			alert("subscribed");
+			}
+		if(ret_data.status_code==400){//accepted
+			alert("unsubscribed");
+			}
+		},"json");
+	}
+	</script>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    
+                    <div class="nav-collapse collapse">
+					  <ul class="nav">
+						<li ><p class="brand">Intern Corner</p></li>
+						<li href="discussion_page.html" class="active"><a href="discussion_page.html">Q & A Corner</a></li>
+						<li ><a href="opportunity_corner.html">Opportunity Corner</a></li>
+						<li><a href="experience_corner.html">Experience Corner</a></li>
+						<li><a href="search_main.html">Search Corner</a></li>
+						<li class="dropdown pull-right">
+						<div class="btn-group">
+						  <a id="username_tag" class="btn btn-small btn-primary" href="#"><i class="icon-user icon-white"></i></a>
+							<a class="btn btn-small btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+						  <ul class="dropdown-menu">
+							<li class="nav-header">Profile actions</li>
+							
+							<li><a href="view_profile.html">View Profile</a></li>
+							<li class="divider"></li>
+							<li class="nav-header">Account</li>
+							<li><a href="change.html">Change Password</a></li>
+							<li><a href="#" onclick="logout()">Logout</a></li>
+						  </ul>
+						</div>
+						</li>
+					  </ul>
+					</div>
+                </div>
+            </div>
+        </div>
+	</div>
+<!-- my_MODAL_Post_Internhsip DETAILS -->
+<div id="myModal_1" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+   
+    <form id="qa_post" class="form-horizontal">
+      <h2 class="form-signin-heading">Add your question here.. </h2>
+      <div class="control-group">
+      <label class="control-label">Title: </label>
+        <div class="controls">
+        <input id="q_title" type="text" maxlength="25" minlength="4" data-validation-pattern-message="sas" placeholder="Enter topic/question here" required/>
+        </div>
+      </div>
+      
+	  
+      
+     
+      
+<div class="control-group">
+      <label class="control-label">Description : </label>
+        <div class="controls">
+        <textarea  id="des" rows="10" cols="50" data-validation-pattern-message="" placeholder="Description of your question" required>
+</textarea>        </div>
+      </div>
+       <div class="control-group">
+      <label class="control-label">Tags: </label>
+        <div class="controls">
+        <input type="text" id="tag" data-validation-pattern-message="sas" placeholder="tag1;tag2;tag3">
+		<p> different tags seperated by ';' (semicolon)</p>
+        </div>
+      </div>
+ <input type="checkbox" id="anon"> make it anonymous </input>
+    
+ 
+  </div>
+  <div class="modal-footer">
+ 
+          <input type="submit" name="post_btn "id="btn_post" class="btn btn-primary" value="Post" />   
+    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+     
+  </div>
+      </form>
+
+</div>
+
+<!--  MODAL_Post Internship ENDS HERE-->
+
+<div class="jumbotron" style="padding-left:20px" >
+
+    <h1 align="center" style="margin-top:60px;"> Q&A Corner</h1>
+          <a href="#myModal_1" data-toggle="modal" class="btn btn-primary">Post New discussion topic here..</a>
+	<div id="discussion">
+ 	  
+	 </div>
+
+      </div>
+	 <div id="dis_posts" style="margin-left:20px;">
+
+<button id="loadmore" onclick="fetchMore()" class="btn btn-primary" align="left" >Load more..</button><br/><hr/>	  
+</div>
+	  
+	
+		<footer >
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        <p>&copy; Intern Corner 2013 SEN Group 8. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+		</footer>
+
+<!--<div id="discussion">
+ 	  
+	 </div>-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> <!-- or use local jquery -->
+  <script src="js/jqBootstrapValidation.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap-transition.js"></script>
+    <script src="js/bootstrap-alert.js"></script>
+    <script src="js/bootstrap-modal.js"></script>
+    <script src="js/bootstrap-dropdown.js"></script>
+    <script src="js/bootstrap-scrollspy.js"></script>
+    <script src="js/bootstrap-tab.js"></script>
+    <script src="js/bootstrap-tooltip.js"></script>
+    <script src="js/bootstrap-popover.js"></script>
+    <script src="js/bootstrap-button.js"></script>
+    <script src="js/bootstrap-collapse.js"></script>
+    <script src="js/bootstrap-carousel.js"></script>
+    <script src="js/bootstrap-typeahead.js"></script>
+	  <script>
+  $(function () { $("form,input").not("[type=submit]").jqBootstrapValidation(); } );
+  </script>
+  
+	<script>
+	$('#qa_post').submit(function(e) {
+    e.preventDefault();
+    addPost();
+    });
+	</script>
+	<script type="text/javascript">
+	function logout(){
+	$.post("/intern_corner/logout",{},function(ret_data){
+		if(ret_data.status_code==200){
+			sessionStorage.clear();
+			window.location="signin.html";
+		}
+
+	},"json");
+	}
+	</script>
+	  <!--<script>
+  $(function () { $("form,input").not("[type=submit]").jqBootstrapValidation(); } );
+  </script>
+<!--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@-->
+ 
+
+  </body>
+</html>
+

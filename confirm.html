@@ -33,9 +33,10 @@
 	<script type="text/javascript">
 	function send_data(){
 	var form = document.forms["confirmform"];
-	$.post("php/controller.php",{func:'confirm',username:form["username"].value,activation_code:form["code"].value},function(ret_data){
+	$.post("/intern_corner/confirm",{username:form["username"].value,activation_code:form["code"].value},function(ret_data){
 		if(ret_data.status_code==200){
 			window.location= "signin.html";
+			alert("Account confirmed! Login with username and password");
 		}
 		else if(ret_data.status_code==400){
 			alert("Wrong Code!");

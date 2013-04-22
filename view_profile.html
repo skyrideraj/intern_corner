@@ -1,15 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Carousel Template &middot; Bootstrap</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
 
-    <!-- Le styles -->
-    <link href="css/bootstrap.css" rel="stylesheet">
-    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Internship Corner</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!-- Bootstrap -->
+		<link href="css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+		<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+		<link href="css/bootstrap.css" rel="stylesheet" media="screen">
+		<script src="js/vendor/jquery-1.9.1.min.js"></script>
     <style>
 
     /* GLOBAL STYLES
@@ -270,17 +269,474 @@ width: 700px;
 	margin-bottom: 0px;
 	margin-right: 40px;
 }
+.aoi_enter
+{
+	position:relative;
+	left:135px;
+	top:-30px;
+	list-style:none;
+}
+
 
     </style>
 	<script>
-function AlertIt(clicked) {
-var answer = confirm ("Please click on OK to continue.");
+	
 
-if (answer)
-{
-document.getElementById(clicked).style.display="none";
+			
+$(document).ready(function () {
+
+
+//alert(sessionStorage.getItem("accounttype"));
+ view_profile();
+});
+
+var account_type = sessionStorage.getItem("accounttype");
+
+function unsubscribe(tag){
+
+	var answer = confirm("Please click on OK to continue.");
+	if(answer)
+	{
+		alert(document.getElementById("id"+tag.toString()).innerHTML);
+		$.post("/intern_corner/unsubscribe",{'tag':document.getElementById("id"+tag.toString()).innerHTML},function(ret_data){
+		if(ret_data.status_code==200){//accepte
+		//view_profile();
+			$.post("/intern_corner/view_profile_student",{},function(ret_data){
+					if(ret_data.status_code==200){
+		document.getElementById("tags").innerHTML="";
+		for(i=0;i<ret_data.result.tag.length;i++)
+			{
+				
+					var tag_data = "<li id=id"+i+">"+ret_data.result.tag[i].tag_name+"</li><a onClick=\"unsubscribe("+i+")\">Unsubscribe</a><br /><br />";
+					//alert(area_of_interest);
+					document.getElementById("tags").insertAdjacentHTML("beforeend",tag_data);
+				
+			}
+		//fetchRecentDiscussions();
+		}},"json");}
+		},"json");
 	}
+
 }
+
+function load(){
+		if(sessionStorage.length>0){
+				document.getElementById("username_tag").innerHTML+=sessionStorage.getItem("user");
+				//alert(sessionStorage.getItem("accounttype"));
+				if(sessionStorage.getItem("accounttype")==2){
+				//document.getElementById("buildProfile").href="#myModal_student";
+				document.getElementById("editProfile").href="#myModal_student";
+				}
+				else if(sessionStorage.getItem("accounttype")==1){
+				//document.getElementById("buildProfile").href="#myModal_faculty";
+				document.getElementById("editProfile").href="#myModal_faculty";
+				}
+				else{
+				//document.getElementById("buildProfile").href="#myModal_alumni";
+				document.getElementById("editProfile").href="#myModal_alumni";
+				}
+			}
+		else{
+			window.location= "notloggedin.html";
+			}
+		}
+
+function view_profile(){
+var account_type=sessionStorage.getItem("accounttype");
+
+	if(account_type==1){
+		
+		$.post("/intern_corner/view_profile_faculty",{},function(ret_data){
+		if(ret_data.status_code==200){//accepted
+			//alert(ret_data.result.full_name);
+			//alert("hii!!");
+			//data=ret_data;
+			//alert("hey");
+			//var elem= document.getElementById("tag_bus");
+			//elem.parentNode.removeChild(elem);
+			//var elem= document.getElementById("subs");
+			//elem.parentNode.removeChild(elem);
+			document.getElementById("form").style="margin-top:50px";
+			document.getElementById("pro_info").innerHTML=" ";
+			var elem = document.getElementById("resume");
+			elem.parentNode.removeChild(elem);
+			
+			var fac_content = '<li id="name">Name:'+ret_data.result.full_name+'</li><li id="email">Other Email Address: '+ret_data.result.email+'</li><li id="add">Other Information: '+ret_data.result.other_details+'</li><li id="proj_details">Project Details: '+ret_data.result.project_details+'</li>';
+			
+			document.getElementById("pro_info").insertAdjacentHTML("afterbegin",fac_content);
+			for(i=0;i<ret_data.result.tag.length;i++)
+			{
+				var tag_data = "<li id=id"+i+">"+ret_data.result.tag[i].tag_name+"</li><a onClick=\"unsubscribe("+i+")\">Unsubscribe</a><br /><br />";
+				//alert(area_of_interest);
+				document.getElementById("tags").insertAdjacentHTML("beforeend",tag_data);
+				
+			}
+			var init_aoi = '<li>Area of Interest:</li>';
+			document.getElementById("aoi_fac").insertAdjacentHTML("beforeend",init_aoi);
+			var str7="";
+			for(i=0;i<ret_data.result.area_of_interest.length;i++)
+			{
+				d=i+1;
+				var area_of_interest = '<li id="aoi_fac'+i+'" class="aoi_enter">'+d+' '+ret_data.result.area_of_interest[i]+'</li>';
+				//alert(area_of_interest);
+				document.getElementById("aoi_fac").insertAdjacentHTML("beforeend",area_of_interest);
+				str7=str7+ret_data.result.area_of_interest[i]+";";
+			}
+			var init_aoe = '<li>Area of expertise:</li>';
+			document.getElementById("aoe_fac").insertAdjacentHTML("beforeend",init_aoe);
+			var str8="";
+			for(i=0;i<ret_data.result.area_of_expertise.length;i++)
+			{
+				d=i+1;
+				var area_of_expertise = '<li id="aoe_fac'+i+'" class="aoi_enter">'+d+' '+ret_data.result.area_of_expertise[i]+'</li>';
+				//alert(area_of_interest);
+				document.getElementById("aoe_fac").insertAdjacentHTML("beforeend",area_of_expertise);
+				str8=str8+ret_data.result.area_of_expertise[i]+";";
+			}
+			if(('+ret_data.result.project_details+')!="")
+				{
+				
+				
+				var data5 = '<div align="left"><textarea cols="20" rows="2" name="myname" id="proj_info_fac">'+ret_data.result.project_details+'</textarea></div>';
+				
+				document.getElementById("control_proj").innerHTML=data5;	
+				}
+				
+				if(('+ret_data.result.other_details+')!="")
+				{
+				
+				
+				var data6 = '<div align="left"><textarea cols="20" rows="2" id="other_info_fac" name="myname"> '+ret_data.result.other_details+'</textarea></div>';
+				
+				document.getElementById("control_other_fac").innerHTML=data6;	
+				}
+				
+				if(str7!="")
+				{
+				
+				
+				var data7 = '<textarea id="intrest" data-validation-pattern-message="sas">'+str7+'</textarea><p> different area of intrest seperated by ";" (semicolon)</p>';
+				
+				document.getElementById("control_intrest_fac").innerHTML=data7;	
+				}
+				
+				if(str8!="")
+				{
+				
+				
+				var data8 = '<textarea id="expertise" data-validation-pattern-message="sas">'+str8+'</textarea><p> different area of expertise seperated by ";" (semicolon)</p>';
+				
+				document.getElementById("control_exp").innerHTML=data8;	
+				}
+				<!-- end--->
+			}
+		},"json");
+	}
+	
+	if(account_type==3){
+		
+		$.post("/intern_corner/view_profile_alumni",{},function(ret_data){
+		if(ret_data.status_code==200){//accepted
+			//alert(ret_data.result.full_name);
+			//alert("hii!!");
+			//data=ret_data;
+			//alert("hey");
+			//var elem= document.getElementById("tag_bus");
+			//elem.parentNode.removeChild(elem);
+			var elem= document.getElementById("resume");
+			elem.parentNode.removeChild(elem);
+			var elem= document.getElementById("form");
+			elem.parentNode.removeChild(elem);
+			document.getElementById("pro_info").innerHTML=" ";
+			
+			var alu_content = '<li id="name">Name:'+ret_data.result.full_name+'</li><li id="email">Email: '+ret_data.result.email+'</li><li id="oth_email">Other Email Address: '+ret_data.result.other_emailid+'</li><li id="add">Other Information: '+ret_data.result.other_details+'</li><li id="curr_emp"> Current Employer: '+ret_data.result.current_employee+'</li><li id="past_intern">Past Internship: '+ret_data.result.past_internship+'</li>';
+			
+			//var alu_pas_com = '<li id="alu_pas_com">Past Companies:<ol id="companies"></ol><li>';
+				document.getElementById("pro_info").insertAdjacentHTML("afterbegin",alu_content);
+			var pre_con = '<li>Past Companies:</li>';
+				document.getElementById("companies").insertAdjacentHTML("afterbegin",pre_con);
+				var str2="";
+			for(i=0;i<ret_data.result.past_companies.length;i++)
+			{
+				d = i+1;
+				var tag_data = '<li id="company"'+i+'" style="position:relative; list-style:none">'+d+'.'+ret_data.result.past_companies[i]+'</li>';
+				//alert(area_of_interest);
+				document.getElementById("companies").insertAdjacentHTML("beforeend",tag_data);
+				str2=str2+ret_data.result.past_companies[i]+";";
+			}
+			//alu_content = alu_content + alu_pas_com; 
+			
+			
+			for(i=0;i<ret_data.result.tag.length;i++)
+			{
+				var tag_data = "<li id=id"+i+">"+ret_data.result.tag[i].tag_name+"</li><a onClick=\"unsubscribe("+i+")\">Unsubscribe</a><br /><br />";
+				//alert(area_of_interest);
+				document.getElementById("tags").insertAdjacentHTML("beforeend",tag_data);
+				
+			}
+			<!-- change in modal>
+			
+			if(('+ret_data.result.other_emailid+')!="")
+			{
+			
+			var data = '<input type="email" id="email_alumni" data-validation-email-message="Not a valid email id!" pattern=	"^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)" data-validation-pattern-message="Must be a valid email id" value='+ret_data.result.other_emailid+' required/>';
+				//alert(area_of_interest);
+				document.getElementById("control_email_alumni").innerHTML=data;	
+			}
+			if(('+ret_data.result.current_employee+')!="")
+			{
+			
+			var data1 = '<input type="text" id="current_emp" pattern="^[A-Za-z0-9_]{1,20}" data-validation-pattern-message="Username should be unique" value='+ret_data.result.current_employee+'>';
+				//alert(area_of_interest);
+				document.getElementById("control_emp").innerHTML=data1;
+				
+			}
+			if(('+ret_data.result.past_internship+')!="")
+			{
+			
+			var data2 = '<textarea cols="20" rows="1" id="past_int" placeholder="internship1;internship2;internship3">'+ret_data.result.past_internship+'</textarea>';
+				//alert(area_of_interest);
+				document.getElementById("control_int").innerHTML=data2;
+				
+			}
+			if(('+ret_data.result.other_details+')!="")
+			{
+			
+			var data = '<textarea id="other_info_alumni" cols="20" rows="2" name="myname" placeholder="Any additional information..">'+ret_data.result.other_details+'</textarea>';
+				//alert(area_of_interest);
+				document.getElementById("control_info_alumni").innerHTML=data;
+				
+			}	
+			if(str2!="")
+			{
+			
+			var data2 = '<textarea cols="20" rows="1" id="past_comp">'+str2+'</textarea><p> different companies seperated by ";" (semicolon)</p>';
+				//alert(area_of_interest);
+				document.getElementById("control_comp").innerHTML=data2;
+				
+			}			
+			
+			<!-- end---->
+			}
+		},"json");
+	}
+	
+	
+	if(account_type==2)
+		{
+		$.post("/intern_corner/view_profile_student",{},function(ret_data){
+		if(ret_data.status_code==200){//accepted
+			//alert(ret_data.result.full_name);
+			//alert("hii!!");
+			//data=ret_data;
+			var elem = document.getElementById("form");
+			elem.parentNode.removeChild(elem);
+			document.getElementById("name").innerHTML="Name:"+ret_data.result.full_name;
+			//$(document.getElementById("uname")).innerHTML=
+			document.getElementById("branch").innerHTML="Branch:"+ret_data.result.branch;
+			document.getElementById("batch").innerHTML="Batch:"+ret_data.result.batch;
+			document.getElementById("cpi").innerHTML="CPI:"+ret_data.result.cpi;
+			document.getElementById("contact").innerHTML="Contact:"+ret_data.result.contact_no;
+			document.getElementById("email").innerHTML="Email:"+ret_data.result.email;
+			document.getElementById("add").innerHTML="Other Information:"+ret_data.result.other_details;
+			if(ret_data.result.resume!="")
+			{
+			document.getElementById()
+			var res = '<li> Resume : <a target="_blank" href="http://localhost/intern_corner/php/upload/'+ret_data.result.user_name+'.pdf" id="resume">My Resume</a></li>';
+			document.getElementById("add").insertAdjacentHTML("afterend",res);
+			}
+			/*for(i=0;i<ret_data.result.area_of_interest.length;i++)
+			{
+				var area_of_interest = '<li id="aoi'+i+'">'+ret_data.result.area_of_interest[i];
+				//alert(area_of_interest);
+				document.getElementById("aoi").insertAdjacentHTML("beforeend",area_of_interest);
+			}*/
+			var str="";
+			for(i=0;i<ret_data.result.area_of_interest.length;i++)
+			{
+				var area_of_interest = '<li id="aoi'+i+'">'+ret_data.result.area_of_interest[i];
+				//alert(area_of_interest);
+				document.getElementById("aoi").insertAdjacentHTML("beforeend",area_of_interest);
+				str=str+ret_data.result.area_of_interest[i]+";";
+			}
+			for(i=0;i<ret_data.result.tag.length;i++)
+			{
+				var tag_data = "<li id=id"+i+">"+ret_data.result.tag[i].tag_name+"</li><a onClick=\"unsubscribe("+i+")\">Unsubscribe</a><br /><br />";
+				//alert(area_of_interest);
+				document.getElementById("tags").insertAdjacentHTML("beforeend",tag_data);
+				
+			}
+			
+			<!-- change in modal innerHTML>
+		
+			if(('+ret_data.result.email+')!="")
+			{
+			
+			var data = '<input type="email" id="pro_email_student" value='+ret_data.result.email+' data-validation-email-message="Not a valid email id!" pattern="^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)"data-validation-pattern-message="Must be a valid email id" required/>';
+				//alert(area_of_interest);
+				document.getElementById("control_email").innerHTML=data;
+				
+			}
+			
+			
+				
+				var data1 = '<select id="pro_program_student" name="program"><option value="0">Select Program</option><option value="BTech">B-Tech</option><option value="Mtech">M-Tech</option><option value="MscIT">Msc-IT</option></select>';
+				//alert(area_of_interest);
+				document.getElementById("control_prog").innerHTML=data1;
+				
+				if(('+ret_data.result.batch+')!="")
+				{
+
+				var data2 = '<input type="text" id="pro_batch_student" value='+ret_data.result.batch+' pattern="^[0-9]{4}" data-validation-pattern-message="Enter Numeric value" required/>';
+				//alert(area_of_interest);
+				document.getElementById("control_batch").innerHTML=data2;
+				}
+				
+				if(('+ret_data.result.cpi+')!="")
+				{
+				var data3 = '<input type="text" id="pro_cpi_student" pattern="([0-9]{1})(\.[0-9][0-9]?)?" data-validation-pattern-message="Enter Numeric value" value='+ret_data.result.cpi+' />';
+				//alert(area_of_interest);
+				document.getElementById("control_cpi").innerHTML=data3;
+				
+				}
+				
+				if(('+ret_data.result.contact_no+')!="")
+				{
+				
+					var data4 = '<input type="text" id="pro_contact_student" pattern="^[0-9]{10,15}" data-validation-pattern-message="Enter Numeric value" value='+ret_data.result.contact_no+' />';
+				//alert(area_of_interest);
+				document.getElementById("control_contact").innerHTML=data4;	
+				}
+				
+				if(('+ret_data.result.other_details+')!="")
+				{
+				
+				
+				var data5 = '<div align="left"><textarea id="pro_other_student" cols="20" rows="2" name="myname">'+ret_data.result.other_details+'</textarea></div>';
+				
+				document.getElementById("control_other").innerHTML=data5;	
+				}
+				
+				if((str)!="")
+				{	
+					
+				var data6 = '<textarea cols="20" rows="2" id="intrest_student" data-validation-pattern-message="sas">'+str+'</textarea><br><p style="font-size:12px;"> different area of intrest seperated by ";" (semicolon)</p>';
+				
+				document.getElementById("control_intrest").innerHTML=data6;
+				
+				}
+		
+		<!--end----->
+			        
+			//alert(document.getElementById("id1").innerHTML);
+					
+
+			
+			//document.getElementById("area_of_interest").innerHTML="Areas"+ret_data.result.other_details;
+			//alert(ret_data);
+			}
+		},"json");
+		
+	}
+	}
+function subscribe(){
+	$('#myModal_2').modal('hide');
+	$.post("/intern_corner/subscribe",{},function(ret_data){
+		if(ret_data.status_code==200){//accepted
+					alert("You Have Successfully subscribed");
+					//document.getElementById("myModal_2").hide();
+			}
+		},"json");
+}
+function unsubscribe_digest(){
+	$('#myModal_2_1').modal('hide');
+	$.post("/intern_corner/unsubscribe_digest",{},function(ret_data){
+		if(ret_data.status_code==200){//accepted
+					alert("You Have Successfully unsubscribed");
+					//$('myModal_2_!1').modal('hide');
+			}
+		},"json");
+}
+function build_profile(){
+		//$('#myModal').modal('hide');
+		
+		if(account_type==1){
+		$('myModal_faculty').modal('hide');
+		var intrest = document.getElementById("intrest").value;
+			var expertise = document.getElementById("expertise").value;
+			var pro_info = document.getElementById("proj_info_fac").value;
+			var other_info = document.getElementById("other_info_fac").value;
+			
+		$.post("/intern_corner/build_profile_faculty",{'intrest':intrest,'expertise': expertise,'pro_info': pro_info, 'other_info': other_info},function(ret_data){
+		if(ret_data.status_code==200){
+				window.location="view_profile.html";
+			}
+		},"json");
+	}
+	
+	
+	else if(account_type==2)		
+	{//var name = document.getElementById("name").value;
+	$('myModal_student').modal('hide');
+			//var uname = document.getElementById("uname").value;
+			var batch = document.getElementById("pro_batch_student").value;
+			var cpi = document.getElementById("pro_cpi_student").value;
+			var contact = document.getElementById("pro_contact_student").value;
+			var email = document.getElementById("pro_email_student").value;
+			var other = document.getElementById("pro_other_student").value;
+			var program = document.getElementById("pro_program_student").value;
+			var intrest = document.getElementById("intrest_student").value;
+				
+				
+		//	var i=data.length;
+	//alert(i);
+			$.post("/intern_corner/build_profile_student",{'batch':batch,'cpi':cpi,'contact':contact,'email':email,'other':other, 'program':program,'intrest':intrest},function(ret_data){
+			if(ret_data.status_code==200){
+				window.location="view_profile.html";
+			
+			}
+			},"json");
+			
+			}
+			
+	else if(account_type==3)		
+	{//var name = document.getElementById("name").value;
+	$('#myModal_alumni').modal('hide');
+			//var uname = document.getElementById("uname").value;
+			var email = document.getElementById("email_alumni").value;
+			var other = document.getElementById("other_info_alumni").value;
+			var past_company = document.getElementById("past_comp").value;
+			var past_int = document.getElementById("past_int").value;
+			var current_emp = document.getElementById("current_emp").value;
+			var program = document.getElementById("pro_program_student").value;
+				
+				//alert(batch);
+		//	var i=data.length;
+	//alert(i);
+			$.post("/intern_corner/build_profile_alumni",{'other':other,'past_company':past_company,'past_int':past_int,'email':email,'current_emp':current_emp},function(ret_data){
+			if(ret_data.status_code==200){
+				window.location="view_profile.html";
+			
+			}
+			},"json");
+			
+			}
+
+}
+function logout(){
+	$.post("/intern_corner/logout",{},function(ret_data){
+		if(ret_data.status_code==200){
+			sessionStorage.removeItem("user");
+			sessionStorage.removeItem("accounttype");
+			window.location="signin.html";
+		}
+
+	},"json");
+	}
+
+
+//view_profile();
+
 </script>
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -295,51 +751,646 @@ document.getElementById(clicked).style.display="none";
                                    <link rel="shortcut icon" href="../assets/ico/favicon.png">
   </head>
 
-  <body>
 
 
+
+
+  <body onLoad="load()">
+
+<!-- my_MODAL DETAILS -->
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <h3>FILE UPLOAD: </h3>
+
+  </div>
+  <div class="modal-body">
+
+
+<form action="fileinsert.php" method="post">
+
+<div class="control-group">
+      <label class="control-label">Company Name: </label>
+        <div class="controls">
+        <input type="text" maxlength="25" minlength="4" data-validation-pattern-message="sas" placeholder="Company_Name" required/>
+        </div>
+      </div>
+      
+
+<p>
+<h4>Specify your File:</h4><br>
+<input type="file" name="datasize" size="30">
+</p>
+<div>
+</div>
+</form>
+
+  </div>
+  <div class="modal-footer">
+    <input type="button" class="btn btn-primary" onClick="" value="Upload"/>
+    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+  </div>
+</div>
+
+
+
+<div id="myModal_2_1" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <h3>Unsubscribe digest: </h3>
+
+  </div>
+  <div class="modal-body">
+
+
+
+  </div>
+  <div class="modal-footer">
+    <input type="button" class="btn btn-primary" onClick="unsubscribe_digest();" value="Unsbscribe"/>
+    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+  </div>
+</div>
+
+
+<div id="myModal_2" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <h3>Subscribe digest: </h3>
+
+  </div>
+  <div class="modal-body">
+
+
+
+  </div>
+  <div class="modal-footer">
+    <input type="button" class="btn btn-primary" onClick="subscribe();" value="Subscribe"/>
+    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+  </div>
+</div>
+<!--  MODAL ENDS HERE-->
+<!--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@-->
+<div id="myModal_1" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <h3>Questions For Form: </h3>
+
+  </div>
+  <div class="modal-body">
+
+      <label class="control-label">Question : </label>
+        
+        <textarea   data-validation-pattern-message="" placeholder="Your Question goes here..." required>
+</textarea>        
+      
+
+<div class="control-group">
+      <label class="control-label">Question 2 : </label>
+        <div class="controls">
+        <textarea rows="2" cols="100" data-validation-pattern-message="" placeholder="Your Question goes here..." required>
+</textarea>        </div>
+      </div>
+
+
+<div class="control-group">
+      <label class="control-label">Question 3 : </label>
+        <div class="controls">
+        <textarea rows="2" cols="100" data-validation-pattern-message="" placeholder="Your Question  goes here..." required>
+</textarea>        </div>
+      </div>
+
+
+
+<div class="control-group"
+      <label class="control-label">Question 4 : </label>
+        <div class="controls">
+        <textarea rows="2" cols="100" data-validation-pattern-message="" placeholder="Your Question goes here..." required>
+</textarea>        </div>
+      </div>
+
+  </div>
+  <div class="modal-footer">
+    <input type="button" class="btn btn-primary" onClick="" value="Upload"/>
+    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+  </div>
+</div>
+
+<!--<!-- student build profile modal-->
+<!--
+<div id="myModal_student" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3 id="myModalLabel">Create Your own Profile!!</h3>
+  </div>
+  
+  <div class="modal-body">
+    
+				<form class="form-horizontal">
+					
+		
+					
+					<div class="control-group">
+					<label class="control-label">Other Email address</label>
+						<div class="controls">
+						<input type="email" data-validation-email-message="Not a valid email id!" pattern=	"^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)" data-validation-pattern-message="Must be a valid email id" required/>
+						</div>
+					</div>
+					<div class="control-group">
+					<label class="control-label">Program:</label>
+						<div class="controls">
+						<select id="program" name="program"> 						
+						<option value="0">Select Program</option><option value="1">B-Tech</option><option value="2">M-Tech</option><option value="3">Msc-IT</option>
+						</select>
+						</div>
+					</div>
+					
+					<div class="control-group">
+					<label class="control-label">Batch*</label>
+						<div class="controls">
+						<input type="text" pattern="^[0-9]{4}" data-validation-pattern-message="Enter Numeric value" placeholder="Batch" required/>
+						</div>
+					</div>
+					
+					<div class="control-group">
+					<label class="control-label">Area of Interest</label>
+						<div class="controls">
+						<div id="s_interest">
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" name="student_interest" placeholder="intrest1" id="si1">	
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" name="student_interest" placeholder="Intrest2" id="si2">
+						
+						</div>
+						<input type="button" value="Add another text input" onClick="addInput2('s_interest');">
+						</div>
+					</div>
+					
+					<div class="control-group">
+					<label class="control-label">CPI</label>
+						<div class="controls">
+						<input type="text" pattern="([0-9]{1})(\.[0-9][0-9]?)?" data-validation-pattern-message="Enter Numeric value" placeholder="0.00" />
+						</div>
+					</div>
+					
+					<div class="control-group">
+										<label class="control-label" for="input01">Resume</label>
+										<div class="controls">
+											<input type="file" class="input-xlarge" id="input01">
+										</div>
+									</div>
+					
+					
+					<div class="control-group">
+					<label class="control-label">Contact_No</label>
+						<div class="controls">
+						<input type="text" pattern="^[0-9]{10,15}" data-validation-pattern-message="Enter Numeric value" placeholder="9999999999" />
+						</div>
+					</div>
+					
+					
+					<div class="control-group">
+					<label class="control-label">Other Information</label>
+						<div class="controls">
+							<div align="left">
+							<textarea cols="20" rows="2" name="myname" placeholder="Any additional information.."></textarea>
+							</div>
+												
+						</div>
+					</div>
+					
+				
+           </div>
+  
+  <div class="modal-footer">
+          <input type="submit" class="btn btn-primary" formaction="404.html" value="Save"/>   
+    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+     
+  </div>
+  </form>
+</div>
+
+<!-- student profile modal ends here-->
+
+
+<!-- faculty profile modal starts here-->
+<!--<div id="myModal_faculty" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3 id="myModalLabel">Create Your own Profile!!</h3>
+  </div>
+  
+  <div class="modal-body">
+    
+				<form class="form-horizontal">
+					
+
+		
+					
+					<div class="control-group">
+					<label class="control-label">Area of Interest</label>
+						<div class="controls">
+						<div id="f_interest">
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" name="faculty_interest" placeholder="intrest1" id="fi1">	
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" name="faculty_interest" placeholder="Intrest2" id="fi2">
+						
+						</div>
+						<input type="button" value="Add another text input" onClick="addInput('f_interest');">
+						</div>
+					</div>
+					
+					
+					<div class="control-group">
+					<label class="control-label">Area of expertise</label>
+						<div class="controls">
+						<div id="f_expertise">
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" name="faculty_experitse" placeholder="field1" id="fe1">
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" name="faculty_experitse" placeholder="field2" id="fe2" >
+						</div>
+						
+						<input type="button" value="Add another text input" onClick="addInput1('f_expertise');">
+						</div>
+					</div>
+					
+					<div class="control-group">
+					<label class="control-label">Project Information</label>
+						<div class="controls">
+							<div align="left">
+							<textarea cols="20" rows="2" name="myname" placeholder="Add any additional project information.."></textarea>
+							</div>
+												
+						</div>
+					</div>
+					
+					<div class="control-group">
+					<label class="control-label">Other Information</label>
+						<div class="controls">
+							<div align="left">
+							<textarea cols="20" rows="2" name="myname" placeholder="Add any additional information.. "></textarea>
+							</div>
+												
+						</div>
+					</div>
+					
+				
+           </div>
+  
+  <div class="modal-footer">
+          <input type="submit" class="btn btn-primary" formaction="404.html" value="Save"/>   
+    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+     
+  </div>
+  </form>
+</div>
+
+<!-- faculty profile modal ends here-->
+<!-- alumni profile modal starts here-->
+
+<!--<div id="myModal_alumni" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3 id="myModalLabel">Create Your own Profile!!</h3>
+  </div>
+  
+  <div class="modal-body">
+    
+				<form class="form-horizontal">
+					
+					<label class="control-label">Other Email address</label>
+						<div class="controls">
+						<input type="email" data-validation-email-message="Not a valid email id!" pattern=	"^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)" data-validation-pattern-message="Must be a valid email id" required/>
+						</div>
+					
+					<div class="control-group">
+					<label class="control-label">current employee</label>
+						<div class="controls">
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" data-validation-pattern-message="Username should be unique" placeholder="company name" >
+						
+						
+						</div>
+					</div>
+					
+					<div class="control-group">
+					<label class="control-label">Past Internships</label>
+						<div class="controls">
+						<div id="internships">
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" name="past_internship" placeholder="Internship1" id="pi1">
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" name="past_internship" placeholder="Internship2" id="pi2" >
+						</div>
+						
+						<input type="button" value="Add another text input" onClick="addInput3('internships');">
+						</div>
+					</div>
+					
+					<div class="control-group">
+					<label class="control-label">Past companies</label>
+						<div class="controls">
+						<div id="companies">
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" name="past_company" placeholder="company1" id="pc1">
+						
+						<input type="text" pattern="^[A-Za-z0-9_]{1,20}" name="past_company" placeholder="company2" id="pc2">
+						
+						</div>
+						<input type="button" value="Add another text input" onClick="addInput4('companies');">
+						</div>
+					</div>
+					
+					
+					
+					
+					<div class="control-group">
+					<label class="control-label">Other Information</label>
+						<div class="controls">
+							<div align="left">
+							<textarea cols="20" rows="2" name="myname" placeholder="Any additional information.."></textarea>
+							</div>
+												
+						</div>
+					</div>
+					
+				
+           </div>
+  
+  <div class="modal-footer">
+          <input type="submit" class="btn btn-primary" formaction="404.html" value="Save"/>   
+    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+     
+  </div>
+  </form>
+</div>
+<!-- alumni profile modal ends here-->
+
+<!----------------------------------------------------------------------------->
+
+<!-- student build profile modal-->
+
+<!-- student build profile modal-->
+
+<div id="myModal_student" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3 id="myModalLabel">Create Your own Profile!!</h3>
+  </div>
+  
+  <div class="modal-body">
+    
+				<form class="form-horizontal">
+					
+		
+					
+					<div class="control-group">
+					<label class="control-label">Other Email address</label>
+						<div class="controls" id="control_email">
+						<input type="email" id="pro_email_student" data-validation-email-message="Not a valid email id!" pattern=	"^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)" data-validation-pattern-message="Must be a valid email id" required/>
+						</div>
+					</div>
+					<div class="control-group">
+					<label class="control-label">Program:</label>
+						<div class="controls" id="control_prog">
+						<select id="pro_program_student" name="program"> 						
+						<option value="0">Select Program</option><option value="BTech">B-Tech</option><option value="MTech">M-Tech</option><option value="MscIT">Msc-IT</option>
+						</select>
+						</div>
+					</div>
+					
+					<div class="control-group">
+					<label class="control-label">Batch*</label>
+						<div class="controls" id="control_batch">
+						<input type="text" id="pro_batch_student" pattern="^[0-9]{4}" data-validation-pattern-message="Enter Numeric value" placeholder="Batch" required/>
+						</div>
+					</div>
+					
+					<div class="control-group">
+					<label class="control-label">Area of Intrest</label>
+						<div class="controls" id="control_intrest">
+						 <input type="text" id="intrest_student" data-validation-pattern-message="sas" placeholder="intrest1;intrest2;intrest3">
+							<p> different area of intrest seperated by ';' (semicolon)</p>
+						</div>
+					</div>
+					
+					<div class="control-group">
+					<label class="control-label">CPI</label>
+						<div class="controls" id="control_cpi">
+						<input type="text" id="pro_cpi_student" pattern="([0-9]{1})(\.[0-9][0-9]?)?" data-validation-pattern-message="Enter Numeric value" 	placeholder="0.00" />
+						</div>
+					</div>
+					
+					<!--<div class="control-group">
+										<label class="control-label" for="input01">Resume</label>
+										<div class="controls">
+											<input type="file" class="input-xlarge" id="input01">
+										</div>
+									</div>
+					-->
+					
+					<div class="control-group">
+					<label class="control-label">Contact_No</label>
+						<div class="controls" id="control_contact">
+						<input type="text" id="pro_contact_student" pattern="^[0-9]{10,15}" data-validation-pattern-message="Enter Numeric value" placeholder="9999999999" />
+						</div>
+					</div>
+					
+					
+					<div class="control-group">
+					<label class="control-label">Other Information</label>
+						<div class="controls" id="control_other">
+							<div align="left">
+							<textarea id="pro_other_student" cols="20" rows="2" name="myname" placeholder="Any additional information.."></textarea>
+							</div>
+												
+						</div>
+					</div>
+					
+				
+           </div>
+  
+  <div class="modal-footer">
+          <input type="button" class="btn btn-primary" value="Save" onClick="build_profile();"/>   
+    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+     
+  </div>
+  
+  </form>
+</div>
+
+<!-- student profile modal ends here-->
+
+
+<!-- faculty profile modal starts here-->
+<div id="myModal_faculty" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3 id="myModalLabel">Create Your own Profile!!</h3>
+  </div>
+  
+  <div class="modal-body">
+    
+				
+  
+  <form class="form-horizontal">
+					
+
+		
+					
+					<div class="control-group">
+					<label class="control-label">Area of Interest</label>
+						<div class="controls" id="control_intrest_fac">
+						
+						 <textarea id="intrest" data-validation-pattern-message="sas" placeholder="intrest1;intrest2;intrest3"></textarea>
+							<p> different area of intrest seperated by ';' (semicolon)</p>
+						
+						
+						
+						</div>
+					</div>
+					
+					
+					<div class="control-group">
+					<label class="control-label">Area of expertise</label>
+						<div class="controls" id="control_exp">
+						
+						 <textarea id="expertise" data-validation-pattern-message="sas" placeholder="intrest1;intrest2;intrest3"></textarea>
+							<p> different area of expertise seperated by ';' (semicolon)</p>
+						
+						
+						
+						</div>
+					</div>
+					
+					<div class="control-group">
+					<label class="control-label">Project Information</label>
+						<div class="controls" id="control_proj">
+							<div align="left">
+							<textarea cols="20" rows="2" name="myname" id="proj_info_fac" placeholder="Add any additional project information.."></textarea>
+							</div>
+												
+						</div>
+					</div>
+					
+					<div class="control-group" >
+					<label class="control-label">Other Information</label>
+						<div class="controls" id="control_other_fac">
+							<div align="left">
+							<textarea cols="20" rows="2" id="other_info_fac" name="myname" placeholder="Add any additional information.. "></textarea>
+							</div>
+												
+						</div>
+					</div>
+					
+				
+           </div>
+  
+  <div class="modal-footer">
+          <input type="button" class="btn btn-primary" value="Save" onClick="build_profile()"/>   
+    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+     
+  </div>
+  </form>  -->
+</div>
+
+<!-- faculty profile modal ends here-->
+<!-- alumni profile modal starts here-->
+
+<div id="myModal_alumni" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3 id="myModalLabel">Create Your own Profile!!</h3>
+  </div>
+  
+  <div class="modal-body">
+    
+				<form class="form-horizontal">
+					<div class="control-group">
+					<label class="control-label">Other Email address</label>
+						<div class="controls" id="control_email_alumni">
+						<input type="email" id="email_alumni" data-validation-email-message="Not a valid email id!" pattern=	"^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)" data-validation-pattern-message="Must be a valid email id" required/>
+						</div>
+					</div>
+					<div class="control-group">
+					<label class="control-label">current employee</label>
+						<div class="controls" id="control_emp">
+						<input type="text" id="current_emp" pattern="^[A-Za-z0-9_]{1,20}" data-validation-pattern-message="Username should be unique" placeholder="company name" >
+						
+						
+						</div>
+					</div>
+					
+					<div class="control-group">
+					<label class="control-label">Past Internships</label>
+						<div class="controls" id="control_int">
+						
+						 <textarea cols="20" rows="1" id="past_int" placeholder="internship1;internship2;internship3"></textarea>
+							<p> different internships seperated by ';' (semicolon)</p>
+						
+						
+						
+						</div>
+				</div>
+					
+					<div class="control-group">
+					<label class="control-label" >Past companies</label>
+						<div class="controls" id="control_comp">
+						
+						<textarea cols="20" rows="1" id="past_comp" placeholder="company1;company2;company3"></textarea>
+							<p> different companies seperated by ';' (semicolon)</p>
+						
+						
+						
+						</div>
+					</div>
+					
+					
+					
+					
+					<div class="control-group">
+					<label class="control-label">Other Information</label>
+						<div class="controls" id="control_info_alumni">
+							<div align="left">
+							<textarea id="other_info_alumni" cols="20" rows="2" name="myname" placeholder="Any additional information.."></textarea>
+							</div>
+												
+						</div>
+					</div>
+					
+				
+           </div>
+  
+  <div class="modal-footer">
+        <input type="button" class="btn btn-primary" value="Save" onClick="build_profile();"/>   
+    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+     
+  </div>
+  </form>
+</div>
+<!-- alumni profile modal ends here-->
 
     <!-- NAVBAR
     ================================================== -->
-    <div class="navbar-wrapper">
-      <!-- Wrap the .navbar in .container to center it within the absolutely positioned parent. -->
-      <div class="container">
+     <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    
+                    <div class="nav-collapse collapse">
+					  <ul class="nav">
+						<li ><p class="brand">Intern Corner</p></li>
+						<li ><a href="discussion_page.html">Q & A Corner</a></li>
+						<li ><a href="opportunity_corner.html">Opportunity Corner</a></li>
+						<li class="active"><a href="experience_corner.html">Experience Corner</a></li>
+						<li><a href="search_main.html">Search Corner</a></li>
+						<li class="dropdown">
+						<div class="btn-group">
+						  <a id="username_tag" class="btn btn-small btn-primary" href="#"><i class="icon-user icon-white"></i></a>
+							<a class="btn btn-small btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+						  <ul class="dropdown-menu">
+							<li class="nav-header">Profile actions</li>
+							
+							<li><a href="view_profile.html">View Profile</a></li>
+							<li class="divider"></li>
+							<li class="nav-header">Account</li>
+							<li><a href="change.html">Change Password</a></li>
+							<li><a href="#" onclick="logout()">Logout</a></li>
+						  </ul>
+						</div>
+						</li>
+					  </ul>
+					</div>
+                </div>
+            </div>
+        </div>
 
-        <div class="navbar navbar-inverse">
-          <div class="navbar-inner">
-            <!-- Responsive Navbar Part 1: Button for triggering responsive navbar (not covered in tutorial). Include responsive CSS to utilize. -->
-            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="brand" href="#">Project name</a>
-            <!-- Responsive Navbar Part 2: Place all navbar contents you want collapsed withing .navbar-collapse.collapse. -->
-            <div class="nav-collapse collapse">
-              <ul class="nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <!-- Read about Bootstrap dropdowns at http://twitter.github.com/bootstrap/javascript.html#dropdowns -->
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-                  <ul class="dropdown-menu">
-                    <li><a href="#">Action</a></li>
-                    <li><a href="#">Another action</a></li>
-                    <li><a href="#">Something else here</a></li>
-                    <li class="divider"></li>
-                    <li class="nav-header">Nav header</li>
-                    <li><a href="#">Separated link</a></li>
-                    <li><a href="#">One more separated link</a></li>
-                  </ul>
-                </li>
-              </ul>
-            </div><!--/.nav-collapse -->
-          </div><!-- /.navbar-inner -->
-        </div><!-- /.navbar -->
-
-      </div> <!-- /.container -->
-    </div><!-- /.navbar-wrapper -->
 
 
  <div id="myCarousel" class="carousel slide">
@@ -363,44 +1414,65 @@ document.getElementById(clicked).style.display="none";
    
  
   <!-- HERO -->
-  <div class="span2 offset1"  style="margin-top:-130px; margin-left:100px">
-      <div  style="align:right; ">
+  <div class="span2 offset1"  style="margin-top:-175px; margin-left:100px">
+      <div  style="align:right">
 	  <br>
-	  <br>
-	  <br>
-	  <br>
-      <a class="btn btn-large btn-block btn-success" href="#" style="margin-bottom:20px"> Edit Profile </a>
-      <br> <a class="btn btn-large btn-block btn-success" href="#" style="margin-bottom:20px"> My Experience </a>  <!--popup with my courses-->
-     
+
+
+
+        <br> <br/><br/></br><a id="editProfile" class="btn btn-large btn-block btn-success" href="#" data-toggle="modal" style="margin-bottom:20px" > Edit Profile</a>
+
+       
+		
+      <!--<br/> <a class="btn btn-large btn-block btn-success" href="#myModal" data-toggle="modal" style="margin-bottom:20px"> Resource Upload </a>-->  
+      <!--####################################################################################################-->
+      <br> <a class="btn btn-large btn-block btn-success" href="#myModal_2" data-toggle="modal" style="margin-bottom:20px" id="subs"> Subscribe For Digest</a>
+		<br> <a class="btn btn-large btn-block btn-success" href="#myModal_2_1" data-toggle="modal" style="margin-bottom:20px" id="subs"> Unsubscribe Digest</a>
+      <br> <a class="btn btn-large btn-block btn-success" href="#myModal_1" data-toggle="modal" style="margin-bottom:20px" id="form"> Form Upload</a>
+		<form action='/intern_corner/php/upload.php' method='post' enctype="multipart/form-data" id="resume">
+		
+		<input class="btn btn-large btn-block btn-success" type='submit' value="Upload Resume">
+		<input type="file" id='userfile' name="file" />
+		</form>
+
+  <!--    ####################################################################################################-->
+
       </div> 
+
+
     </div><!-- span4-->
- <div class="span6 "  style="margin-top:-130px; margin-left:40px"  >
+	
+	
+	
+ <div class="span6 "  style="margin-top:-100px; margin-left:40px"  >
       <div class="hero-unit">
           <h2>About Me</h2> 
-		  <ul>
-		  <li>Name: Akhil Ahuja</li>
-          <li>User Name: Funckycha</li>
-          <li>Program : B-tech</li>
-		  <li>Batch : 2010</li>
-		  <li>CPI : 10</li>
-          <li>Other Email Address: akhilahuja@gmail.com</li>
-          <li>Contact_NO: 1234567890</li>
-		  <li>Other Information: I am Pro!!</li>
-        </ul> 
+		  <ul id="pro_info">
+			<li id="name"></li>
+			<li id="branch"></li>
+			<li id="batch"></li>
+			<li id="cpi"></li>
+			<li id="email"></li>
+			<li id="contact"></li>
+			<li id="add"></li>
+		  
+			<li>Area of Interest :</li>
+			<li style="margin-left:140px; margin-top:-30px; list-style:none;"><ol id="aoi" style="font-size:15px;"></ol></li>
+		  </ul>
+			<ul id="aoi_fac" style="margin-top:-10px;"></ul>
+			<ul id="aoe_fac" style="margin-top:-10px;"></ul>
+			<ul id="companies" style="margin-top:-10px;"></ul>
        
       </div>
   </div> <!-- span8-->
  
-<div class="span3 " style="margin-top:-135px; padding:20px">
+<div class="span3 " style="position:absolute; top:180px; left:1000px;" id="tag_bus">
           <div class="well sidebar-nav">
          <h3>My Subscriptions : </h3>
           
           <h4>Tags :</h4>
-		  <ul>
-          <li id="id1">Name1 <a href="javascript:AlertIt(this.id);">Unsubscribe</a></li>
-		  <li>Name2 <a href="javascript:AlertIt(this.id);">Unsubscribe</a></li>
-		  <li>Name3 <a href="javascript:AlertIt(this.id);">Unsubscribe</a></li>
-		  <li>Name4  <a href="javascript:AlertIt(this.id);">Unsubscribe</a></li>
+		  <ul id="tags">
+          
 		  </ul>
          
 		 
@@ -408,7 +1480,6 @@ document.getElementById(clicked).style.display="none";
     </div><!--/span3-->
   <!-- SIDE-NAVBAR RIGHT -->
    
-    </div><!--/span3-->
  </div> <!-- Row fluid-->
 
 </div> <!-- container-fluid -->
@@ -461,6 +1532,11 @@ document.getElementById(clicked).style.display="none";
                         }
                     });
 	</script>
+	
     <script src="js/holder/holder.js"></script>
+	<footer class="container">
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        <p>&copy; Intern Corner 2013 SEN Group 8. &middot; </p>
+      </footer>
   </body>
 </html>

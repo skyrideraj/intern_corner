@@ -1,4 +1,4 @@
-<?
+<?php
 // echo "Hi";
 $reputation_to_delete=200;
 $increase_reputation_upvote=10;
