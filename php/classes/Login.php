@@ -53,7 +53,7 @@ class Login
 			@session_start();
 			$_SESSION['user'] = $user;
 			//check if student
-			/*if($result[0]['account_type']==2)//student
+			if($result[0]['account_type']==2)//student
 				{
 					
 					//extract student's information from student table
@@ -71,8 +71,16 @@ class Login
 						return array('status_code'=>202,'detail'=>'home screen');
 					}
 
+<<<<<<< HEAD
 				}*/
 				return array('status_code'=>202,'detail'=>'home screen','user'=>$user);
+=======
+				}
+			else if($result[0]['account_type']==1||$result[0]['account_type']==3){
+				//student or faculty
+				return array('status_code'=>202,'detail'=>'home screen');
+			}
+>>>>>>> a84ff92c4e6e02a26c77a9ea0d98ea4879eaddf7
 			
 
 		}			
@@ -82,11 +90,17 @@ class Login
 	
 	static function logout()
 	{
+<<<<<<< HEAD
 		@session_start();
 		if(self::checkSetAndEmpty($_SESSION['user'])){
+=======
+		session_start();
+		if(Login::checkSetAndEmpty($_SESSION['user'])){
+>>>>>>> a84ff92c4e6e02a26c77a9ea0d98ea4879eaddf7
 			//user logged in?
 			//okay
 			unset($_SESSION['user']);
+			session_destroy();
 			return array('status_code'=>200);
 
 		}
@@ -103,11 +117,11 @@ class Login
 
 
 	}
-	function forgotPasswordHandler($username){
+	static function forgotPasswordHandler($username){
 		// $db = (new Database())->connectToDatabase();
-		$this->getDatabase();
-		$this->db->query("SELECT email FROM User WHERE user_name='$username'");
-		if($this->db->returned_rows==0){
+		// $this->getDatabase();
+		$db->query("SELECT email FROM User WHERE user_name='$username'");
+		if($db->returned_rows==0){
 			//username not found
 			// 400 => 'Bad Request',
 			return array('status_code'=>400,'detail'=>'username not found');
@@ -178,11 +192,21 @@ class Login
 	}
 
 }
-// session_start();
-// $login = new Login("sen","password");
-// $ret_val = $login -> validateAndLogin();
+
+session_start();
+$login = new Login("testuser13","sen");
+// print_r($_SESSION['user']);
+$ret_val = $login -> validateAndLogin();
 // print_r($ret_val);
 // print_r($_SESSION['user']);
 // $login -> logout();
 // print_r($_SESSION['user']);
+// 
+// Login::logout();
+// session_start();
+// $login = new Login("sen","password");
+
+// $ret_val = $login->validateAndLogin();
+// print_r($ret_val);
+// print($_SESSION['user']->username);
 ?>

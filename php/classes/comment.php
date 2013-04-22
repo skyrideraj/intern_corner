@@ -36,7 +36,11 @@ return array('status_code'=>200);
 }
 
 
+<<<<<<< HEAD
 /*function deleteComment()
+=======
+function deleteComment()
+>>>>>>> a84ff92c4e6e02a26c77a9ea0d98ea4879eaddf7
 {
 $db = (new Database())->connectToDatabase();
 $db->query("SELECT * from post_comments where comment_id='$this->comment_id';");
@@ -48,6 +52,7 @@ return array('status_code'=>200);
 }
 else 
 return array('status_code'=>404,'detail'=>'comment not found');
+<<<<<<< HEAD
 }*/
 
 static function deleteComment($id)
@@ -64,6 +69,8 @@ $db = (new Database())->connectToDatabase();
 	else{
 		return array('status_code'=>203,'detail'=>'not permitted');
 	}
+=======
+>>>>>>> a84ff92c4e6e02a26c77a9ea0d98ea4879eaddf7
 }
 
 
