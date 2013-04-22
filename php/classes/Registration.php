@@ -1,4 +1,5 @@
-<?
+
+<?php
 /**
 * 
 */
@@ -53,13 +54,8 @@ class Registration
   }
 	
 	function validateDetails(){
-<<<<<<< HEAD
 		$db = (new Database())->connectToDatabase();
 		$db->query("SELECT * FROM User WHERE email='$this->email'");
-=======
-		$db=(new Database())->connectToDatabase();
-		$db->query("SELECT * FROM User WHERE user_name='$this->username'");
->>>>>>> a84ff92c4e6e02a26c77a9ea0d98ea4879eaddf7
 		if($db->returned_rows>=1){
 		return 2;
 		}
@@ -88,38 +84,30 @@ class Registration
 			$db = (new Database())->connectToDatabase();
 			$db->insert('Activation_Codes',array('user_name'=>$this->username,'full_name'=>$this->full_name,'email'=>$this->email,'account_type'=>$this->account_type,'password'=>$this->hashed_password,'activation_code'=>$this->activation_code));
 			return array('status_code'=>200);
+			
 		}
 	}
 
-	static function register($username,$activation_code){
+	function register(){
 		
 		//called when user enters activation code
 		//construct an object with username, NULL, NULL, NULL ,NULL
 
 		//check if correct activation code
 		$db = (new Database())->connectToDatabase();
-		$db->query("SELECT * FROM Activation_Codes WHERE user_name='$username' AND activation_code='$activation_code'");
+		$db->query("SELECT * FROM Activation_Codes WHERE user_name='$this->username' AND activation_code='$this->activation_code'");
 		if($db->returned_rows==0){
 			return array('status_code'=>400,'detail'=>"username doesn't exist in the table or wrong activation code");
 		}
 		//successful
-		//move entries to User table and account type table
+		//move entries to User table
 		$result = $db->fetch_assoc_all();
-<<<<<<< HEAD
 		$db->insert('User',array('user_name' => $result[0]['user_name'], 'full_name' =>$result[0]['full_name'] ,'email' => $result[0]['email'],'account_type' => $result[0]['account_type'],'password' => $result[0]['password']));
 		$db->query("DELETE from Activation_Codes WHERE user_name='$this->username'");
 		switch ($result[0]['account_type']) {
 			case 2:
 				# code...
 				// echo "yup";
-=======
-		$db->insert('User',array('user_name' => $result[0]['user_name'], 'full_name' =>$result[0]['full_name'] ,'email' => $result[0]['email'],'account_type' => $result[0]['account_type'],'password' => $result[0]['password'],'contact_details' =>NULL));
-		$db->query("DELETE from Activation_Codes WHERE user_name='$username'");
-		switch ($result[0]['account_type']) {
-			case 2:
-				# code...
-				echo "yup";
->>>>>>> a84ff92c4e6e02a26c77a9ea0d98ea4879eaddf7
 				$username = $result[0]['user_name'];
 				$db->query("INSERT INTO Student (user_name,profile_complete) VALUES('$username',0)");
 				break;
@@ -130,11 +118,7 @@ class Registration
 				break;
 			case 3:
 				$username = $result[0]['user_name'];
-<<<<<<< HEAD
 				$db->query("INSERT INTO allumni (user_name) VALUES('$username')");
-=======
-				$db->query("INSERT INTO alumni (user_name) VALUES('$username')");
->>>>>>> a84ff92c4e6e02a26c77a9ea0d98ea4879eaddf7
 				break;		
 			
 			default:
@@ -142,10 +126,6 @@ class Registration
 				break;
 		}
 
-<<<<<<< HEAD
-=======
-		
->>>>>>> a84ff92c4e6e02a26c77a9ea0d98ea4879eaddf7
 		return array('status_code'=>200);
 	}
 	
@@ -156,12 +136,18 @@ class Registration
 
 //testing.....
 
-// $reg = new Registration('testuser13','full name','email@email.com','sen','2',NULL);
-// $reg->handleRegistration();
+
+    /*$username = $_POST['username'];
+	$full_name = $_POST['fullname'];
+    $password = $_POST['password'];
+	$email = $_POST['email'];
+	$account_type = $_POST['category'];
+	$activation_code;
+    $reg = new Registration($username,$full_name,$email,$password,$account_type,NULL);
+    $reg->handleRegistration();*/
 // $reg = new Registration('testuser',NULL,NULL,NULL,NULL,73);
 // $reg->register();
 // session_start();
 // print_r($_SESSION['user']);
-// Registration::register('testuser13',7904);
 
 ?>

@@ -128,7 +128,7 @@ class Student extends User
 
 	}*/
 
-/*static function displayProfile(){
+static function displayProfile(){
 
 	@session_start();
 	$username=$_SESSION['user']->username;
@@ -218,178 +218,9 @@ class Student extends User
 			return array('status_code'=>404,'detail'=>'user not found');
 
 	}
-*/
-
-/*static function displayProfile(){
-
-    @session_start();
-    $username=$_SESSION['user']->username;
-    
-		$db=(new Database())->connectToDatabase();
-		$db->query("SELECT * from student where user_name='$username' ");
-		//$result=array();
-		$rows=$db->returned_rows;
-		if($rows==1)
-		{
-			$row=$db->fetch_assoc_all();
-			foreach($row[0] as $index=>$value){
-				$result[$index]=$value;
-			}
-			$db->query("SELECT * from user where user_name='$username'");
-			$row=$db->fetch_assoc_all();
-			foreach($row[0] as $index=>    $value){
-				$result[$index]=$value;
-			}
-			$db->query("SELECT * from student_area_of_intrest where user_name='$username'");
-			$rows=$db->returned_rows;
-			$row=$db->fetch_assoc_all();
-			if($rows>0){
-			$result['area_of_interest']=array();
-			for($i=0;$i<$rows;$i++)
-			{		
-				$result['area_of_interest'][$i]=$row[$i]['area_of_intrest'];
-			}
-			}
-			else 
-				$result['area_of_interest']="";
-
-			$db->query("SELECT * from field where user_name='$username'");
-			$rows=$db->returned_rows;
-			$row=$db->fetch_assoc_all();
-			if($rows==1){
-			foreach($row[0] as $index=>$value){
-				$result[$index]=$value;
-				}
-			}
-			else {
-				$result['ct']=0;
-				$result['el']=0;
-				$result['it']=0;
-			}
-			$db->query("SELECT * from tag_table where tag_id in (SELECT tag_id from  tag_subscribed where user_name='$username')");
-			$rows=$db->returned_rows;
-			$row=$db->fetch_assoc_all();
-			if($rows>0){
-			for($i=0;$i<$rows;$i++)
-			{		
-			$result['tag'][$i]=$row[$i];
-			}
-			}
-			else 
-				$result['tag']="";
 
 
-			$db->query("SELECT * from user_experince where user_name='$username'");
-			$rows=$db->returned_rows;
-			$row=$db->fetch_assoc_all();
-			if($rows>0){
-			for($i=0;$i<$rows;$i++)
-			{		
-				$result['experince'][$i]=array();
-				$result['experince'][$i]['title']=$row[$i]['experince_title'];
-				$result['experince'][$i]['id']=$row[$i]['experince_id'];
-				$result['experince'][$i]['description']=$row[$i]['experince_description'];
-			}
-			}
-			else
-				$result['experince']="";
 
-			return array('status_code'=>200,'result'=>$result);
-		}
-		else
-			return array('status_code'=>404,'detail'=>'user not found');
-
-    }*/
-	
-	static function displayProfile(){
-
-    @session_start();
-    $username=$_SESSION['user']->username;
-    
-		$db=(new Database())->connectToDatabase();
-		$db->query("SELECT * from student where user_name='$username' ");
-		//$result=array();
-		$rows=$db->returned_rows;
-		if($rows==1)
-		{
-			$row=$db->fetch_assoc_all();
-			foreach($row[0] as $index=>$value){
-				if($index=='contact_no'){
-				if($value==0){}
-				else{
-				$result[$index]=$value;
-				}
-				
-				}
-				else{
-				$result[$index]=$value;
-				}
-			}
-			$db->query("SELECT * from user where user_name='$username'");
-			$row=$db->fetch_assoc_all();
-			foreach($row[0] as $index=>    $value){
-				$result[$index]=$value;
-			}
-			$db->query("SELECT * from student_area_of_intrest where user_name='$username'");
-			$rows=$db->returned_rows;
-			$row=$db->fetch_assoc_all();
-			if($rows>0){
-			$result['area_of_interest']=array();
-			for($i=0;$i<$rows;$i++)
-			{		
-				$result['area_of_interest'][$i]=$row[$i]['area_of_intrest'];
-			}
-			}
-			else 
-				$result['area_of_interest']="";
-
-			$db->query("SELECT * from field where user_name='$username'");
-			$rows=$db->returned_rows;
-			$row=$db->fetch_assoc_all();
-			if($rows==1){
-			foreach($row[0] as $index=>$value){
-				$result[$index]=$value;
-				}
-			}
-			else {
-				$result['ct']=0;
-				$result['el']=0;
-				$result['it']=0;
-			}
-			$db->query("SELECT * from tag_table where tag_id in (SELECT tag_id from  tag_subscribed where user_name='$username')");
-			$rows=$db->returned_rows;
-			$row=$db->fetch_assoc_all();
-			if($rows>0){
-			for($i=0;$i<$rows;$i++)
-			{		
-			$result['tag'][$i]=$row[$i];
-			}
-			}
-			else 
-				$result['tag']="";
-
-
-			$db->query("SELECT * from user_experince where user_name='$username'");
-			$rows=$db->returned_rows;
-			$row=$db->fetch_assoc_all();
-			if($rows>0){
-			for($i=0;$i<$rows;$i++)
-			{		
-				$result['experince'][$i]=array();
-				$result['experince'][$i]['title']=$row[$i]['experince_title'];
-				$result['experince'][$i]['id']=$row[$i]['experince_id'];
-				$result['experince'][$i]['description']=$row[$i]['experince_description'];
-			}
-			}
-			else
-				$result['experince']="";
-
-			return array('status_code'=>200,'result'=>$result);
-		}
-		else
-			return array('status_code'=>404,'detail'=>'user not found');
-
-    }
 
 	
 
@@ -440,9 +271,9 @@ class Student extends User
 	
 	}
 
-/*	static function buildProfile($other_email,$other_info,$cpi,$contact_no,$batch,$program)
+	static function buildProfile($other_email,$other_info,$cpi,$contact_no,$batch,$program)
 	{
-		@session_start();
+		session_start();
 		$username=$_SESSION['user']->username;
 		$db=(new Database())->connectToDatabase();
 		$db->query("SELECT * from student where user_name='$username'");
@@ -460,7 +291,7 @@ class Student extends User
   else
     {
     
-    if (file_exists("C:/xampp/htdocs/intern_corner-master2/upload/" .$username.".pdf"))
+    if (file_exists("C:/xampp/htdocs/mera/sen/classes/upload/" .$username.".pdf"))
       {
       $a=$_FILES["resume"]["name"] . " already exists. ";
       echo "fe";
@@ -468,9 +299,9 @@ class Student extends User
     else
       {
       move_uploaded_file($_FILES["resume"]["tmp_name"],
-      "C:/xampp/htdocs/intern_corner-master2/upload/" .$username.".pdf");
+      "C:/xampp/htdocs/mera/sen/classes/upload/" .$username.".pdf");
       echo "Stored in: " . "upload/" .$username.".pdf";
-      $path="C:/xampp/htdocs/intern_corner-master2/upload/" .$username.".pdf";
+      $path="C:/xampp/htdocs/mera/sen/classes/upload/" .$username.".pdf";
   		echo $path;
       }
     }
@@ -504,104 +335,6 @@ class Student extends User
 	
 	}
 
-	*/
-	
-
-static function buildProfile2($other_email,$other_info,$cpi,$contact_no,$batch,$program,$area_of_interest){
-	@session_start();
-	$username=$_SESSION['user']->username;	
-	$x=Student::buildProfile($other_email,$other_info,$cpi,$contact_no,$batch,$program)['status_code'];
-	$y=Student::updateAreasOfIntrest2(1, $area_of_interest)['status_code'];
-	//echo $x."<br>";
-	//echo $y;
-	if($x==200 && $y==200)
-		return array('status_code'=>200);
-	else
-		return array('status_code'=>400,'detail'=>'bad request');
-}
-
-
-
-static function buildProfile($other_email,$other_info,$cpi,$contact_no,$batch,$program)
-    {
-	@session_start();
-	$username=$_SESSION['user']->username;
-	$db=(new Database())->connectToDatabase();
-	$db->query("SELECT * from student where user_name='$username'");
-	$rows=$db->returned_rows;
-	$row=$db->fetch_assoc_all();
-	if($contact_no==NULL or $contact_no==""){
-	$contact_no=0;
-		}
-	$db->query("UPDATE student set user_name='$username',branch='$program',cpi=$cpi,other_emailid='$other_email',other_details='$other_info',batch='$batch',contact_no='$contact_no',reputation=1,avg_prof_rating=1,profile_complete=1 where user_name='$username'");
-	return array('status_code'=>200);
-
-    
-    }
-	
-static function editTagSubscription($type,$tag){
-    @session_start();
-    $username=$_SESSION['user']->username;
-    $db=(new Database())->connectToDatabase();
-    if($type==1){
-    $db->query("SELECT * from tag_table where tag_name='$tag' ");
-    $row=$db->fetch_assoc_all();
-    $rows=$db->returned_rows;
-    //print_r();
-    if($rows!=0){
-		$tagg=$row[0]['tag_id'];
-		$db->query("INSERT INTO tag_subscribed values ('$tagg','$username')");
-		return array('status_code'=>200);
-		}
-    else{
-		$db->query("INSERT INTO tag_table(tag_name) values ('$tag')");
-		$db->query("SELECT * from tag_table where tag_name='$tag' ");
-		$row1=$db->fetch_assoc_all();
-		$tagg=$row1[0]['tag_id'];
-		$db->query("INSERT INTO tag_subscribed values ('$tagg','$username')");
-		return array('status_code'=>200);
-    }
-		
-    }
-
-    else if($type==-1){
-    $db->query("SELECT * from tag_table where tag_name='$tag' ");
-    $row=$db->fetch_assoc_all();
-    $rows=$db->returned_rows;
-    if($rows==1){
-		$tagg=$row[0]['tag_id'];
-		$db->query("SELECT * from tag_subscribed where user_name='$username' and tag_id='$tagg' ");
-		if($db->returned_rows==1){
-			$db->query("DELETE from tag_subscribed where user_name='$username' and tag_id='$tagg'");
-			return array('status_code'=>200);
-		}
-    }
-    return array('status_code'=>404,'detail'=>'tag not found');
-    }
-}
-	static function updateAreasOfIntrest2($type, $area_of_interest){
-		$arr=explode(';',$area_of_interest);
-		$s=array();
-		$return_s=0;
-		$acrazy="";
-		//$return_s=3;
-		for($i=0;$i<sizeof($arr);$i++){
-		$crazy=$arr[$i];
-		if($crazy!="" && $crazy!=" "){
-		$s1=Student::updateAreasOfInterest($type,$arr[$i]);
-		$s[$i]=$s1['status_code'];
-		}
-	}
-		//print_r($s);
-		for($i=0;$i<sizeof($s);$i++)
-		if ($s[$i]==404){
-		$return_s=1;
-		}
-		if($return_s==0)
-		  return array('status_code'=>200);
-		else
-		return array('status_code'=>400);
-	}
 
 
 
@@ -609,7 +342,7 @@ static function editTagSubscription($type,$tag){
 
 
 
-		@session_start();
+		session_start();
 		$username=$_SESSION['user']->username;
 		if($type==1)
 		{
@@ -618,10 +351,12 @@ static function editTagSubscription($type,$tag){
 			$rows=$db->returned_rows;
 			//echo "1111".$rows."<br>";
 			if($rows==0)
+			{
 			$db->query(" INSERT INTO student_area_of_intrest values ('$username','$area_of_interest')");
-			
 			return array('status_code'=>200);
-			
+			}
+			else
+				return array('status_code'=>400, 'detail'=> 'already exists');
 		}
 		if($type==-1)
 		{
@@ -749,7 +484,7 @@ static function editTagSubscription($type,$tag){
 //print_r(Student::displayProfile()['result']);
 //foreach(Student::displayProfile().['result'] as $index=>$value)
 //echo $index."=>".$value."<br>"
-//print_r(Student::buildProfile('nitin@gmail.com','xyz',10,9898989898,2010,null));
+
 //error addtodatbase inner methods St
 //print_r(Student::displayProfile()['result']);
 //echo Student :: buildprofile('other_email','other_info',111,11111,'batch','asdfs')['status_code'];

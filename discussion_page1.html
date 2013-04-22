@@ -1,0 +1,271 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Discussion Page</title>
+	
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+	    <link href="css/bootstrap.css" rel="stylesheet">
+		
+		<script src="js/jquery-1.9.1.min.js"></script>
+		
+
+  </head>
+  <body>
+  
+ 
+    
+<!-- Button to trigger modal -->
+
+<script type="text/javascript">
+
+var page=0;
+var data;
+
+
+setInterval(fetchRecentDiscussions, 30000);
+
+	$(document).ready(function(){
+//	alert("hey");
+/*$("#btn_post").bind("click", function() {
+    $.addPost().close();
+  });*/
+	fetchRecentDiscussions();
+	
+
+});
+
+	function putRecentDiscussions(Discussions){
+	for(i = Discussions.length-1; i >= 0 ; i--){
+	//tags=Discussion[i].tags;
+		discussionArticle = makeDiscussions(Discussions[i].post_id, Discussions[i].title, Discussions[i].description, Discussions[i].answers, Discussions[i].comments, Discussions[i].username, Discussions[i].total_votes, Discussions[i].tags, Discussions[i].timestamp, Discussions[i].closed, Discussions[i].no_of_closed_requests,i);
+		//$('#discussion').append(discussionArticle);
+	////	x=addTags(i,Discussions[i].tags);
+	//tags_display=addTags(tags);
+		document.getElementById("discussion").insertAdjacentHTML("afterbegin",discussionArticle);
+		}
+	}
+	
+	
+	function makeDiscussions(postid, title, description, answers, comments, username, total_votes, tags, timestamp, closed, no_of_close_requests,i){
+		var discussion = '<div class="page-header" style="padding-left:20px;"><li><a style="font-size:20px;font-weight:700; color:#000000;" id="title1" onClick="sesvar('+postid+');"> Title:"' + title + '" </a></li><button class="btn btn-primary" id="close'+postid+'"onClick="delete_post('+postid+');"style="position:relative; left:1200px; top:-15px;">x</button><li><a href="#" name="user1"> Username:' + username +' </a><b>posted at:</b> '+timestamp+'<div style="margin-left:10px"><p>' + description + '<a href="#myModal" data-toggle="modal">More>></a><br></p></div><a style="padding-left:3px" onClick="sesvar('+postid+');"> Comments </a><a style="padding-left:7px" onClick="sesvar('+postid+');"> Answers </a> <button style="padding-left:3px" onClick="upVote('+postid+')"><img src="img/like_thumbs_up.png" height="20px" width="20px"></button><button onClick="downVote('+postid+')"><img src="img/like_thumbs_down.png" height="20px" width="20px"></button><span id="tot_votes_'+postid+'">&nbsp;&nbsp;&nbsp;votes:'+total_votes+'&nbsp;&nbsp;&nbsp; ';
+		
+		for(i=0;i<tags.length;i++)
+		{
+			d=i+1;
+			//if(tags[i].tag_name!=" ")
+			{
+			var str='<button id="tag'+d+'">'+tags[i].tag_name+'</button>';
+			discussion=discussion+str;
+			}
+		}
+		
+		
+		
+	
+		return discussion;
+	}
+	
+/*	function addTags(tags)
+	{
+	alert(hi!);
+	return 0;
+	}
+	*/
+	function upVote(postid){
+	$.post("php/controller.php",{func:'upVote', post_id:postid},function(ret_data){
+		if(ret_data.status_code==200){//accepted
+			document.getElementById("tot_votes_"+postid).innerHTML="&nbsp;&nbsp;&nbsp;votes:"+ret_data.tot_votes;
+			//alert(document.getElementById("tot_votes_"+postid).value);
+			}
+		if(ret_data.status_code==400){//accepted
+			alert("Author Cannot Upvote his own post")
+			}
+		},"json");
+	}
+	function downVote(postid){
+	$.post("php/controller.php",{func:'downVote', post_id:postid},function(ret_data){
+		if(ret_data.status_code==200){//accepted
+			document.getElementById("tot_votes_"+postid).innerHTML="&nbsp;&nbsp;&nbsp;votes:"+ret_data.tot_votes;
+			//alert(document.getElementById("tot_votes_"+postid).value);
+			}
+		if(ret_data.status_code==400){//accepted
+			alert("Author Cannot downVote his own post");
+			}
+		},"json");
+	}
+	function sesvar(post_id)
+		{
+		//var id= document.getElementById(this.id).id;
+		//alert(id);
+		alert(post_id);
+		sessionStorage.setItem("post_id",post_id);
+		window.location="discussion_topic.html";
+		
+		}
+	function fetchRecentDiscussions(){
+	
+	$.post("php/controller.php",{func:'extractPost',page_no: page },function(ret_data){
+		if(ret_data.length >0){//accepted
+			//alert(ret_data);
+			
+			document.getElementById("discussion").innerHTML=" ";
+			//data=ret_data;
+			putRecentDiscussions(ret_data);
+			}
+		},"json");
+		}
+		
+		function addPost(){
+		$('#myModal_1').modal('hide')
+			var title = document.getElementById("q_title").value;
+			var des = document.getElementById("des").value;
+			var tag = document.getElementById("tag").value;
+			//alert(title);
+		//	var i=data.length;
+			//alert(i);
+			$.post("php/controller.php",{func:'addPost', 'title':title, 'description': des, 'tags' : tag},function(ret_data){
+			if(ret_data.status_code==200){//accepte
+			$(document.getElementById("q_title")).val('');
+			$(document.getElementById("des")).val('');
+			$(document.getElementById("tag")).val('');
+			fetchRecentDiscussions();
+			}
+			},"json");
+		}
+		function delete_post(postid)
+		{
+		$.post("php/controller.php",{func:'deletePost', 'post_id':postid},function(ret_data){
+			if(ret_data.status_code==200){//accepte
+			//alert(ret_data.detail);
+			fetchRecentDiscussions();
+			}
+			else
+			{
+			alert(ret_data.detail);
+			}
+			},"json");
+		
+		}
+		
+	</script>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    
+                    <div class="nav-collapse collapse">
+					  <ul class="nav">
+						<li ><p class="brand">Intern Corner</p></li>
+						<li class="active"><a href="#">Discussion Corner</a></li>
+						<li ><a href="oppurtunity_corner.html">Oppurtunity Corner</a></li>
+						<li><a href="experience_corner.html">Experience Corner</a></li>
+						<li><a href="search_main.html">Search Corner</a></li>
+						<li class="dropdown">
+						<div class="btn-group">
+						  <a id="username_tag" class="btn btn-small btn-primary" href="#"><i class="icon-user icon-white"></i></a>
+							<a class="btn btn-small btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+						  <ul class="dropdown-menu">
+							<li class="nav-header">Profile actions</li>
+							<li><a href="#">Edit Profile</a></li>
+							<li><a href="#">View Profile</a></li>
+							<li class="divider"></li>
+							<li class="nav-header">Logout</li>
+							<li><a href="#" onclick="logout()">Logout</a></li>
+						  </ul>
+						</div>
+						</li>
+					  </ul>
+					</div>
+                </div>
+            </div>
+        </div>
+	</div>
+<!-- my_MODAL_Post_Internhsip DETAILS -->
+<div id="myModal_1" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+   
+    <form class="form-horizontal">
+      <h2 class="form-signin-heading">Add your question here.. </h2>
+      <div class="control-group">
+      <label class="control-label">Title: </label>
+        <div class="controls">
+        <input id="q_title" type="text" maxlength="25" minlength="4" data-validation-pattern-message="sas" placeholder="Enter topic/question here" required/>
+        </div>
+      </div>
+      
+	  
+      
+     
+      
+<div class="control-group">
+      <label class="control-label">Description : </label>
+        <div class="controls">
+        <textarea  id="des" rows="10" cols="50" data-validation-pattern-message="" placeholder="Description of your question" required>
+</textarea>        </div>
+      </div>
+       <div class="control-group">
+      <label class="control-label">Tags: </label>
+        <div class="controls">
+        <input type="text" id="tag" maxlength="25" minlength="4" data-validation-pattern-message="sas" placeholder="tag1;tag2;tag3">
+		<p> different tags seperated by ';' (semicolon)</p>
+        </div>
+      </div>
+ <input type="checkbox" > make it anonymous </>
+    
+ 
+  </div>
+  <div class="modal-footer">
+ 
+          <input type="button" name="post_btn "id="btn_post" class="btn btn-primary" value="Post" onClick="addPost();" />   
+    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+     
+  </div>
+      </form>
+
+</div>
+
+<!--  MODAL_Post Internship ENDS HERE-->
+
+<div class="jumbotron" style="padding-left:20px" >
+
+    <h1 align="center" style="margin-top:60px;"> Q&A Corner</h1>
+          <a href="#myModal_1" data-toggle="modal" class="btn btn-primary">Post New discussion topic here..</a>
+	<div id="discussion">
+ 	  
+	 </div>
+
+      </div>
+
+<!--<div id="discussion">
+ 	  
+	 </div>-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> <!-- or use local jquery -->
+  <script src="js/jqBootstrapValidation.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap-transition.js"></script>
+    <script src="js/bootstrap-alert.js"></script>
+    <script src="js/bootstrap-modal.js"></script>
+    <script src="js/bootstrap-dropdown.js"></script>
+    <script src="js/bootstrap-scrollspy.js"></script>
+    <script src="js/bootstrap-tab.js"></script>
+    <script src="js/bootstrap-tooltip.js"></script>
+    <script src="js/bootstrap-popover.js"></script>
+    <script src="js/bootstrap-button.js"></script>
+    <script src="js/bootstrap-collapse.js"></script>
+    <script src="js/bootstrap-carousel.js"></script>
+    <script src="js/bootstrap-typeahead.js"></script>
+	  <script>
+  $(function () { $("form,input").not("[type=submit]").jqBootstrapValidation(); } );
+  </script>
+	  <!--<script>
+  $(function () { $("form,input").not("[type=submit]").jqBootstrapValidation(); } );
+  </script>
+<!--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@-->
+ 
+
+  </body>
+</html>
+

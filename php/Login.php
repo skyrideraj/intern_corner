@@ -47,10 +47,10 @@ class Login
 		}
 		if($num_rows==1){
 			//username and password exists and are cool
-			$user = new User($result[0]['user_name'],$result[0]['full_name'],$result[0]['email'],$result[0]['account_type']);
+			$user = new User($result[0]['user_name'],$result[0]['full_name'],$result[0]['email'],$result[0]['account_type'],$result[0]['contact_details']);
 
 			//start session variables
-			@session_start();
+			session_start();
 			$_SESSION['user'] = $user;
 			//check if student
 			/*if($result[0]['account_type']==2)//student
@@ -77,12 +77,10 @@ class Login
 
 		}			
 	}
-
-	
 	
 	static function logout()
 	{
-		@session_start();
+		session_start();
 		if(self::checkSetAndEmpty($_SESSION['user'])){
 			//user logged in?
 			//okay
@@ -116,13 +114,13 @@ class Login
 			$result = $this->db->fetch_assoc_all();
 			$password = $this->generateRandomPassword(10);  
 			$this->sendRandomPassword($password,$result[0]['email']);
-			$password1 = md5($password);
+			$password = md5($password);
         	// 200 => 'OK', 
-			$this->changePasswordHandler($username,$password1);
+			$this->changePasswordHandler($username,$password);
         	//update password entry in User table
         	
 
-			return array('status_code'=>200,'new password'=>$password); 
+			return array('status_code'=>200); 
 		}
 	}
 
@@ -133,46 +131,13 @@ class Login
 	}
 	function sendRandomPassword($password,$email){
 		//TODO
-		$mailer = new PHPMailer();
-		  $mailer->IsSMTP();
-		  $mailer->SMTPAuth = true;
-		  $mailer->Host = "smtp.gmail.com";
-		  $mailer->SMTPDebug = 1;
-		  $mailer->SMTPSecure = 'ssl';
-		  $mailer->Port = 465;
-		  $mailer->Username = "sengroup8@gmail.com";
-		  $mailer->Password = "passwordsen";
-		  $mailer->SetFrom('sengroup8@gmail.com','Intern Corner Webmaster');
-		  $mailer->FromName = "Intern Corner";
-		  $mailer->AddAddress($email);
-		  $body = "Your new password is ".$password;
-		  $mailer->Subject = ("New password");
-		  $mailer->Body = $body;
-		  $mailer->IsHTML (true);
-		  $mailer->Send();
+		// add send mail code
 	}
 
 	function changePasswordHandler($username,$password){
 		$this->getDatabase();
 
 		$this->db->query("UPDATE User SET password='$password' WHERE user_name='$username'");
-
-
-	}
-	function changePassword($username,$oldpassword,$newpassword){
-		$this->getDatabase();
-		$md5old=md5($oldpassword);
-		$md5new=md5($newpassword);
-		$this->db->query("SELECT * FROM User WHERE user_name='$username' and password='$md5old'");
-		$num_rows = $this->db->returned_rows;
-		if($num_rows==0){
-			//no user found with username and passowrd combination
-			return array('status_code'=>400,'detail'=>'old password was incorrect');
-		}
-		else{
-		$this->db->query("UPDATE User SET password='$md5new' WHERE user_name='$username' and password='$md5old'" );
-		return array('status_code'=>200,'detail'=>'password changed');
-		}
 
 
 	}

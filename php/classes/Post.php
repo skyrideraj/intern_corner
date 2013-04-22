@@ -46,11 +46,7 @@ class Post
 		//check if user has reached his limit for today?
 		$username = $this->username;
 		//retrieve if student
-<<<<<<< HEAD
 		@session_start();
-=======
-		session_start();
->>>>>>> a84ff92c4e6e02a26c77a9ea0d98ea4879eaddf7
 		$account_type = $_SESSION['user']->account_type;
 		// echo $account_type;
 		if($account_type==2){
@@ -105,7 +101,6 @@ class Post
 		}
 		if($allowed_to_post==1){
 
-<<<<<<< HEAD
 			$db->query("INSERT INTO post (title,user_name,description,anonymous) VALUES('$this->title','$username','$this->description',$this->anonymous)");
 			//extract latest post id by user
 			$db->query("SELECT * FROM post WHERE user_name='$this->username' ORDER BY timestamp DESC LIMIT 1");
@@ -131,9 +126,6 @@ class Post
 				$this->sendMailToTagSubscribers($post_id);
 				}
 			}
-=======
-			$db->query("INSERT INTO post (title,user_name,description,closed) VALUES('$this->title','$username','$this->description',0)");
->>>>>>> a84ff92c4e6e02a26c77a9ea0d98ea4879eaddf7
 			return array('status_code'=>200);
 
 		}
@@ -143,7 +135,6 @@ class Post
 		}
 		
 	}
-<<<<<<< HEAD
 	function sendMailToTagSubscribers($post_id){
 		$table_name = 'tag_subscribed';
 		$db = (new Database())->connectToDatabase();
@@ -179,11 +170,6 @@ class Post
 	static function extractPosts($page_no){
 		//page_no starts from 0
 		$page_length=10;
-=======
-	static function extractPosts($page_no){
-		//page_no starts from 0
-		$page_length=2;
->>>>>>> a84ff92c4e6e02a26c77a9ea0d98ea4879eaddf7
 		$db = (new Database())->connectToDatabase();
 		$no_of_posts = $page_length*$page_no+$page_length;
 		// echo $no_of_posts;
@@ -213,22 +199,14 @@ class Post
 			
 			$comments=Post::extractComments($result[$i]['post_id']);
 		
-<<<<<<< HEAD
 			$ques = new Post($result[$i]['post_id'],$result[$i]['title'],$result[$i]['description'],$answers,$comments,$result[$i]['user_name'],$total_votes,$tags,$result[$i]['timestamp'],$result[$i]['anonymous'],NULL);
-=======
-			$ques = new Post($result[$i]['post_id'],$result[$i]['title'],$result[$i]['description'],$answers,$comments,$result[$i]['user_name'],$total_votes,$tags,$result[$i]['timestamp'],$result[$i]['closed'],NULL);
->>>>>>> a84ff92c4e6e02a26c77a9ea0d98ea4879eaddf7
 			array_push($results_to_send, $ques);
 				
 		}
 		if($count==0){
 			return array("status_code"=>204,"detail"=>"No more content");
 		}
-<<<<<<< HEAD
 		//array_push($results_to_send);
-=======
-		array_push($results_to_send);
->>>>>>> a84ff92c4e6e02a26c77a9ea0d98ea4879eaddf7
 		return $results_to_send;
 		
 
@@ -288,7 +266,6 @@ class Post
 			$tag_name = $db->fetch_assoc();
 			$tag_name = $tag_name['tag_name'];
 			array_push($tags_arr,array('tag_id'=>$tag_id,'tag_name'=>$tag_name));
-<<<<<<< HEAD
 
 		}
 		return $tags_arr;
@@ -323,74 +300,7 @@ class Post
 		return array('status_code'=>200,'username'=>$username);
 
 
-=======
->>>>>>> a84ff92c4e6e02a26c77a9ea0d98ea4879eaddf7
 
-		}
-		return $tags_arr;
-
-	}
-
-	static function sendMailToSubscribers($post_id){
-
-	}
-	static function edit($post_obj){
-		//should also call sendMailToSubscribers
-		
-		sendMailToSubscribers();
-
-	}
-	static function addAnswer($ans_obj){
-		//check if user has already voted?
-		// var_dump($ans_obj);
-		session_start();
-		$username = $_SESSION['user']->username;
-		$db = (new Database)->connectToDatabase();
-		$post_id = $ans_obj->post_id;
-		$db->query("SELECT * FROM post_answer WHERE post_id=$post_id AND user_name='$username'");
-		if($db->returned_rows>0){
-			//user has already added an answer
-			//400=> Bad Request
-			return array('status_code'=>400,'detail'=>'user already answered');
-
-		}
-		$db->query("INSERT INTO post_answer (post_id,answer,user_name) VALUES ($ans_obj->post_id,'$ans_obj->answer_text','$username')");
-		//200=OK
-		return array('status_code'=>200);
-
-
-
-	}
-	static function addComment($comment_obj){
-		session_start();
-		$username = $_SESSION['user']->username;
-		$db = (new Database)->connectToDatabase();
-		$post_id = $comment_obj->post_id;
-		// $db->query("SELECT * FROM post_answer WHERE post_id=$post_id AND user_name='$username'");
-		$db->query("INSERT INTO post_comments (post_id,comment,user_name) VALUES ($comment_obj->post_id,'$comment_obj->comment','$username')");
-		//200=OK
-		return array('status_code'=>200);
-
-		
-	}
-	static function addTag($tags){
-		//tags is an array
-		//fetch corresponding tagids
-		$length = count($tags);
-		$db = (new Database)->connectToDatabase();
-		for($i=0;$i<$length;$i++){
-			$db->query("SELECT * FROM tag_table WHERE tag_name='$tags[i]'");
-			if($db->returned_rows==0){
-				//no tag found in tag table... so add it
-				$db->query("INSERT INTO tag_table (tag_name) VALUES ('$tag[i]')");
-			}
-			else{
-				//check if tag already there with post?
-				
-			}
-		}
-
-		
 	}
 	static function addComment($comment_obj){
 		@session_start();
@@ -635,160 +545,7 @@ static function subscribeTag($tag_id){
 	}
 
 
-	static function upVote($post_id){
-
-		//controller must check if user is logged in or not
-
-		session_start();
-		$username = $_SESSION['user']->getUsername();
-		$db = (new Database())->connectToDatabase();
-		//fIRSTLY CHECK IF USER IS THE AUTHOR OF THE ANSWER?
-		//
-		
-		$db->query("SELECT * FROM post WHERE user_name='$username' AND post_id=$post_id");
-
-
-		
-		if($db->returned_rows==0)
-		{
-			//has this user already voted?
-			$db->query("SELECT * FROM post_votes WHERE post_id=$post_id AND user_name='$username'");
-			if(($db->returned_rows)==1){
-			//user has not voted on this answer
-			//increase reputation of user who answered
-			
-			$db->query("DELETE FROM post_votes WHERE post_id=$post_id AND user_name='$username'");
-			}
-		//finally insert his vote
-		$db->insert('post_votes',array('post_id'=>$post_id,'user_name'=>$username,'vote_type'=>1));
-		//200=OKAY
-		return array('status_code'=>200,'tot_votes'=>Post::calculateVotes($post_id));
-		}
-		else{
-			//user has already voted on this post
-			//400=BAD REQUEST
-			return array('status_code'=>400,'detail'=>'user is the author of the answer');
-		}
-
-	}
-	static function downVote($post_id){
-		session_start();
-		$username = $_SESSION['user']->getUsername();
-		$db = (new Database())->connectToDatabase();
-		//fIRSTLY CHECK IF USER IS THE AUTHOR OF THE ANSWER?
-		//
-		
-		$db->query("SELECT * FROM post WHERE user_name='$username' AND post_id=$post_id");
-
-
-		
-		if($db->returned_rows==0)
-		{
-			//has this user already voted?
-			$db->query("SELECT * FROM post_votes WHERE post_id=$post_id AND user_name='$username'");
-			if(($db->returned_rows)==1){
-			//user has not voted on this answer
-			//increase reputation of user who answered
-			
-			$db->query("DELETE FROM post_votes WHERE post_id=$post_id AND user_name='$username'");
-			}
-		//finally insert his vote
-		$db->insert('post_votes',array('post_id'=>$post_id,'user_name'=>$username,'vote_type'=>-1));
-		//200=OKAY
-		return array('status_code'=>200,'tot_votes'=>Post::calculateVotes($post_id));
-		}
-		else{
-			//user has already voted on this post
-			//400=BAD REQUEST
-			return array('status_code'=>400,'detail'=>'user is the author of the answer');
-		}
-
-	}
-	static function subscribe($post_id){
-		session_start();
-		$username = $_SESSION['user']->getUsername();
-		$db = (new Database())->connectToDatabase();
-		//has user already subscribed?
-		$db->query("SELECT * FROM post_subscription WHERE user_name='$username' AND post_id=$post_id");
-		if($db->returned_rows==0){
-			$db->insert('post_subscription',array('user_name'=>$username,'post_id'=>$post_id));
-				// OK
-			return array('status_code'=>200);
-
-		}
-		else{
-			//already subscribed
-			//bad request
-			return array('status_code'=>400,'detail'=>'user already subscribed');
-		}
-
-
-	}
-
-	static function removeTag($post_id,$tag_id){
-		session_start();
-		$username = $_SESSION['user']->getUsername();
-		$db = (new Database())->connectToDatabase();
-		//firstly check if user is the author of the post?
-		$db->query("SELECT * FROM post WHERE user_name='$username' AND post_id=$post_id");
-		if($db->returned_rows==0){
-			//user is not the author
-			//bad request
-			return array('status_code'=>400,'detail'=>'user is not the author');
-		}
-		$db->query("DELETE FROM post_tags WHERE post_id=$post_id AND tag_id=$tag_id");
-		// ok
-		return array('status_code'=>200);
-
-		
-	}
-
-	static function delete($post_id){
-		session_start();
-		$threshold_to_delete = 50; //reputation
-		$db=(new Database)->connectToDatabase();
-		$username = $_SESSION['username']->username;
-		//check if user is the author
-		$db->query("SELECT * FROM post WHERE post_id=$post_id");
-		$results = $db->fetch_assoc_all();
-		$post_author = $results['user_name'];
-		if($post_author==$username || ($_SESSION['user']->account_type==1)|| ($_SESSION['user']->account_type==3)){
-			$db->query("DELETE FROM post WHERE post_id=$post_id");
-			return array('status_code'=>200,'detail'=>'deleted');
-		}
-		// fetch reputation of the current user .... he is a student
-		$db->query("SELECT * FROM Student WHERE user_name = '$username'");
-		$results = $db->fetch_assoc_all();
-		$reputation = $results['reputation'];
-		if($reputation>$threshold_to_delete){
-			
-			//has user already requested?
-			$db->query("SELECT * FROM post_close_requests WHERE post_id=$post_id AND user_name='$username'");
-			if($db->returned_rows==1){
-				// bad request
-				return array('status_code'=>400,'detail'=>'already requested');
-			}
-						// insert into close request
-			$db->query("INSERT INTO post_close_requests VALUES($post_id,$username)");
-			//calculate the new value
-			$db->query("SELECT * FROM post_close_requests WHERE post_id=$post_id");
-			$num_results = $db->returned_rows;
-			if($num_results>=3){
-				//delete the post
-				$db->query("DELETE FROM posts WHERE post_id=$post_id");
-				return array('status_code'=>200,'detail'=>'deleted');
-			}
-
-		}
-		
-		return array('status_code'=>400,'detail'=>'not enough reputation');
-
-		$db=null;
-	}
-
-
 }
-<<<<<<< HEAD
 
 
 
@@ -837,49 +594,5 @@ static function subscribeTag($tag_id){
 // print_r($rr);
 //$post_obj = new Post(102,"hey there","bhakk", NULL, NULL, "sen", NULL,"great; ", NULL,true, NULL);
 //$post_obj->addPost();
-=======
->>>>>>> a84ff92c4e6e02a26c77a9ea0d98ea4879eaddf7
 
-////////////
-//testing //
-////////////
-// print_r(Post::extractPosts(0));
-// echo '<br>';
-// print_r(Post::extractPosts(1));
-// echo '<br>';
-// print_r(Post::extractPosts(2));
-// echo '<br>';
-// print_r(Post::extractPosts(3));
-// echo '<br>';
-// print_r(Post::extractPosts(4));
-// echo '<br>';
-
-
-
-////////////////////////
-// add answer Testing //
-////////////////////////
-// $ans = new Answer(NULL,2,'sen','Hello I am an answer',NULL);
-// print_r(Post::addAnswer($ans));
-// 
-// 
-
-
-/////////////////////////
-// add comment testing //
-/////////////////////////
-// $comment = new Comment(NULL,2,NULL,'Hello I am a comment');
-// print_r(Post::addComment($comment));
-// 
-
-
-//////////////////////
-// add post testing //
-//////////////////////
-// session_start();
-// echo $_SESSION['user']->username;
-// session_start();
-// $post = new Post(NULL,'testT1','testd1',NULL,NULL,$_SESSION['user']->username,0,NULL,NULL,0,0);
-// $rr = $post->addPost();
-// print_r($rr);
 ?>
